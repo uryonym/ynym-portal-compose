@@ -16,28 +16,28 @@ import com.uryonym.ynymportal.data.Task
 
 @Composable
 fun TaskScreen(
-    taskViewModel: TaskViewModel = viewModel(), modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, taskViewModel: TaskViewModel = viewModel()
 ) {
     val taskUiState by taskViewModel.taskUiState.collectAsState()
-    Box() {
-        TaskList(taskUiState.taskList)
+    Box(modifier = modifier) {
+        TaskList(modifier, taskUiState.taskList)
     }
 }
 
 @Composable
 fun TaskList(
-    taskList: List<Task>, modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, taskList: List<Task>
 ) {
     LazyColumn {
         items(taskList) { task ->
-            TaskItem(task)
+            TaskItem(modifier, task)
         }
     }
 }
 
 @Composable
 fun TaskItem(
-    task: Task, modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, task: Task
 ) {
     Column {
         ListItem(headlineText = { Text(text = task.title) })
