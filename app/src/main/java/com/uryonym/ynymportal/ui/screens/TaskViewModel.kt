@@ -13,10 +13,11 @@ import kotlinx.coroutines.launch
 class TaskViewModel : ViewModel() {
 
     data class TaskUiState(
-        val taskList: List<Task>
+        val taskList: List<Task>,
+        val taskTitle: String
     )
 
-    private val _taskUiState = MutableStateFlow(TaskUiState(taskList = listOf()))
+    private val _taskUiState = MutableStateFlow(TaskUiState(taskList = listOf(), taskTitle = ""))
     val taskUiState: StateFlow<TaskUiState> = _taskUiState.asStateFlow()
 
     init {
@@ -27,7 +28,7 @@ class TaskViewModel : ViewModel() {
         viewModelScope.launch {
             val result = YnymPortalApi.retrofitService.getTasks()
             Log.i("TaskViewModel", result.toString())
-            _taskUiState.value = TaskUiState(result)
+            _taskUiState.value = TaskUiState(result, "")
         }
     }
 }

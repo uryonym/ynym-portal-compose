@@ -8,6 +8,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,34 +17,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.data.Task
 
 @Composable
-fun TaskScreen(
+fun AddTaskScreen(
     modifier: Modifier = Modifier, taskViewModel: TaskViewModel = viewModel()
 ) {
     val taskUiState by taskViewModel.taskUiState.collectAsState()
     Box(modifier = modifier) {
-        TaskList(modifier, taskUiState.taskList)
-    }
-}
-
-@Composable
-fun TaskList(
-    modifier: Modifier = Modifier, taskList: List<Task>
-) {
-    LazyColumn {
-        items(taskList) { task ->
-            TaskItem(modifier, task)
+        Column() {
+            TextField(
+                value = taskUiState.taskTitle,
+                onValueChange = {},
+                label = { Text(text = "タイトル") },
+                singleLine = true
+            )
+            TextField(
+                value = taskUiState.taskTitle,
+                onValueChange = {},
+                label = { Text(text = "詳細") },
+                singleLine = true
+            )
         }
-    }
-}
-
-@Composable
-fun TaskItem(
-    modifier: Modifier = Modifier, task: Task
-) {
-    Column {
-        ListItem(headlineText = { Text(text = task.title) }, leadingContent = {
-            Checkbox(checked = false, onCheckedChange = {})
-        })
-        Divider()
     }
 }
