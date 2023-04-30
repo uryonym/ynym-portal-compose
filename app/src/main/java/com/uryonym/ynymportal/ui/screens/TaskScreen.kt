@@ -2,26 +2,48 @@ package com.uryonym.ynymportal.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.uryonym.ynymportal.data.Task
+import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun TaskScreen(
-    modifier: Modifier = Modifier, taskViewModel: TaskViewModel = viewModel()
+    navController: NavController,
+    taskViewModel: TaskViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
-    val taskUiState by taskViewModel.taskUiState.collectAsState()
-    Box(modifier = modifier) {
-        TaskList(modifier, taskUiState.taskList)
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(title = {
+            Text(stringResource(id = YnymPortalScreen.TaskList.title))
+        })
+    }, floatingActionButton = {
+        FloatingActionButton(onClick = { navController.navigate(YnymPortalScreen.AddTask.name) }) {
+            Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+        }
+    }) { innerPadding ->
+        val taskUiState by taskViewModel.taskUiState.collectAsState()
+        Box(modifier = modifier.padding(innerPadding)) {
+            TaskList(modifier, taskUiState.taskList)
+        }
     }
 }
 

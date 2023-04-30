@@ -27,7 +27,6 @@ class TaskViewModel : ViewModel() {
     private fun getTasks() {
         viewModelScope.launch {
             val result = YnymPortalApi.retrofitService.getTasks()
-            Log.i("TaskViewModel", result.toString())
             _taskUiState.value = TaskUiState(result, "")
         }
     }
