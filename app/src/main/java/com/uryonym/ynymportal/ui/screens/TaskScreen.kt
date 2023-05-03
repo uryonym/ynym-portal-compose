@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.uryonym.ynymportal.YnymPortalScreen
 import com.uryonym.ynymportal.data.Task
-import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun TaskScreen(
@@ -40,10 +40,7 @@ fun TaskScreen(
             Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
         }
     }) { innerPadding ->
-        val taskUiState by taskViewModel.taskUiState.collectAsState()
-        Box(modifier = modifier.padding(innerPadding)) {
-            TaskList(modifier, taskUiState.taskList)
-        }
+        Box(modifier = modifier.padding(innerPadding)) {}
     }
 }
 
@@ -63,7 +60,7 @@ fun TaskItem(
     modifier: Modifier = Modifier, task: Task
 ) {
     Column {
-        ListItem(headlineText = { Text(text = task.title) }, leadingContent = {
+        ListItem(headlineContent = { Text(text = task.title) }, leadingContent = {
             Checkbox(checked = false, onCheckedChange = {})
         })
         Divider()
