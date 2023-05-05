@@ -36,7 +36,7 @@ fun TaskScreen(
             Text(stringResource(id = YnymPortalScreen.TaskList.title))
         })
     }, floatingActionButton = {
-        FloatingActionButton(onClick = { navController.navigate(YnymPortalScreen.AddTask.name) }) {
+        FloatingActionButton(onClick = { navController.navigate(YnymPortalScreen.TaskAdd.name) }) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
         }
     }) { innerPadding ->

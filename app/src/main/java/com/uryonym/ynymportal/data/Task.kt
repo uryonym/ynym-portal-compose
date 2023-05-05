@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Task(
-    val id: String,
+    val id: String? = null,
     val title: String,
     val description: String?,
-    @SerialName(value = "dead_line") val deadLine: String?,
-    @SerialName(value = "is_complete") val isComplete: Boolean,
-    @SerialName(value = "created_at") val createdAt: String?,
-    @SerialName(value = "updated_at") val updatedAt: String?,
+    @SerialName(value = "dead_line") val deadLine: String? = null,
+    @SerialName(value = "is_complete") val isComplete: Boolean = false,
+    @SerialName(value = "created_at") val createdAt: String? = null,
+    @SerialName(value = "updated_at") val updatedAt: String? = null,
 )

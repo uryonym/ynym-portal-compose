@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.BottomAppBar
@@ -39,7 +41,7 @@ import com.uryonym.ynymportal.ui.screens.TaskViewModel
 import com.uryonym.ynymportal.ui.theme.YnymPortalTheme
 
 enum class YnymPortalScreen(@StringRes val title: Int) {
-    TaskList(title = R.string.task_list), AddTask(title = R.string.add_task), EditTask(title = R.string.edit_task)
+    TaskList(title = R.string.task_list), TaskAdd(title = R.string.add_task), TaskEdit(title = R.string.edit_task)
 }
 
 class MainActivity : ComponentActivity() {
@@ -56,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController = navController, startDestination = YnymPortalScreen.TaskList.name
                 ) {
-                    composable(YnymPortalScreen.TaskList.name) {
+                    composable(route = YnymPortalScreen.TaskList.name) {
                         Scaffold(topBar = {
                             CenterAlignedTopAppBar(title = {
                                 Text(stringResource(id = YnymPortalScreen.TaskList.title))
@@ -72,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             }, floatingActionButton = {
                                 FloatingActionButton(onClick = {
                                     navController.navigate(
-                                        YnymPortalScreen.AddTask.name
+                                        YnymPortalScreen.TaskAdd.name
                                     )
                                 }) {
                                     Icon(
@@ -89,6 +91,10 @@ class MainActivity : ComponentActivity() {
                                         ListItem(headlineContent = { Text(text = task.title) },
                                             leadingContent = {
                                                 Checkbox(checked = false, onCheckedChange = {})
+                                            },
+                                            modifier = Modifier.clickable {
+                                                taskViewModel.onClickTaskItem(task)
+                                                navController.navigate(YnymPortalScreen.TaskEdit.name)
                                             })
                                         Divider()
                                     }
@@ -96,10 +102,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    composable(YnymPortalScreen.AddTask.name) {
+                    composable(route = YnymPortalScreen.TaskAdd.name) {
                         Scaffold(topBar = {
                             CenterAlignedTopAppBar(title = {
-                                Text(stringResource(id = YnymPortalScreen.AddTask.title))
+                                Text(stringResource(id = YnymPortalScreen.TaskAdd.title))
                             }, navigationIcon = {
                                 IconButton(onClick = { navController.popBackStack() }) {
                                     Icon(
@@ -108,7 +114,10 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }, actions = {
-                                TextButton(onClick = { /*TODO*/ }) {
+                                TextButton(onClick = {
+                                    taskViewModel.onSave()
+                                    navController.popBackStack()
+                                }) {
                                     Text(text = "保存")
                                 }
                             })
@@ -119,12 +128,54 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                OutlinedTextField(value = "",
+                                OutlinedTextField(value = taskViewModel.title,
                                     label = { Text("タスク") },
-                                    onValueChange = {})
-                                OutlinedTextField(value = "",
+                                    onValueChange = { taskViewModel.onChangeTitle(it) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                OutlinedTextField(value = taskViewModel.description,
                                     label = { Text("詳細") },
-                                    onValueChange = {})
+                                    onValueChange = { taskViewModel.onChangeDescription(it) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                    composable(route = YnymPortalScreen.TaskEdit.name) {
+                        Scaffold(topBar = {
+                            CenterAlignedTopAppBar(title = {
+                                Text(stringResource(id = YnymPortalScreen.TaskEdit.title))
+                            }, navigationIcon = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        contentDescription = "戻る"
+                                    )
+                                }
+                            }, actions = {
+                                TextButton(onClick = {
+                                    navController.popBackStack()
+                                }) {
+                                    Text(text = "保存")
+                                }
+                            })
+                        }) { padding ->
+                            Column(
+                                modifier = Modifier
+                                    .padding(padding)
+                                    .fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                OutlinedTextField(value = taskViewModel.title,
+                                    label = { Text("タスク") },
+                                    onValueChange = { taskViewModel.onChangeTitle(it) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                OutlinedTextField(value = taskViewModel.description,
+                                    label = { Text("詳細") },
+                                    onValueChange = { taskViewModel.onChangeDescription(it) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
                         }
                     }

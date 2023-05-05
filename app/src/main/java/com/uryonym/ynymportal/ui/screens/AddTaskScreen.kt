@@ -30,7 +30,7 @@ fun AddTaskScreen(
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
-            Text(stringResource(id = YnymPortalScreen.AddTask.title))
+            Text(stringResource(id = YnymPortalScreen.TaskAdd.title))
         }, navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
