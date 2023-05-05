@@ -7,7 +7,9 @@ import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
 
@@ -21,6 +23,9 @@ interface YnymPortalService {
 
     @POST("tasks")
     suspend fun addTask(@Body task: Task)
+
+    @PATCH("tasks/{id}")
+    suspend fun editTask(@Path("id") id: String, @Body task: Task)
 }
 
 object YnymPortalApi {

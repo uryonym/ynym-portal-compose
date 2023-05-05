@@ -16,10 +16,13 @@ class TaskViewModel : ViewModel() {
     private val _taskList = MutableStateFlow<List<Task>>(listOf())
     val taskList = _taskList.asStateFlow()
 
-    var title by mutableStateOf("")
+    var task: Task by mutableStateOf(Task())
         private set
 
-    var description by mutableStateOf("")
+    var title: String by mutableStateOf("")
+        private set
+
+    var description: String by mutableStateOf("")
         private set
 
     init {
@@ -35,16 +38,31 @@ class TaskViewModel : ViewModel() {
     }
 
     fun onClickTaskItem(task: Task) {
+        this.task = task
         title = task.title
         description = task.description ?: ""
     }
 
-    fun onSave() {
+    fun onSaveNewTask() {
         viewModelScope.launch {
             val newTask = Task(title = title, description = description)
             YnymPortalApi.retrofitService.addTask(task = newTask)
             val result = YnymPortalApi.retrofitService.getTasks()
             _taskList.value = result
+            title = ""
+            description = ""
+        }
+    }
+
+    fun onSaveEditTask() {
+        viewModelScope.launch {
+            task.title = title
+            task.description = description
+            task.id?.let {
+                YnymPortalApi.retrofitService.editTask(id = it, task = task)
+                val result = YnymPortalApi.retrofitService.getTasks()
+                _taskList.value = result
+            }
             title = ""
             description = ""
         }

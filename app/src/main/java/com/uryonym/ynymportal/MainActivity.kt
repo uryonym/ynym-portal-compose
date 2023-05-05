@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -67,8 +68,8 @@ class MainActivity : ComponentActivity() {
                             BottomAppBar(actions = {
                                 IconButton(onClick = { /*TODO*/ }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Check,
-                                        contentDescription = "完了"
+                                        imageVector = Icons.Filled.Menu,
+                                        contentDescription = "メニュー"
                                     )
                                 }
                             }, floatingActionButton = {
@@ -115,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }, actions = {
                                 TextButton(onClick = {
-                                    taskViewModel.onSave()
+                                    taskViewModel.onSaveNewTask()
                                     navController.popBackStack()
                                 }) {
                                     Text(text = "保存")
@@ -128,12 +129,14 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                OutlinedTextField(value = taskViewModel.title,
+                                OutlinedTextField(
+                                    value = taskViewModel.title,
                                     label = { Text("タスク") },
                                     onValueChange = { taskViewModel.onChangeTitle(it) },
                                     modifier = Modifier.fillMaxWidth()
                                 )
-                                OutlinedTextField(value = taskViewModel.description,
+                                OutlinedTextField(
+                                    value = taskViewModel.description,
                                     label = { Text("詳細") },
                                     onValueChange = { taskViewModel.onChangeDescription(it) },
                                     modifier = Modifier.fillMaxWidth()
@@ -154,6 +157,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }, actions = {
                                 TextButton(onClick = {
+                                    taskViewModel.onSaveEditTask()
                                     navController.popBackStack()
                                 }) {
                                     Text(text = "保存")
@@ -166,12 +170,14 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                OutlinedTextField(value = taskViewModel.title,
+                                OutlinedTextField(
+                                    value = taskViewModel.title,
                                     label = { Text("タスク") },
                                     onValueChange = { taskViewModel.onChangeTitle(it) },
                                     modifier = Modifier.fillMaxWidth()
                                 )
-                                OutlinedTextField(value = taskViewModel.description,
+                                OutlinedTextField(
+                                    value = taskViewModel.description,
                                     label = { Text("詳細") },
                                     onValueChange = { taskViewModel.onChangeDescription(it) },
                                     modifier = Modifier.fillMaxWidth()
