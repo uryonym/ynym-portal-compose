@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -26,6 +27,9 @@ interface YnymPortalService {
 
     @PATCH("tasks/{id}")
     suspend fun editTask(@Path("id") id: String, @Body task: Task)
+
+    @DELETE("tasks/{id}")
+    suspend fun deleteTask(@Path("id") id: String)
 }
 
 object YnymPortalApi {

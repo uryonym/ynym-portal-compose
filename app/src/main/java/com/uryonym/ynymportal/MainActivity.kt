@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -68,8 +69,7 @@ class MainActivity : ComponentActivity() {
                             BottomAppBar(actions = {
                                 IconButton(onClick = { /*TODO*/ }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Menu,
-                                        contentDescription = "メニュー"
+                                        imageVector = Icons.Filled.Menu, contentDescription = "メニュー"
                                     )
                                 }
                             }, floatingActionButton = {
@@ -161,6 +161,18 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 }) {
                                     Text(text = "保存")
+                                }
+                            })
+                        }, bottomBar = {
+                            BottomAppBar(actions = {
+                                IconButton(onClick = {
+                                    taskViewModel.onDelete()
+                                    navController.popBackStack()
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = "削除"
+                                    )
                                 }
                             })
                         }) { padding ->

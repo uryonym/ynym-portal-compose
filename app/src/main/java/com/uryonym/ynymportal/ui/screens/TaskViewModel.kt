@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,6 +61,18 @@ class TaskViewModel : ViewModel() {
             task.description = description
             task.id?.let {
                 YnymPortalApi.retrofitService.editTask(id = it, task = task)
+                val result = YnymPortalApi.retrofitService.getTasks()
+                _taskList.value = result
+            }
+            title = ""
+            description = ""
+        }
+    }
+
+    fun onDelete() {
+        viewModelScope.launch {
+            task.id?.let {
+                YnymPortalApi.retrofitService.deleteTask(it)
                 val result = YnymPortalApi.retrofitService.getTasks()
                 _taskList.value = result
             }
