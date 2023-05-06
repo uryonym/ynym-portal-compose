@@ -43,6 +43,14 @@ class AuthInfoViewModel : ViewModel() {
         loginId = value
     }
 
+    fun onChangePassword(value: String) {
+        password = value
+    }
+
+    fun onChangeOther(value: String) {
+        other = value
+    }
+
     fun onClickAuthInfoItem(authInfo: AuthInfo) {
         this.authInfo = authInfo
         serviceName = authInfo.serviceName

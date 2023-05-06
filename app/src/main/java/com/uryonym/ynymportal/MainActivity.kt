@@ -23,6 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.uryonym.ynymportal.ui.screens.AuthInfoAddScreen
+import com.uryonym.ynymportal.ui.screens.AuthInfoEditScreen
 import com.uryonym.ynymportal.ui.screens.AuthInfoListScreen
 import com.uryonym.ynymportal.ui.screens.AuthInfoViewModel
 import com.uryonym.ynymportal.ui.screens.TaskAddScreen
@@ -136,6 +138,18 @@ class MainActivity : ComponentActivity() {
                                         )
                                     },
                                     onOpenDrawer = { scope.launch { drawerState.open() } }
+                                )
+                            }
+                            composable(route = YnymPortalScreen.AuthInfoAdd.name) {
+                                AuthInfoAddScreen(
+                                    authInfoViewModel = authInfoViewModel,
+                                    onNavigateBack = { navController.navigateUp() }
+                                )
+                            }
+                            composable(route = YnymPortalScreen.AuthInfoEdit.name) {
+                                AuthInfoEditScreen(
+                                    authInfoViewModel = authInfoViewModel,
+                                    onNavigateBack = { navController.navigateUp() }
                                 )
                             }
                         }
