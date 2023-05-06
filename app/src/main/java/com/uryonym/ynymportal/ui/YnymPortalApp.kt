@@ -11,8 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.uryonym.ynymportal.R
-import com.uryonym.ynymportal.ui.screens.AddTaskScreen
-import com.uryonym.ynymportal.ui.screens.TaskScreen
 
 @Composable
 fun YnymPortalApp(modifier: Modifier = Modifier) {
