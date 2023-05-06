@@ -3,4 +3,7 @@
     <string name="task_list">タスク</string>
     <string name="add_task">タスクの追加</string>
     <string name="edit_task">タスクの編集</string>
+    <string name="auth_info_list">認証情報</string>
+    <string name="add_auth_infok">認証情報の追加</string>
+    <string name="edit_auth_info">認証情報の編集</string>
 </resources>

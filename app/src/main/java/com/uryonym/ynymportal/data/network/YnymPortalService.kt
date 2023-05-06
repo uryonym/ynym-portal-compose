@@ -1,6 +1,7 @@
 package com.uryonym.ynymportal.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.uryonym.ynymportal.data.AuthInfo
 import com.uryonym.ynymportal.data.Task
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
@@ -30,6 +31,18 @@ interface YnymPortalService {
 
     @DELETE("tasks/{id}")
     suspend fun deleteTask(@Path("id") id: String)
+
+    @GET("auth_infos")
+    suspend fun getAuthInfos(): List<AuthInfo>
+
+    @POST("auth_infos")
+    suspend fun addAuthInfo(@Body authInfo: AuthInfo)
+
+    @PATCH("auth_infos/{id}")
+    suspend fun editAuthInfo(@Path("id") id: String, @Body authInfo: AuthInfo)
+
+    @DELETE("auth_infos/{id}")
+    suspend fun deleteAuthInfo(@Path("id") id: String)
 }
 
 object YnymPortalApi {
