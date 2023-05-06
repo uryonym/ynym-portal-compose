@@ -23,7 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.uryonym.ynymportal.YnymPortalScreen
+import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun TaskListScreen(

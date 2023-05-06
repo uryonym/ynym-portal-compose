@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.uryonym.ynymportal.YnymPortalScreen
+import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun TaskAddScreen(
