@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
@@ -56,13 +58,25 @@ fun TaskAddScreen(
                 value = taskViewModel.title,
                 label = { Text("タスク") },
                 onValueChange = { taskViewModel.onChangeTitle(it) },
-                modifier = Modifier.fillMaxWidth()
+                maxLines = 3,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
             )
             OutlinedTextField(
                 value = taskViewModel.description,
                 label = { Text("詳細") },
                 onValueChange = { taskViewModel.onChangeDescription(it) },
-                modifier = Modifier.fillMaxWidth()
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Description,
+                        contentDescription = "詳細"
+                    )
+                },
+                maxLines = 5,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
             )
         }
     }
