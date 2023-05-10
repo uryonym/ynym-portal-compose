@@ -10,7 +10,6 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -64,18 +63,7 @@ fun TaskEditScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = taskViewModel.title,
-                label = { Text("タスク") },
-                onValueChange = { taskViewModel.onChangeTitle(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = taskViewModel.description,
-                label = { Text("詳細") },
-                onValueChange = { taskViewModel.onChangeDescription(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
+            TaskCommonForm(taskViewModel = taskViewModel)
         }
     }
 }

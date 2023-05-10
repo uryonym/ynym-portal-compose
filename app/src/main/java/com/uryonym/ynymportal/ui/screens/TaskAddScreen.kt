@@ -54,30 +54,35 @@ fun TaskAddScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = taskViewModel.title,
-                label = { Text("タスク") },
-                onValueChange = { taskViewModel.onChangeTitle(it) },
-                maxLines = 3,
-                modifier = Modifier
-                    .padding(16.dp, 8.dp)
-                    .fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = taskViewModel.description,
-                label = { Text("詳細") },
-                onValueChange = { taskViewModel.onChangeDescription(it) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Description,
-                        contentDescription = "詳細"
-                    )
-                },
-                maxLines = 5,
-                modifier = Modifier
-                    .padding(16.dp, 8.dp)
-                    .fillMaxWidth()
-            )
+            TaskCommonForm(taskViewModel = taskViewModel)
         }
     }
+}
+
+@Composable
+fun TaskCommonForm(taskViewModel: TaskViewModel) {
+    OutlinedTextField(
+        value = taskViewModel.title,
+        label = { Text("タスク") },
+        onValueChange = { taskViewModel.onChangeTitle(it) },
+        maxLines = 3,
+        modifier = Modifier
+            .padding(16.dp, 8.dp)
+            .fillMaxWidth()
+    )
+    OutlinedTextField(
+        value = taskViewModel.description,
+        label = { Text("詳細") },
+        onValueChange = { taskViewModel.onChangeDescription(it) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Description,
+                contentDescription = "詳細"
+            )
+        },
+        maxLines = 5,
+        modifier = Modifier
+            .padding(16.dp, 8.dp)
+            .fillMaxWidth()
+    )
 }
