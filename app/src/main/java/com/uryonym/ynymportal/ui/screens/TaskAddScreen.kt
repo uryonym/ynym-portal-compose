@@ -30,7 +30,10 @@ fun TaskAddScreen(
                     Text(stringResource(id = YnymPortalScreen.TaskAdd.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        taskViewModel.onClearState()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },

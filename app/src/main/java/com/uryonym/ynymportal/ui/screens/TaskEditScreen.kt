@@ -32,7 +32,10 @@ fun TaskEditScreen(
                     Text(stringResource(id = YnymPortalScreen.TaskEdit.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        taskViewModel.onClearState()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },
