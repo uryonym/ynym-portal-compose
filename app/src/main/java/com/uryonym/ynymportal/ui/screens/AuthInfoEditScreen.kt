@@ -32,7 +32,10 @@ fun AuthInfoEditScreen(
                     Text(stringResource(id = YnymPortalScreen.AuthInfoEdit.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        authInfoViewModel.onClearState()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },

@@ -30,7 +30,10 @@ fun AuthInfoAddScreen(
                     Text(stringResource(id = YnymPortalScreen.AuthInfoAdd.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        authInfoViewModel.onClearState()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },

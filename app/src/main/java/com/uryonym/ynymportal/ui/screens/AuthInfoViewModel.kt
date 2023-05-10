@@ -60,17 +60,15 @@ class AuthInfoViewModel : ViewModel() {
     }
 
     fun onSaveNewAuthInfo() {
+        val newAuthInfo = AuthInfo(
+            serviceName = serviceName, loginId = loginId, password = password, other = other
+        )
+        onClearState()
+
         viewModelScope.launch {
-            val newAuthInfo = AuthInfo(
-                serviceName = serviceName, loginId = loginId, password = password, other = other
-            )
             YnymPortalApi.retrofitService.addAuthInfo(authInfo = newAuthInfo)
             val result = YnymPortalApi.retrofitService.getAuthInfos()
             _authInfoList.value = result
-            serviceName = ""
-            loginId = ""
-            password = ""
-            other = ""
         }
     }
 
@@ -80,30 +78,33 @@ class AuthInfoViewModel : ViewModel() {
             authInfo.loginId = loginId
             authInfo.password = password
             authInfo.other = other
+            onClearState()
+
             authInfo.id?.let {
                 YnymPortalApi.retrofitService.editAuthInfo(id = it, authInfo = authInfo)
                 val result = YnymPortalApi.retrofitService.getAuthInfos()
                 _authInfoList.value = result
             }
-            serviceName = ""
-            loginId = ""
-            password = ""
-            other = ""
         }
     }
 
     fun onDelete() {
+        onClearState()
+
         viewModelScope.launch {
             authInfo.id?.let {
                 YnymPortalApi.retrofitService.deleteAuthInfo(it)
                 val result = YnymPortalApi.retrofitService.getAuthInfos()
                 _authInfoList.value = result
             }
-            serviceName = ""
-            loginId = ""
-            password = ""
-            other = ""
         }
+    }
+
+    fun onClearState() {
+        serviceName = ""
+        loginId = ""
+        password = ""
+        other = ""
     }
 
     private fun getAuthInfos() {
