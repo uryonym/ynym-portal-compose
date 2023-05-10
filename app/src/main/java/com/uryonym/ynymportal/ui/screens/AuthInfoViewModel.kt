@@ -60,12 +60,12 @@ class AuthInfoViewModel : ViewModel() {
     }
 
     fun onSaveNewAuthInfo() {
-        val newAuthInfo = AuthInfo(
-            serviceName = serviceName, loginId = loginId, password = password, other = other
-        )
-        onClearState()
-
         viewModelScope.launch {
+            val newAuthInfo = AuthInfo(
+                serviceName = serviceName, loginId = loginId, password = password, other = other
+            )
+            onClearState()
+
             YnymPortalApi.retrofitService.addAuthInfo(authInfo = newAuthInfo)
             val result = YnymPortalApi.retrofitService.getAuthInfos()
             _authInfoList.value = result
@@ -89,9 +89,9 @@ class AuthInfoViewModel : ViewModel() {
     }
 
     fun onDelete() {
-        onClearState()
-
         viewModelScope.launch {
+            onClearState()
+
             authInfo.id?.let {
                 YnymPortalApi.retrofitService.deleteAuthInfo(it)
                 val result = YnymPortalApi.retrofitService.getAuthInfos()
