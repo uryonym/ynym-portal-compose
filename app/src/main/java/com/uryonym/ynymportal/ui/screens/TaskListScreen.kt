@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.uryonym.ynymportal.ui.YnymPortalScreen
@@ -55,13 +57,24 @@ fun TaskListScreen(
 
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(items = taskList) { task ->
+                val stateTask = remember { mutableStateOf(task) }
                 Column {
-                    ListItem(headlineContent = { Text(text = task.title) }, leadingContent = {
-                        Checkbox(checked = false, onCheckedChange = {})
-                    }, modifier = Modifier.clickable {
-                        taskViewModel.onClickTaskItem(task)
-                        onNavigateTaskEdit()
-                    })
+                    ListItem(
+                        headlineContent = { Text(text = stateTask.value.title) },
+                        leadingContent = {
+                            Checkbox(
+                                checked = stateTask.value.isComplete,
+                                onCheckedChange = {
+                                    stateTask.value.isComplete = it
+                                    taskViewModel.onSaveStatus(
+                                        currentTask = stateTask.value,
+                                    )
+                                })
+                        },
+                        modifier = Modifier.clickable {
+                            taskViewModel.onClickTaskItem(stateTask.value)
+                            onNavigateTaskEdit()
+                        })
                     Divider()
                 }
             }

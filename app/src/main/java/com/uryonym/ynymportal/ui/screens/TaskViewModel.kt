@@ -68,6 +68,18 @@ class TaskViewModel : ViewModel() {
         }
     }
 
+    fun onSaveStatus(currentTask: Task) {
+        viewModelScope.launch {
+            task = currentTask
+
+            task.id?.let {
+                YnymPortalApi.retrofitService.editTask(id = it, task = task)
+                val result = YnymPortalApi.retrofitService.getTasks()
+                _taskList.value = result
+            }
+        }
+    }
+
     fun onDelete() {
         viewModelScope.launch {
             onClearState()
