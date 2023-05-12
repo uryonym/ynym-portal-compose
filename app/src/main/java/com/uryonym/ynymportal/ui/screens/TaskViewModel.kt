@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -68,14 +69,16 @@ class TaskViewModel : ViewModel() {
         }
     }
 
-    fun onSaveStatus(currentTask: Task) {
+    fun onSaveStatus(currentTask: Task, status: Boolean) {
+        Log.d("CheckBox", currentTask.toString())
+        Log.d("CheckBox", status.toString())
+        currentTask.isComplete = status
+        Log.d("CheckBox", currentTask.toString())
         viewModelScope.launch {
-            task = currentTask
-
-            task.id?.let {
-                YnymPortalApi.retrofitService.editTask(id = it, task = task)
-                val result = YnymPortalApi.retrofitService.getTasks()
-                _taskList.value = result
+            currentTask.id?.let {
+                YnymPortalApi.retrofitService.editTask(id = it, task = currentTask)
+//                val result = YnymPortalApi.retrofitService.getTasks()
+//                _taskList.value = result
             }
         }
     }
