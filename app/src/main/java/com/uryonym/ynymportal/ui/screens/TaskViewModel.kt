@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
+import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,10 +16,12 @@ import kotlinx.coroutines.launch
 
 class TaskViewModel : ViewModel() {
 
+    private val taskRepository: TaskRepository = DefaultTaskRepository()
+
     private val _taskList = MutableStateFlow<List<Task>>(listOf())
     val taskList = _taskList.asStateFlow()
 
-    var task: Task by mutableStateOf(Task())
+    var currentId: String? by mutableStateOf(null)
         private set
 
     var title: String by mutableStateOf("")
@@ -28,6 +32,7 @@ class TaskViewModel : ViewModel() {
 
     init {
         getTasks()
+        Log.d("taskViewModel", "ViewModel Initialized")
     }
 
     fun onChangeTitle(value: String) {
@@ -39,47 +44,41 @@ class TaskViewModel : ViewModel() {
     }
 
     fun onClickTaskItem(task: Task) {
-        this.task = task
+        currentId = task.id
         title = task.title
         description = task.description ?: ""
     }
 
     fun onSaveNewTask() {
         viewModelScope.launch {
-            val newTask = Task(title = title, description = description)
+            val newTask = Task(title = title, description = description, isComplete = false)
             onClearState()
 
-            YnymPortalApi.retrofitService.addTask(task = newTask)
-            val result = YnymPortalApi.retrofitService.getTasks()
-            _taskList.value = result
+            taskRepository.addTask(newTask)
+            getTasks()
         }
     }
 
     fun onSaveEditTask() {
         viewModelScope.launch {
-            task.title = title
-            task.description = description
+            val editTask = Task(title = title, description = description, isComplete = false)
             onClearState()
 
-            task.id?.let {
-                YnymPortalApi.retrofitService.editTask(id = it, task = task)
-                val result = YnymPortalApi.retrofitService.getTasks()
-                _taskList.value = result
+            currentId?.let {
+                taskRepository.editTask(it, editTask)
             }
+            getTasks()
         }
     }
 
     fun onSaveStatus(currentTask: Task, status: Boolean) {
-        Log.d("CheckBox", currentTask.toString())
-        Log.d("CheckBox", status.toString())
-        currentTask.isComplete = status
-        Log.d("CheckBox", currentTask.toString())
         viewModelScope.launch {
+            val editTask = Task(isComplete = status)
+
             currentTask.id?.let {
-                YnymPortalApi.retrofitService.editTask(id = it, task = currentTask)
-//                val result = YnymPortalApi.retrofitService.getTasks()
-//                _taskList.value = result
+                YnymPortalApi.retrofitService.editTask(id = it, task = editTask)
             }
+            getTasks()
         }
     }
 
@@ -87,11 +86,10 @@ class TaskViewModel : ViewModel() {
         viewModelScope.launch {
             onClearState()
 
-            task.id?.let {
-                YnymPortalApi.retrofitService.deleteTask(it)
-                val result = YnymPortalApi.retrofitService.getTasks()
-                _taskList.value = result
+            currentId?.let {
+                taskRepository.deleteTask(it)
             }
+            getTasks()
         }
     }
 
@@ -102,8 +100,9 @@ class TaskViewModel : ViewModel() {
 
     private fun getTasks() {
         viewModelScope.launch {
-            val result = YnymPortalApi.retrofitService.getTasks()
-            _taskList.value = result
+            taskRepository.getTasks().collect {
+                _taskList.value = it
+            }
         }
     }
 }

@@ -1,12 +1,10 @@
 package com.uryonym.ynymportal.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -25,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
@@ -58,25 +57,34 @@ fun TaskListScreen(
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(items = taskList) { task ->
                 Column {
-                    ListItem(
-                        headlineContent = { Text(text = task.title) },
-                        leadingContent = {
-                            Checkbox(
-                                checked = task.isComplete,
-                                onCheckedChange = {
-                                    taskViewModel.onSaveStatus(
-                                        currentTask = task,
-                                        status = it,
-                                    )
-                                })
-                        },
-                        modifier = Modifier.clickable {
-                            taskViewModel.onClickTaskItem(task)
-                            onNavigateTaskEdit()
-                        })
+                    TaskListItem(
+                        task = task,
+                        onNavigateTaskEdit = onNavigateTaskEdit,
+                        taskViewModel = taskViewModel
+                    )
                     Divider()
                 }
             }
         }
     }
+}
+
+@Composable
+fun TaskListItem(task: Task, onNavigateTaskEdit: () -> Unit, taskViewModel: TaskViewModel) {
+    ListItem(
+        headlineContent = { Text(text = task.title) },
+        leadingContent = {
+            Checkbox(
+                checked = task.isComplete,
+                onCheckedChange = {
+                    taskViewModel.onSaveStatus(
+                        currentTask = task,
+                        status = it
+                    )
+                })
+        },
+        modifier = Modifier.clickable {
+            taskViewModel.onClickTaskItem(task)
+            onNavigateTaskEdit()
+        })
 }
