@@ -15,8 +15,8 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
-//private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
+//private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
+private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 private val httpClient = OkHttpClient.Builder().addInterceptor(logger)

@@ -13,6 +13,9 @@ import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 
 class TaskViewModel : ViewModel() {
 
@@ -30,9 +33,14 @@ class TaskViewModel : ViewModel() {
     var description: String by mutableStateOf("")
         private set
 
+    var deadLine: LocalDate? by mutableStateOf(null)
+        private set
+
+    var showPicker: Boolean by mutableStateOf(false)
+        private set
+
     init {
         getTasks()
-        Log.d("taskViewModel", "ViewModel Initialized")
     }
 
     fun onChangeTitle(value: String) {
@@ -43,15 +51,25 @@ class TaskViewModel : ViewModel() {
         description = value
     }
 
+    fun onChangeDeadLine(value: LocalDate) {
+        deadLine = value
+    }
+
     fun onClickTaskItem(task: Task) {
         currentId = task.id
         title = task.title
         description = task.description ?: ""
+        deadLine = task.deadLine
     }
 
     fun onSaveNewTask() {
         viewModelScope.launch {
-            val newTask = Task(title = title, description = description, isComplete = false)
+            val newTask = Task(
+                title = title,
+                description = description,
+                deadLine = deadLine,
+                isComplete = false
+            )
             onClearState()
 
             taskRepository.addTask(newTask)
@@ -61,7 +79,12 @@ class TaskViewModel : ViewModel() {
 
     fun onSaveEditTask() {
         viewModelScope.launch {
-            val editTask = Task(title = title, description = description, isComplete = false)
+            val editTask = Task(
+                title = title,
+                description = description,
+                deadLine = deadLine,
+                isComplete = false
+            )
             onClearState()
 
             currentId?.let {
@@ -96,6 +119,11 @@ class TaskViewModel : ViewModel() {
     fun onClearState() {
         title = ""
         description = ""
+        deadLine = null
+    }
+
+    fun onChangePicker(status: Boolean) {
+        showPicker = status
     }
 
     private fun getTasks() {

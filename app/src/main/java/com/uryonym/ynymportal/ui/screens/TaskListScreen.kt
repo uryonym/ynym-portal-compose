@@ -72,7 +72,12 @@ fun TaskListScreen(
 @Composable
 fun TaskListItem(task: Task, onNavigateTaskEdit: () -> Unit, taskViewModel: TaskViewModel) {
     ListItem(
-        headlineContent = { Text(text = task.title) },
+        headlineContent = {
+            Column {
+                Text(text = task.title)
+                Text(text = task.createdAt.toString())
+            }
+        },
         leadingContent = {
             Checkbox(
                 checked = task.isComplete,
