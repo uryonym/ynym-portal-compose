@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
@@ -63,7 +64,12 @@ fun TaskEditScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TaskCommonForm(taskViewModel = taskViewModel)
+            TaskCommonForm(
+                taskViewModel = taskViewModel,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }
