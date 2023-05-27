@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
@@ -52,30 +53,44 @@ fun AuthInfoAddScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = authInfoViewModel.serviceName,
-                label = { Text("サービス名") },
-                onValueChange = { authInfoViewModel.onChangeServiceName(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = authInfoViewModel.loginId,
-                label = { Text("ログインID") },
-                onValueChange = { authInfoViewModel.onChangeLoginId(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = authInfoViewModel.password,
-                label = { Text("パスワード") },
-                onValueChange = { authInfoViewModel.onChangePassword(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = authInfoViewModel.other,
-                label = { Text("備考") },
-                onValueChange = { authInfoViewModel.onChangeOther(it) },
-                modifier = Modifier.fillMaxWidth()
+            AuthInfoCommonForm(
+                authInfoViewModel = authInfoViewModel,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
             )
         }
     }
+}
+
+@Composable
+fun AuthInfoCommonForm(authInfoViewModel: AuthInfoViewModel, modifier: Modifier = Modifier) {
+    OutlinedTextField(
+        value = authInfoViewModel.serviceName,
+        label = { Text("サービス名") },
+        onValueChange = { authInfoViewModel.onChangeServiceName(it) },
+        singleLine = true,
+        modifier = modifier
+    )
+    OutlinedTextField(
+        value = authInfoViewModel.loginId,
+        label = { Text("ログインID") },
+        onValueChange = { authInfoViewModel.onChangeLoginId(it) },
+        singleLine = true,
+        modifier = modifier
+    )
+    OutlinedTextField(
+        value = authInfoViewModel.password,
+        label = { Text("パスワード") },
+        onValueChange = { authInfoViewModel.onChangePassword(it) },
+        singleLine = true,
+        modifier = modifier
+    )
+    OutlinedTextField(
+        value = authInfoViewModel.other,
+        label = { Text("備考") },
+        onValueChange = { authInfoViewModel.onChangeOther(it) },
+        singleLine = true,
+        modifier = modifier
+    )
 }

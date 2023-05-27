@@ -64,21 +64,24 @@ fun TaskAddScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TaskCommonForm(taskViewModel = taskViewModel)
+            TaskCommonForm(
+                taskViewModel = taskViewModel,
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }
 
 @Composable
-fun TaskCommonForm(taskViewModel: TaskViewModel) {
+fun TaskCommonForm(taskViewModel: TaskViewModel, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = taskViewModel.title,
         label = { Text("タスク") },
         onValueChange = { taskViewModel.onChangeTitle(it) },
         maxLines = 3,
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
+        modifier = modifier
     )
     OutlinedTextField(
         value = taskViewModel.description,
@@ -91,9 +94,7 @@ fun TaskCommonForm(taskViewModel: TaskViewModel) {
             )
         },
         maxLines = 5,
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
+        modifier = modifier
     )
     OutlinedTextField(
         value = taskViewModel.deadLine.toString(),
@@ -108,9 +109,7 @@ fun TaskCommonForm(taskViewModel: TaskViewModel) {
             }
         },
         singleLine = true,
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
+        modifier = modifier
     )
 
     val datePickerState = rememberDatePickerState(
