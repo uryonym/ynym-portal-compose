@@ -75,7 +75,9 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: () -> Unit, taskViewModel: Task
         headlineContent = {
             Column {
                 Text(text = task.title)
-                Text(text = task.createdAt.toString())
+                task.deadLine?.let {
+                    Text(text = it.toString())
+                }
             }
         },
         leadingContent = {
