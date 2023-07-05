@@ -53,10 +53,10 @@ fun TaskListScreen(
             }
         })
     }) { padding ->
-        val taskList by taskViewModel.taskList.collectAsStateWithLifecycle()
+        val uiState by taskViewModel.uiState.collectAsStateWithLifecycle()
 
         LazyColumn(modifier = Modifier.padding(padding)) {
-            items(items = taskList) { task ->
+            items(items = uiState.tasks) { task ->
                 Column {
                     TaskListItem(
                         task = task,

@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,18 +10,41 @@ import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+
+data class TasksUiState(
+    val isLoading: Boolean = false,
+    val tasks: List<Task> = emptyList()
+)
 
 class TaskViewModel : ViewModel() {
 
+    // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
+    // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
 
-    private val _taskList = MutableStateFlow<List<Task>>(listOf())
-    val taskList = _taskList.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
+
+    val uiState: StateFlow<TasksUiState> = combine(
+        _isLoading, _tasks
+    ) { isLoading, tasks ->
+        if (tasks.isNotEmpty()) {
+            TasksUiState(isLoading = false, tasks = tasks)
+        } else {
+            TasksUiState(isLoading = true)
+        }
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = TasksUiState(isLoading = true)
+        )
 
     var currentId: String? by mutableStateOf(null)
         private set
@@ -129,7 +151,7 @@ class TaskViewModel : ViewModel() {
     private fun getTasks() {
         viewModelScope.launch {
             taskRepository.getTasks().collect {
-                _taskList.value = it
+                _tasks.value = it
             }
         }
     }
