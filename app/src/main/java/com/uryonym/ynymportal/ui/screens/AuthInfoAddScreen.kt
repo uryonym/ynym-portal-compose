@@ -17,12 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun AuthInfoAddScreen(
-    authInfoViewModel: AuthInfoViewModel,
     onNavigateBack: () -> Unit,
+    authInfoViewModel: AuthInfoViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {

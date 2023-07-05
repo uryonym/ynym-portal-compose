@@ -45,8 +45,6 @@ fun YnymPortalApp() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val taskViewModel: TaskViewModel = viewModel()
-    val authInfoViewModel: AuthInfoViewModel = viewModel()
 
     BackHandler(
         enabled = drawerState.isOpen
@@ -96,7 +94,6 @@ fun YnymPortalApp() {
             ) {
                 composable(route = YnymPortalScreen.TaskList.name) {
                     TaskListScreen(
-                        taskViewModel = taskViewModel,
                         onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.name) },
                         onNavigateTaskEdit = { navController.navigate(YnymPortalScreen.TaskEdit.name) },
                         onOpenDrawer = { scope.launch { drawerState.open() } }
@@ -104,19 +101,16 @@ fun YnymPortalApp() {
                 }
                 composable(route = YnymPortalScreen.TaskAdd.name) {
                     TaskAddScreen(
-                        taskViewModel = taskViewModel,
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
                 composable(route = YnymPortalScreen.TaskEdit.name) {
                     TaskEditScreen(
-                        taskViewModel = taskViewModel,
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
                 composable(route = YnymPortalScreen.AuthInfoList.name) {
                     AuthInfoListScreen(
-                        authInfoViewModel = authInfoViewModel,
                         onNavigateAuthInfoAdd = {
                             navController.navigate(
                                 YnymPortalScreen.AuthInfoAdd.name
@@ -132,13 +126,11 @@ fun YnymPortalApp() {
                 }
                 composable(route = YnymPortalScreen.AuthInfoAdd.name) {
                     AuthInfoAddScreen(
-                        authInfoViewModel = authInfoViewModel,
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
                 composable(route = YnymPortalScreen.AuthInfoEdit.name) {
                     AuthInfoEditScreen(
-                        authInfoViewModel = authInfoViewModel,
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }

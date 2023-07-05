@@ -23,14 +23,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun AuthInfoListScreen(
-    authInfoViewModel: AuthInfoViewModel,
     onNavigateAuthInfoAdd: () -> Unit,
     onNavigateAuthInfoEdit: () -> Unit,
-    onOpenDrawer: () -> Unit
+    onOpenDrawer: () -> Unit,
+    authInfoViewModel: AuthInfoViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {

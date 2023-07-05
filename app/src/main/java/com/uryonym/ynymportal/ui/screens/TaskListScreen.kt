@@ -23,15 +23,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
 fun TaskListScreen(
-    taskViewModel: TaskViewModel,
     onNavigateTaskAdd: () -> Unit,
     onNavigateTaskEdit: () -> Unit,
-    onOpenDrawer: () -> Unit
+    onOpenDrawer: () -> Unit,
+    taskViewModel: TaskViewModel = viewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
