@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.ui.screens
+package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,9 +30,9 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @Composable
 fun TaskListScreen(
     onNavigateTaskAdd: () -> Unit,
-    onNavigateTaskEdit: () -> Unit,
+    onNavigateTaskEdit: (Task) -> Unit,
     onOpenDrawer: () -> Unit,
-    taskViewModel: TaskViewModel = viewModel()
+    viewModel: TaskViewModel = viewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -53,7 +53,7 @@ fun TaskListScreen(
             }
         })
     }) { padding ->
-        val uiState by taskViewModel.uiState.collectAsStateWithLifecycle()
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(items = uiState.tasks) { task ->
@@ -61,7 +61,7 @@ fun TaskListScreen(
                     TaskListItem(
                         task = task,
                         onNavigateTaskEdit = onNavigateTaskEdit,
-                        taskViewModel = taskViewModel
+                        viewModel = viewModel
                     )
                     Divider()
                 }
@@ -71,7 +71,7 @@ fun TaskListScreen(
 }
 
 @Composable
-fun TaskListItem(task: Task, onNavigateTaskEdit: () -> Unit, taskViewModel: TaskViewModel) {
+fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskViewModel) {
     ListItem(
         headlineContent = {
             Column {
@@ -85,14 +85,14 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: () -> Unit, taskViewModel: Task
             Checkbox(
                 checked = task.isComplete,
                 onCheckedChange = {
-                    taskViewModel.onSaveStatus(
+                    viewModel.onSaveStatus(
                         currentTask = task,
                         status = it
                     )
                 })
         },
         modifier = Modifier.clickable {
-            taskViewModel.onClickTaskItem(task)
-            onNavigateTaskEdit()
+            viewModel.onClickTaskItem(task)
+            onNavigateTaskEdit(task)
         })
 }

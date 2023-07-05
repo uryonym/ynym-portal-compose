@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,20 +23,22 @@ import com.uryonym.ynymportal.R
 import com.uryonym.ynymportal.ui.screens.AuthInfoAddScreen
 import com.uryonym.ynymportal.ui.screens.AuthInfoEditScreen
 import com.uryonym.ynymportal.ui.screens.AuthInfoListScreen
-import com.uryonym.ynymportal.ui.screens.AuthInfoViewModel
-import com.uryonym.ynymportal.ui.screens.TaskAddScreen
-import com.uryonym.ynymportal.ui.screens.TaskEditScreen
-import com.uryonym.ynymportal.ui.screens.TaskListScreen
-import com.uryonym.ynymportal.ui.screens.TaskViewModel
+import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
+import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
+import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
 import kotlinx.coroutines.launch
 
-enum class YnymPortalScreen(@StringRes val title: Int) {
-    TaskList(title = R.string.task_list),
-    TaskAdd(title = R.string.add_task),
-    TaskEdit(title = R.string.edit_task),
-    AuthInfoList(title = R.string.auth_info_list),
-    AuthInfoAdd(title = R.string.add_auth_infok),
-    AuthInfoEdit(title = R.string.edit_auth_info)
+sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
+    object TaskList: YnymPortalScreen(route = "taskList", title = R.string.task_list)
+    object TaskAdd: YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
+    object TaskEdit: YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
+        fun createRoute(taskId: String): String {
+            return "taskEdit/$taskId"
+        }
+    }
+    object AuthInfoList: YnymPortalScreen(route = "authInfoList", title = R.string.auth_info_list)
+    object AuthInfoAdd: YnymPortalScreen(route = "authInfoAdd", title = R.string.add_auth_info)
+    object AuthInfoEdit: YnymPortalScreen(route = "authInfoEdit", title = R.string.edit_auth_info)
 }
 
 @Composable
@@ -62,9 +63,9 @@ fun YnymPortalApp() {
                     label = { Text(text = "タスク") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.TaskList.name) {
+                        navController.navigate(YnymPortalScreen.TaskList.route) {
                             launchSingleTop = true
-                            popUpTo(YnymPortalScreen.TaskList.name)
+                            popUpTo(YnymPortalScreen.TaskList.route)
                         }
                         scope.launch {
                             drawerState.close()
@@ -76,9 +77,9 @@ fun YnymPortalApp() {
                     label = { Text(text = "認証情報") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.AuthInfoList.name) {
+                        navController.navigate(YnymPortalScreen.AuthInfoList.route) {
                             launchSingleTop = true
-                            popUpTo(YnymPortalScreen.TaskList.name)
+                            popUpTo(YnymPortalScreen.TaskList.route)
                         }
                         scope.launch {
                             drawerState.close()
@@ -90,46 +91,48 @@ fun YnymPortalApp() {
         }, content = {
             NavHost(
                 navController = navController,
-                startDestination = YnymPortalScreen.TaskList.name
+                startDestination = YnymPortalScreen.TaskList.route
             ) {
-                composable(route = YnymPortalScreen.TaskList.name) {
+                composable(route = YnymPortalScreen.TaskList.route) {
                     TaskListScreen(
-                        onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.name) },
-                        onNavigateTaskEdit = { navController.navigate(YnymPortalScreen.TaskEdit.name) },
+                        onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
+                        onNavigateTaskEdit = { task -> task.id?.let { it ->
+                            navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
+                        } },
                         onOpenDrawer = { scope.launch { drawerState.open() } }
                     )
                 }
-                composable(route = YnymPortalScreen.TaskAdd.name) {
+                composable(route = YnymPortalScreen.TaskAdd.route) {
                     TaskAddScreen(
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.TaskEdit.name) {
+                composable(route = YnymPortalScreen.TaskEdit.route, ) {
                     TaskEditScreen(
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoList.name) {
+                composable(route = YnymPortalScreen.AuthInfoList.route) {
                     AuthInfoListScreen(
                         onNavigateAuthInfoAdd = {
                             navController.navigate(
-                                YnymPortalScreen.AuthInfoAdd.name
+                                YnymPortalScreen.AuthInfoAdd.route
                             )
                         },
                         onNavigateAuthInfoEdit = {
                             navController.navigate(
-                                YnymPortalScreen.AuthInfoEdit.name
+                                YnymPortalScreen.AuthInfoEdit.route
                             )
                         },
                         onOpenDrawer = { scope.launch { drawerState.open() } }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoAdd.name) {
+                composable(route = YnymPortalScreen.AuthInfoAdd.route) {
                     AuthInfoAddScreen(
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoEdit.name) {
+                composable(route = YnymPortalScreen.AuthInfoEdit.route) {
                     AuthInfoEditScreen(
                         onNavigateBack = { navController.navigateUp() }
                     )

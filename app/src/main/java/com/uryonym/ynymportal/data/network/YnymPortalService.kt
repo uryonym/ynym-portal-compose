@@ -29,6 +29,9 @@ interface YnymPortalService {
     @GET("tasks")
     suspend fun getTasks(): List<Task>
 
+    @GET("tasks/{id}")
+    suspend fun getTask(@Path("id") id: String): Task
+
     @POST("tasks")
     suspend fun addTask(@Body task: Task): Task
 

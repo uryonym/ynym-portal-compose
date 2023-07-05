@@ -1,12 +1,15 @@
-package com.uryonym.ynymportal.ui.screens
+package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EditCalendar
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -19,10 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 import kotlinx.datetime.Clock
@@ -32,41 +37,60 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun TaskAddScreen(
+fun TaskEditScreen(
     onNavigateBack: () -> Unit,
-    taskViewModel: TaskViewModel = viewModel()
+    viewModel: TaskEditViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.TaskAdd.title))
+                    Text(stringResource(id = YnymPortalScreen.TaskEdit.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        taskViewModel.onClearState()
+                        viewModel.onClearState()
                         onNavigateBack()
                     }) {
-                        Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },
                 actions = {
                     TextButton(onClick = {
-                        taskViewModel.onSaveNewTask()
+                        viewModel.onSaveEditTask()
                         onNavigateBack()
                     }) {
                         Text(text = "保存")
                     }
                 })
+        },
+        bottomBar = {
+            BottomAppBar(actions = {
+                IconButton(onClick = {
+                    viewModel.onDelete()
+                    onNavigateBack()
+                }) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
+                }
+            })
         }) { padding ->
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TaskCommonForm(
-                taskViewModel = taskViewModel,
+            TaskEditForm(
+                title = uiState.title,
+                description = uiState.description,
+                deadLine = uiState.deadLine,
+                isShowPicker = uiState.isShowPicker,
+                onChangeTitle = viewModel::onChangeTitle,
+                onChangeDescription = viewModel::onChangeDescription,
+                onChangeDeadLine = viewModel::onChangeDeadLine,
+                onChangeShowPicker = viewModel::onChangeShowPicker,
                 modifier = Modifier
                     .padding(16.dp, 8.dp)
                     .fillMaxWidth()
@@ -76,18 +100,28 @@ fun TaskAddScreen(
 }
 
 @Composable
-fun TaskCommonForm(taskViewModel: TaskViewModel, modifier: Modifier = Modifier) {
+private fun TaskEditForm(
+    title: String,
+    description: String,
+    deadLine: LocalDate?,
+    isShowPicker: Boolean,
+    onChangeTitle: (String) -> Unit,
+    onChangeDescription: (String) -> Unit,
+    onChangeDeadLine: (LocalDate) -> Unit,
+    onChangeShowPicker: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     OutlinedTextField(
-        value = taskViewModel.title,
+        value = title,
         label = { Text("タスク") },
-        onValueChange = { taskViewModel.onChangeTitle(it) },
+        onValueChange = { onChangeTitle(it) },
         maxLines = 3,
         modifier = modifier
     )
     OutlinedTextField(
-        value = taskViewModel.description,
+        value = description,
         label = { Text("詳細") },
-        onValueChange = { taskViewModel.onChangeDescription(it) },
+        onValueChange = { onChangeDescription(it) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Description,
@@ -98,11 +132,11 @@ fun TaskCommonForm(taskViewModel: TaskViewModel, modifier: Modifier = Modifier) 
         modifier = modifier
     )
     OutlinedTextField(
-        value = taskViewModel.deadLine.toString(),
+        value = deadLine.toString(),
         label = { Text("期日") },
-        onValueChange = { taskViewModel.onChangeDescription(it) },
+        onValueChange = { },
         trailingIcon = {
-            IconButton(onClick = { taskViewModel.onChangePicker(true) }) {
+            IconButton(onClick = { onChangeShowPicker(true) }) {
                 Icon(
                     imageVector = Icons.Outlined.EditCalendar,
                     contentDescription = "期日",
@@ -116,16 +150,16 @@ fun TaskCommonForm(taskViewModel: TaskViewModel, modifier: Modifier = Modifier) 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
     )
-    if (taskViewModel.showPicker) {
+    if (isShowPicker) {
         DatePickerDialogComponent(
             datePickerState = datePickerState,
-            onChangeDeadLine = { taskViewModel.onChangeDeadLine(it) },
-            closePicker = { taskViewModel.onChangePicker(false) })
+            onChangeDeadLine = { onChangeDeadLine(it) },
+            closePicker = { onChangeShowPicker(false) })
     }
 }
 
 @Composable
-fun DatePickerDialogComponent(
+private fun DatePickerDialogComponent(
     datePickerState: DatePickerState,
     onChangeDeadLine: (LocalDate) -> Unit,
     closePicker: () -> Unit,

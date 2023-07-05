@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.ui.screens
+package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
