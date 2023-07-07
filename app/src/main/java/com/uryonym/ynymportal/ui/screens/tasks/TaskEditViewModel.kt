@@ -1,8 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +20,9 @@ data class TaskEditUiState(
     val title: String = "",
     val description: String = "",
     val deadLine: LocalDate? = null,
-    val isShowPicker: Boolean = false
+    val isComplete: Boolean = false,
+    val isShowPicker: Boolean = false,
+    val isTaskSaved: Boolean = false
 )
 
 class TaskEditViewModel constructor(
@@ -36,23 +35,8 @@ class TaskEditViewModel constructor(
 
     private val taskId: String = savedStateHandle["taskId"]!!
 
-    private val _isLoading = MutableStateFlow(false)
-    private val _task = MutableStateFlow<Task?>(null)
-
     private val _uiState = MutableStateFlow(TaskEditUiState())
     val uiState: StateFlow<TaskEditUiState> = _uiState.asStateFlow()
-
-    var currentId: String? by mutableStateOf(null)
-        private set
-
-    var title: String by mutableStateOf("")
-        private set
-
-    var description: String by mutableStateOf("")
-        private set
-
-    var deadLine: LocalDate? by mutableStateOf(null)
-        private set
 
     init {
         getTask()
@@ -82,26 +66,19 @@ class TaskEditViewModel constructor(
         }
     }
 
-    fun onSaveNewTask() {
-        viewModelScope.launch {
-            val newTask = Task(
-                title = title, description = description, deadLine = deadLine, isComplete = false
-            )
-            onClearState()
-
-            taskRepository.addTask(newTask)
-        }
-    }
-
     fun onSaveEditTask() {
-        viewModelScope.launch {
+        if (uiState.value.title.isNotEmpty()) {
             val editTask = Task(
-                title = title, description = description, deadLine = deadLine, isComplete = false
+                title = uiState.value.title,
+                description = uiState.value.description,
+                deadLine = uiState.value.deadLine,
+                isComplete = uiState.value.isComplete
             )
-            onClearState()
-
-            currentId?.let {
-                taskRepository.editTask(it, editTask)
+            viewModelScope.launch {
+                taskRepository.editTask(taskId, editTask)
+                _uiState.update {
+                    it.copy(isTaskSaved = true)
+                }
             }
         }
     }
@@ -118,18 +95,8 @@ class TaskEditViewModel constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            onClearState()
-
-            currentId?.let {
-                taskRepository.deleteTask(it)
-            }
+            taskRepository.deleteTask(taskId)
         }
-    }
-
-    fun onClearState() {
-        title = ""
-        description = ""
-        deadLine = null
     }
 
     private fun getTask() {

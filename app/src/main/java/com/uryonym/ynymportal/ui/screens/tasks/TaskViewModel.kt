@@ -32,7 +32,7 @@ class TaskViewModel : ViewModel() {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
 
     val uiState: StateFlow<TasksUiState> = combine(
-        _isLoading, _tasks
+        _isLoading, taskRepository.getTasks()
     ) { isLoading, tasks ->
         if (tasks.isNotEmpty()) {
             TasksUiState(isLoading = false, tasks = tasks)

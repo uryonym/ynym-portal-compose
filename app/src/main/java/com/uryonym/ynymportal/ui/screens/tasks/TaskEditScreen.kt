@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun TaskEditScreen(
+    onTaskUpdate: () -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: TaskEditViewModel = viewModel()
 ) {
@@ -49,7 +51,6 @@ fun TaskEditScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        viewModel.onClearState()
                         onNavigateBack()
                     }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
@@ -95,6 +96,12 @@ fun TaskEditScreen(
                     .padding(16.dp, 8.dp)
                     .fillMaxWidth()
             )
+        }
+
+        LaunchedEffect(uiState.isTaskSaved) {
+            if (uiState.isTaskSaved) {
+                onTaskUpdate()
+            }
         }
     }
 }

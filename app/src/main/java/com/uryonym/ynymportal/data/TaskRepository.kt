@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 interface TaskRepository {
-    suspend fun getTasks(): Flow<List<Task>>
+    fun getTasks(): Flow<List<Task>>
 
     suspend fun getTask(id: String): Task
 
@@ -17,7 +17,7 @@ interface TaskRepository {
 }
 
 class DefaultTaskRepository: TaskRepository {
-    override suspend fun getTasks(): Flow<List<Task>> = flow {
+    override fun getTasks(): Flow<List<Task>> = flow {
         emit(YnymPortalApi.retrofitService.getTasks())
     }
 
