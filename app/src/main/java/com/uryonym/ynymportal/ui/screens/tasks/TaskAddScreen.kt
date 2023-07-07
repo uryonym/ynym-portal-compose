@@ -19,12 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -34,8 +36,9 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun TaskAddScreen(
+    onTaskSave: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: TaskViewModel = viewModel()
+    viewModel: TaskAddViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
@@ -45,7 +48,6 @@ fun TaskAddScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        viewModel.onClearState()
                         onNavigateBack()
                     }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
@@ -60,36 +62,60 @@ fun TaskAddScreen(
                     }
                 })
         }) { padding ->
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TaskCommonForm(
-                viewModel = viewModel,
-                task = Task(isComplete = false),
+            TaskAddForm(
+                title = uiState.title,
+                description = uiState.description,
+                deadLine = uiState.deadLine,
+                isShowPicker = uiState.isShowPicker,
+                onChangeTitle = viewModel::onChangeTitle,
+                onChangeDescription = viewModel::onChangeDescription,
+                onChangeDeadLine = viewModel::onChangeDeadLine,
+                onChangeShowPicker = viewModel::onChangeShowPicker,
                 modifier = Modifier
                     .padding(16.dp, 8.dp)
                     .fillMaxWidth()
             )
         }
+
+        LaunchedEffect(uiState.isTaskSaved) {
+            if (uiState.isTaskSaved) {
+                onTaskSave()
+            }
+        }
     }
 }
 
 @Composable
-fun TaskCommonForm(viewModel: TaskViewModel, task: Task?, modifier: Modifier = Modifier) {
+fun TaskAddForm(
+    title: String,
+    description: String,
+    deadLine: LocalDate?,
+    isShowPicker: Boolean,
+    onChangeTitle: (String) -> Unit,
+    onChangeDescription: (String) -> Unit,
+    onChangeDeadLine: (LocalDate) -> Unit,
+    onChangeShowPicker: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     OutlinedTextField(
-        value = viewModel.title,
+        value = title,
         label = { Text("タスク") },
-        onValueChange = { viewModel.onChangeTitle(it) },
+        onValueChange = { onChangeTitle(it) },
         maxLines = 3,
         modifier = modifier
     )
     OutlinedTextField(
-        value = viewModel.description,
+        value = description,
         label = { Text("詳細") },
-        onValueChange = { viewModel.onChangeDescription(it) },
+        onValueChange = { onChangeDescription(it) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Description,
@@ -100,11 +126,11 @@ fun TaskCommonForm(viewModel: TaskViewModel, task: Task?, modifier: Modifier = M
         modifier = modifier
     )
     OutlinedTextField(
-        value = viewModel.deadLine.toString(),
+        value = deadLine.toString(),
         label = { Text("期日") },
-        onValueChange = { viewModel.onChangeDescription(it) },
+        onValueChange = { },
         trailingIcon = {
-            IconButton(onClick = { viewModel.onChangePicker(true) }) {
+            IconButton(onClick = { onChangeShowPicker(true) }) {
                 Icon(
                     imageVector = Icons.Outlined.EditCalendar,
                     contentDescription = "期日",
@@ -118,11 +144,11 @@ fun TaskCommonForm(viewModel: TaskViewModel, task: Task?, modifier: Modifier = M
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
     )
-    if (viewModel.showPicker) {
+    if (isShowPicker) {
         DatePickerDialogComponent(
             datePickerState = datePickerState,
-            onChangeDeadLine = { viewModel.onChangeDeadLine(it) },
-            closePicker = { viewModel.onChangePicker(false) })
+            onChangeDeadLine = { onChangeDeadLine(it) },
+            closePicker = { onChangeShowPicker(false) })
     }
 }
 

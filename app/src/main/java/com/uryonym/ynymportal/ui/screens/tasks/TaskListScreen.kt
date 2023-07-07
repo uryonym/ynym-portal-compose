@@ -92,7 +92,6 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: Task
                 })
         },
         modifier = Modifier.clickable {
-            viewModel.onClickTaskItem(task)
             onNavigateTaskEdit(task)
         })
 }

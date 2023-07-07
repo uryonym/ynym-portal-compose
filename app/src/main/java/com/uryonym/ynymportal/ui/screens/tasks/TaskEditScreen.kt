@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

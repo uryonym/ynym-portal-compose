@@ -105,6 +105,11 @@ fun YnymPortalApp() {
                 }
                 composable(route = YnymPortalScreen.TaskAdd.route) {
                     TaskAddScreen(
+                        onTaskSave = {navController.navigate(YnymPortalScreen.TaskList.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        } },
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
