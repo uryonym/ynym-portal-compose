@@ -41,15 +41,11 @@ fun TaskListScreen(
     }, bottomBar = {
         BottomAppBar(actions = {
             IconButton(onClick = onOpenDrawer) {
-                Icon(
-                    imageVector = Icons.Filled.Menu, contentDescription = "メニュー"
-                )
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
         }, floatingActionButton = {
             FloatingActionButton(onClick = onNavigateTaskAdd) {
-                Icon(
-                    imageVector = Icons.Filled.Add, contentDescription = "追加"
-                )
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
             }
         })
     }) { padding ->

@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.ui.screens
+package com.uryonym.ynymportal.ui.screens.confidentials
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -19,52 +19,48 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uryonym.ynymportal.data.Confidential
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @Composable
-fun AuthInfoListScreen(
-    onNavigateAuthInfoAdd: () -> Unit,
-    onNavigateAuthInfoEdit: () -> Unit,
+fun ConfidentialListScreen(
+    onNavigateConfidentialAdd: () -> Unit,
+    onNavigateConfidentialEdit: (Confidential) -> Unit,
     onOpenDrawer: () -> Unit,
-    authInfoViewModel: AuthInfoViewModel = viewModel()
+    viewModel: ConfidentialViewModel = viewModel()
 ) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(title = {
-                Text(stringResource(id = YnymPortalScreen.AuthInfoList.title))
-            })
-        },
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = onNavigateAuthInfoAdd) {
-                        Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
-                    }
-                })
-        }) { padding ->
-        val authInfoList by authInfoViewModel.authInfoList.collectAsState()
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(title = {
+            Text(stringResource(id = YnymPortalScreen.ConfidentialList.title))
+        })
+    }, bottomBar = {
+        BottomAppBar(actions = {
+            IconButton(onClick = onOpenDrawer) {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
+            }
+        }, floatingActionButton = {
+            FloatingActionButton(onClick = onNavigateConfidentialAdd) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+            }
+        })
+    }) { padding ->
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LazyColumn(modifier = Modifier.padding(padding)) {
-            items(items = authInfoList) { authInfo ->
+            items(items = uiState.confidentials) { confidential ->
                 Column {
                     ListItem(
-                        headlineContent = { Text(text = authInfo.serviceName) },
+                        headlineContent = { Text(text = confidential.serviceName) },
                         leadingContent = {
                             Checkbox(checked = false, onCheckedChange = {})
                         },
                         modifier = Modifier.clickable {
-                            authInfoViewModel.onClickAuthInfoItem(authInfo)
-                            onNavigateAuthInfoEdit()
+                            onNavigateConfidentialEdit(confidential)
                         })
                     Divider()
                 }

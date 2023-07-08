@@ -42,25 +42,12 @@ class TaskViewModel : ViewModel() {
             initialValue = TasksUiState(isLoading = true)
         )
 
-    init {
-        getTasks()
-    }
-
     fun onSaveStatus(currentTask: Task, status: Boolean) {
         viewModelScope.launch {
             val editTask = Task(isComplete = status)
 
             currentTask.id?.let {
                 YnymPortalApi.retrofitService.editTask(id = it, task = editTask)
-            }
-            getTasks()
-        }
-    }
-
-    private fun getTasks() {
-        viewModelScope.launch {
-            taskRepository.getTasks().collect {
-                _tasks.value = it
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.uryonym.ynymportal.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.uryonym.ynymportal.data.AuthInfo
+import com.uryonym.ynymportal.data.Confidential
 import com.uryonym.ynymportal.data.Task
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
@@ -41,17 +41,23 @@ interface YnymPortalService {
     @DELETE("tasks/{id}")
     suspend fun deleteTask(@Path("id") id: String)
 
-    @GET("auth_infos")
-    suspend fun getAuthInfos(): List<AuthInfo>
+    @GET("confidentials")
+    suspend fun getConfidentials(): List<Confidential>
 
-    @POST("auth_infos")
-    suspend fun addAuthInfo(@Body authInfo: AuthInfo)
+    @GET("confidentials/{id}")
+    suspend fun getConfidential(@Path("id") id: String): Confidential
 
-    @PATCH("auth_infos/{id}")
-    suspend fun editAuthInfo(@Path("id") id: String, @Body authInfo: AuthInfo)
+    @POST("confidentials")
+    suspend fun addConfidential(@Body confidential: Confidential): Confidential
 
-    @DELETE("auth_infos/{id}")
-    suspend fun deleteAuthInfo(@Path("id") id: String)
+    @PATCH("confidentials/{id}")
+    suspend fun editConfidential(
+        @Path("id") id: String,
+        @Body confidential: Confidential
+    ): Confidential
+
+    @DELETE("confidentials/{id}")
+    suspend fun deleteConfidential(@Path("id") id: String)
 }
 
 object YnymPortalApi {

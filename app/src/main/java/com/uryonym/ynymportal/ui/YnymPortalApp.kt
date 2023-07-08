@@ -21,25 +21,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.uryonym.ynymportal.R
-import com.uryonym.ynymportal.ui.screens.AuthInfoAddScreen
-import com.uryonym.ynymportal.ui.screens.AuthInfoEditScreen
-import com.uryonym.ynymportal.ui.screens.AuthInfoListScreen
+import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialAddScreen
+import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialEditScreen
+import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialListScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
 import kotlinx.coroutines.launch
 
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
-    object TaskList: YnymPortalScreen(route = "taskList", title = R.string.task_list)
-    object TaskAdd: YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
-    object TaskEdit: YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
+    object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
+    object TaskAdd : YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
+    object TaskEdit : YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
         fun createRoute(taskId: String): String {
             return "taskEdit/$taskId"
         }
     }
-    object AuthInfoList: YnymPortalScreen(route = "authInfoList", title = R.string.auth_info_list)
-    object AuthInfoAdd: YnymPortalScreen(route = "authInfoAdd", title = R.string.add_auth_info)
-    object AuthInfoEdit: YnymPortalScreen(route = "authInfoEdit", title = R.string.edit_auth_info)
+
+    object ConfidentialList :
+        YnymPortalScreen(route = "confidentialList", title = R.string.confidential_list)
+
+    object ConfidentialAdd :
+        YnymPortalScreen(route = "confidentialAdd", title = R.string.add_confidential)
+
+    object ConfidentialEdit : YnymPortalScreen(
+        route = "confidentialEdit/{confidentialId}",
+        title = R.string.edit_confidential
+    ) {
+        fun createRoute(confidentialId: String): String {
+            return "confidentialEdit/$confidentialId"
+        }
+    }
 }
 
 @Composable
@@ -78,7 +90,7 @@ fun YnymPortalApp() {
                     label = { Text(text = "認証情報") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.AuthInfoList.route) {
+                        navController.navigate(YnymPortalScreen.ConfidentialList.route) {
                             launchSingleTop = true
                             popUpTo(YnymPortalScreen.TaskList.route)
                         }
@@ -97,54 +109,74 @@ fun YnymPortalApp() {
                 composable(route = YnymPortalScreen.TaskList.route) {
                     TaskListScreen(
                         onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
-                        onNavigateTaskEdit = { task -> task.id?.let { it ->
-                            navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
-                        } },
+                        onNavigateTaskEdit = { task ->
+                            task.id?.let { it ->
+                                navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
+                            }
+                        },
                         onOpenDrawer = { scope.launch { drawerState.open() } }
                     )
                 }
                 composable(route = YnymPortalScreen.TaskAdd.route) {
                     TaskAddScreen(
-                        onTaskSave = {navController.navigate(YnymPortalScreen.TaskList.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
+                        onTaskSave = {
+                            navController.navigate(YnymPortalScreen.TaskList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
                             }
-                        } },
+                        },
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.TaskEdit.route, ) {
+                composable(route = YnymPortalScreen.TaskEdit.route) {
                     TaskEditScreen(
-                        onTaskUpdate = {navController.navigate(YnymPortalScreen.TaskList.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
+                        onTaskUpdate = {
+                            navController.navigate(YnymPortalScreen.TaskList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
                             }
-                        } },
+                        },
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoList.route) {
-                    AuthInfoListScreen(
-                        onNavigateAuthInfoAdd = {
+                composable(route = YnymPortalScreen.ConfidentialList.route) {
+                    ConfidentialListScreen(
+                        onNavigateConfidentialAdd = {
                             navController.navigate(
-                                YnymPortalScreen.AuthInfoAdd.route
+                                YnymPortalScreen.ConfidentialAdd.route
                             )
                         },
-                        onNavigateAuthInfoEdit = {
-                            navController.navigate(
-                                YnymPortalScreen.AuthInfoEdit.route
-                            )
+                        onNavigateConfidentialEdit = { confidential ->
+                            confidential.id?.let {
+                                navController.navigate(YnymPortalScreen.ConfidentialEdit.createRoute(it))
+                            }
                         },
                         onOpenDrawer = { scope.launch { drawerState.open() } }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoAdd.route) {
-                    AuthInfoAddScreen(
+                composable(route = YnymPortalScreen.ConfidentialAdd.route) {
+                    ConfidentialAddScreen(
+                        onConfidentialSave = {
+                            navController.navigate(YnymPortalScreen.ConfidentialList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
-                composable(route = YnymPortalScreen.AuthInfoEdit.route) {
-                    AuthInfoEditScreen(
+                composable(route = YnymPortalScreen.ConfidentialEdit.route) {
+                    ConfidentialEditScreen(
+                        onConfidentialUpdate = {
+                            navController.navigate(YnymPortalScreen.ConfidentialList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                         onNavigateBack = { navController.navigateUp() }
                     )
                 }
