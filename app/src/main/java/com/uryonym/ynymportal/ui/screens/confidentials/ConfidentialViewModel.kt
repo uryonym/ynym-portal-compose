@@ -22,7 +22,6 @@ class ConfidentialViewModel : ViewModel() {
     private val confidentialRepository: ConfidentialRepository = DefaultConfidentialRepository()
 
     private val _isLoading = MutableStateFlow(false)
-    private val _confidentials = MutableStateFlow<List<Confidential>>(emptyList())
 
     val uiState: StateFlow<ConfidentialsUiState> = combine(
         _isLoading, confidentialRepository.getConfidentials()

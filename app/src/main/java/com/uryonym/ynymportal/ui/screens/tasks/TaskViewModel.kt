@@ -25,7 +25,6 @@ class TaskViewModel : ViewModel() {
     private val taskRepository: TaskRepository = DefaultTaskRepository()
 
     private val _isLoading = MutableStateFlow(false)
-    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
 
     val uiState: StateFlow<TasksUiState> = combine(
         _isLoading, taskRepository.getTasks()
