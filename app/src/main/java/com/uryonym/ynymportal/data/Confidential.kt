@@ -8,8 +8,8 @@ data class Confidential(
     val id: String? = null,
     @SerialName(value = "service_name") var serviceName: String = "",
     @SerialName(value = "login_id") var loginId: String = "",
-    var password: String = "",
-    var other: String = "",
+    var password: String? = null,
+    var other: String? = null,
     @SerialName(value = "created_at") val createdAt: String? = null,
     @SerialName(value = "updated_at") val updatedAt: String? = null,
 )

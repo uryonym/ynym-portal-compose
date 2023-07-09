@@ -110,7 +110,7 @@ fun YnymPortalApp() {
                     TaskListScreen(
                         onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
                         onNavigateTaskEdit = { task ->
-                            task.id?.let { it ->
+                            task.id?.let {
                                 navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
                             }
                         },
@@ -150,7 +150,11 @@ fun YnymPortalApp() {
                         },
                         onNavigateConfidentialEdit = { confidential ->
                             confidential.id?.let {
-                                navController.navigate(YnymPortalScreen.ConfidentialEdit.createRoute(it))
+                                navController.navigate(
+                                    YnymPortalScreen.ConfidentialEdit.createRoute(
+                                        it
+                                    )
+                                )
                             }
                         },
                         onOpenDrawer = { scope.launch { drawerState.open() } }

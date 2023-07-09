@@ -6,16 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.Confidential
 import com.uryonym.ynymportal.data.ConfidentialRepository
 import com.uryonym.ynymportal.data.DefaultConfidentialRepository
-import com.uryonym.ynymportal.data.DefaultTaskRepository
-import com.uryonym.ynymportal.data.Task
-import com.uryonym.ynymportal.data.TaskRepository
-import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 
 data class ConfidentialEditUiState(
     val isLoading: Boolean = false,
@@ -85,16 +80,6 @@ class ConfidentialEditViewModel constructor(
         }
     }
 
-    fun onSaveStatus(currentTask: Task, status: Boolean) {
-        viewModelScope.launch {
-            val editTask = Task(isComplete = status)
-
-            currentTask.id?.let {
-                YnymPortalApi.retrofitService.editTask(id = it, task = editTask)
-            }
-        }
-    }
-
     fun onDelete() {
         viewModelScope.launch {
             confidentialRepository.deleteConfidential(confidentialId)
@@ -109,8 +94,8 @@ class ConfidentialEditViewModel constructor(
                         isLoading = false,
                         serviceName = confidential.serviceName,
                         loginId = confidential.loginId,
-                        password = confidential.password,
-                        other = confidential.other,
+                        password = confidential.password ?: "",
+                        other = confidential.other ?: "",
                     )
                 }
             }
