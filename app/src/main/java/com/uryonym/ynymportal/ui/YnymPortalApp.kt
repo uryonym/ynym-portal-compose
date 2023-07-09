@@ -21,6 +21,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.uryonym.ynymportal.R
+import com.uryonym.ynymportal.ui.screens.cars.CarAddScreen
+import com.uryonym.ynymportal.ui.screens.cars.CarEditScreen
+import com.uryonym.ynymportal.ui.screens.cars.CarListScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialAddScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialEditScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialListScreen
@@ -50,6 +53,21 @@ sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
     ) {
         fun createRoute(confidentialId: String): String {
             return "confidentialEdit/$confidentialId"
+        }
+    }
+
+    object CarList :
+        YnymPortalScreen(route = "carList", title = R.string.car_list)
+
+    object CarAdd :
+        YnymPortalScreen(route = "carAdd", title = R.string.add_car)
+
+    object CarEdit : YnymPortalScreen(
+        route = "carEdit/{carId}",
+        title = R.string.edit_car
+    ) {
+        fun createRoute(carId: String): String {
+            return "carEdit/$carId"
         }
     }
 }
@@ -91,6 +109,20 @@ fun YnymPortalApp() {
                     selected = false,
                     onClick = {
                         navController.navigate(YnymPortalScreen.ConfidentialList.route) {
+                            launchSingleTop = true
+                            popUpTo(YnymPortalScreen.TaskList.route)
+                        }
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "車") },
+                    selected = false,
+                    onClick = {
+                        navController.navigate(YnymPortalScreen.CarList.route) {
                             launchSingleTop = true
                             popUpTo(YnymPortalScreen.TaskList.route)
                         }
@@ -144,16 +176,12 @@ fun YnymPortalApp() {
                 composable(route = YnymPortalScreen.ConfidentialList.route) {
                     ConfidentialListScreen(
                         onNavigateConfidentialAdd = {
-                            navController.navigate(
-                                YnymPortalScreen.ConfidentialAdd.route
-                            )
+                            navController.navigate(YnymPortalScreen.ConfidentialAdd.route)
                         },
                         onNavigateConfidentialEdit = { confidential ->
                             confidential.id?.let {
                                 navController.navigate(
-                                    YnymPortalScreen.ConfidentialEdit.createRoute(
-                                        it
-                                    )
+                                    YnymPortalScreen.ConfidentialEdit.createRoute(it)
                                 )
                             }
                         },
@@ -176,6 +204,45 @@ fun YnymPortalApp() {
                     ConfidentialEditScreen(
                         onConfidentialUpdate = {
                             navController.navigate(YnymPortalScreen.ConfidentialList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onNavigateBack = { navController.navigateUp() }
+                    )
+                }
+                composable(route = YnymPortalScreen.CarList.route) {
+                    CarListScreen(
+                        onNavigateCarAdd = {
+                            navController.navigate(YnymPortalScreen.CarAdd.route)
+                        },
+                        onNavigateCarEdit = { car ->
+                            car.id?.let {
+                                navController.navigate(
+                                    YnymPortalScreen.CarEdit.createRoute(it)
+                                )
+                            }
+                        },
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
+                    )
+                }
+                composable(route = YnymPortalScreen.CarAdd.route) {
+                    CarAddScreen(
+                        onCarSave = {
+                            navController.navigate(YnymPortalScreen.CarList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onNavigateBack = { navController.navigateUp() }
+                    )
+                }
+                composable(route = YnymPortalScreen.CarEdit.route) {
+                    CarEditScreen(
+                        onCarUpdate = {
+                            navController.navigate(YnymPortalScreen.CarList.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     inclusive = true
                                 }

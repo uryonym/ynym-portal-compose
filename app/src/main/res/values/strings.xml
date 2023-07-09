@@ -6,4 +6,7 @@
     <string name="confidential_list">認証情報</string>
     <string name="add_confidential">認証情報の追加</string>
     <string name="edit_confidential">認証情報の編集</string>
+    <string name="car_list">車</string>
+    <string name="add_car">車の追加</string>
+    <string name="edit_car">車の編集</string>
 </resources>
