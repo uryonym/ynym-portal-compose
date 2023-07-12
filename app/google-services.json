@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1017779990554",
+    "project_id": "ynym-portal-25b29",
+    "storage_bucket": "ynym-portal-25b29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017779990554:android:72c386a9333b49e98f61a3",
+        "android_client_info": {
+          "package_name": "com.uryonym.ynymportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017779990554-549sque2ufie2966luof47a7hd45p7er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uryonym.ynymportal",
+            "certificate_hash": "5edc0a44525223162a9e55b6026352ab09abc230"
+          }
+        },
+        {
+          "client_id": "1017779990554-qnovgeflmbqiti5al69otlv0mtm8vup4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaccChsqiAhZY6xwuBwGCt-hyxopFPR_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017779990554-qnovgeflmbqiti5al69otlv0mtm8vup4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

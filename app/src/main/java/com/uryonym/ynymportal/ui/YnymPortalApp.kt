@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,12 +28,15 @@ import com.uryonym.ynymportal.ui.screens.cars.CarListScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialAddScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialEditScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialListScreen
+import com.uryonym.ynymportal.ui.screens.login.LoginScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
+    object Login : YnymPortalScreen(route = "login", title = R.string.login)
     object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
     object TaskAdd : YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
     object TaskEdit : YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
@@ -73,7 +77,9 @@ sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
 }
 
 @Composable
-fun YnymPortalApp() {
+fun YnymPortalApp(
+    viewModel: YnymPortalAppViewModel = viewModel()
+) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -96,7 +102,7 @@ fun YnymPortalApp() {
                     onClick = {
                         navController.navigate(YnymPortalScreen.TaskList.route) {
                             launchSingleTop = true
-                            popUpTo(YnymPortalScreen.TaskList.route)
+                            popUpTo(YnymPortalScreen.Login.route)
                         }
                         scope.launch {
                             drawerState.close()
@@ -110,7 +116,7 @@ fun YnymPortalApp() {
                     onClick = {
                         navController.navigate(YnymPortalScreen.ConfidentialList.route) {
                             launchSingleTop = true
-                            popUpTo(YnymPortalScreen.TaskList.route)
+                            popUpTo(YnymPortalScreen.Login.route)
                         }
                         scope.launch {
                             drawerState.close()
@@ -124,7 +130,7 @@ fun YnymPortalApp() {
                     onClick = {
                         navController.navigate(YnymPortalScreen.CarList.route) {
                             launchSingleTop = true
-                            popUpTo(YnymPortalScreen.TaskList.route)
+                            popUpTo(YnymPortalScreen.Login.route)
                         }
                         scope.launch {
                             drawerState.close()
@@ -136,8 +142,13 @@ fun YnymPortalApp() {
         }, content = {
             NavHost(
                 navController = navController,
-                startDestination = YnymPortalScreen.TaskList.route
+                startDestination = YnymPortalScreen.Login.route
             ) {
+                composable(route = YnymPortalScreen.Login.route) {
+                    LoginScreen(
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
+                    )
+                }
                 composable(route = YnymPortalScreen.TaskList.route) {
                     TaskListScreen(
                         onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
@@ -254,4 +265,19 @@ fun YnymPortalApp() {
             }
         }
     )
+
+    val isUserSignedOut = viewModel.getAuthState().collectAsState().value
+    if (isUserSignedOut) {
+        navController.navigate(YnymPortalScreen.Login.route) {
+            popUpTo(navController.graph.id) {
+                inclusive = true
+            }
+        }
+    } else {
+        navController.navigate(YnymPortalScreen.TaskList.route) {
+            popUpTo(navController.graph.id) {
+                inclusive = true
+            }
+        }
+    }
 }
