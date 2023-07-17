@@ -2,8 +2,10 @@ package com.uryonym.ynymportal.ui.screens.cars
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.Car
 import com.uryonym.ynymportal.data.CarRepository
+import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultCarRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,7 @@ class CarAddViewModel : ViewModel() {
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val carRepository: CarRepository = DefaultCarRepository()
+    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val _uiState = MutableStateFlow(CarAddUiState())
     val uiState: StateFlow<CarAddUiState> = _uiState.asStateFlow()
@@ -83,7 +86,8 @@ class CarAddViewModel : ViewModel() {
                 tankCapacity = uiState.value.tankCapacity
             )
             viewModelScope.launch {
-                carRepository.addCar(newCar)
+                val token = authRepository.getIdToken()
+                carRepository.addCar(newCar, token)
                 _uiState.update {
                     it.copy(isCarSaved = true)
                 }

@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.data
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -14,10 +15,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 interface AuthRepository {
     val currentUser: FirebaseUser?
+
+    suspend fun getIdToken(): String
 
     suspend fun signInWithEmailAndPassword(email: String, password: String): Response<Boolean>
 
@@ -32,6 +34,17 @@ class DefaultAuthRepository : AuthRepository {
 
     override val currentUser: FirebaseUser?
         get() = auth.currentUser
+
+    override suspend fun getIdToken(): String {
+        var token = ""
+        try {
+            token = currentUser?.getIdToken(true)?.await()?.token ?: ""
+        } catch (e: Exception) {
+            Log.d("firebase", e.toString())
+        }
+
+        return token
+    }
 
     override suspend fun signInWithEmailAndPassword(
         email: String,

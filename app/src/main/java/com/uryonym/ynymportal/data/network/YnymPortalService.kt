@@ -10,12 +10,13 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-//private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
-private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
+private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
+//private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
@@ -23,52 +24,66 @@ private val retrofit = Retrofit.Builder()
 
 interface YnymPortalService {
     @GET("tasks")
-    suspend fun getTasks(): List<Task>
+    suspend fun getTasks(@Header("Authorization") token: String): List<Task>
 
     @GET("tasks/{id}")
-    suspend fun getTask(@Path("id") id: String): Task
+    suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): Task
 
     @POST("tasks")
-    suspend fun addTask(@Body task: Task): Task
+    suspend fun addTask(@Body task: Task, @Header("Authorization") token: String): Task
 
     @PATCH("tasks/{id}")
-    suspend fun editTask(@Path("id") id: String, @Body task: Task): Task
+    suspend fun editTask(
+        @Path("id") id: String,
+        @Body task: Task,
+        @Header("Authorization") token: String
+    ): Task
 
     @DELETE("tasks/{id}")
-    suspend fun deleteTask(@Path("id") id: String)
+    suspend fun deleteTask(@Path("id") id: String, @Header("Authorization") token: String)
 
     @GET("confidentials")
-    suspend fun getConfidentials(): List<Confidential>
+    suspend fun getConfidentials(@Header("Authorization") token: String): List<Confidential>
 
     @GET("confidentials/{id}")
-    suspend fun getConfidential(@Path("id") id: String): Confidential
+    suspend fun getConfidential(
+        @Path("id") id: String,
+        @Header("Authorization") token: String
+    ): Confidential
 
     @POST("confidentials")
-    suspend fun addConfidential(@Body confidential: Confidential): Confidential
+    suspend fun addConfidential(
+        @Body confidential: Confidential,
+        @Header("Authorization") token: String
+    ): Confidential
 
     @PATCH("confidentials/{id}")
     suspend fun editConfidential(
         @Path("id") id: String,
-        @Body confidential: Confidential
+        @Body confidential: Confidential, @Header("Authorization") token: String
     ): Confidential
 
     @DELETE("confidentials/{id}")
-    suspend fun deleteConfidential(@Path("id") id: String)
+    suspend fun deleteConfidential(@Path("id") id: String, @Header("Authorization") token: String)
 
     @GET("cars")
-    suspend fun getCars(): List<Car>
+    suspend fun getCars(@Header("Authorization") token: String): List<Car>
 
     @GET("cars/{id}")
-    suspend fun getCar(@Path("id") id: String): Car
+    suspend fun getCar(@Path("id") id: String, @Header("Authorization") token: String): Car
 
     @POST("cars")
-    suspend fun addCar(@Body car: Car): Car
+    suspend fun addCar(@Body car: Car, @Header("Authorization") token: String): Car
 
     @PATCH("cars/{id}")
-    suspend fun editCar(@Path("id") id: String, @Body car: Car): Car
+    suspend fun editCar(
+        @Path("id") id: String,
+        @Body car: Car,
+        @Header("Authorization") token: String
+    ): Car
 
     @DELETE("cars/{id}")
-    suspend fun deleteCar(@Path("id") id: String)
+    suspend fun deleteCar(@Path("id") id: String, @Header("Authorization") token: String)
 }
 
 object YnymPortalApi {

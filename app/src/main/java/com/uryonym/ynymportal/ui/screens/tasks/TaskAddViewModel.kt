@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.AuthRepository
@@ -30,8 +29,8 @@ class TaskAddViewModel : ViewModel() {
 
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
-    private val authRepository: AuthRepository = DefaultAuthRepository()
     private val taskRepository: TaskRepository = DefaultTaskRepository()
+    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val _uiState = MutableStateFlow(TaskAddUiState())
     val uiState: StateFlow<TaskAddUiState> = _uiState.asStateFlow()
@@ -61,7 +60,6 @@ class TaskAddViewModel : ViewModel() {
     }
 
     fun onSaveNewTask() {
-        Log.d("user_info", authRepository.currentUser!!.uid)
         if (uiState.value.title.isNotEmpty()) {
             val newTask = Task(
                 title = uiState.value.title,
@@ -69,8 +67,10 @@ class TaskAddViewModel : ViewModel() {
                 deadLine = uiState.value.deadLine,
                 isComplete = uiState.value.isComplete
             )
+
             viewModelScope.launch {
-                taskRepository.addTask(newTask)
+                val token = authRepository.getIdToken()
+                taskRepository.addTask(newTask, token)
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }

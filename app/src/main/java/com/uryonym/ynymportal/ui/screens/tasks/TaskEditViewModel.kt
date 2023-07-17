@@ -3,6 +3,8 @@ package com.uryonym.ynymportal.ui.screens.tasks
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.AuthRepository
+import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
@@ -32,6 +34,7 @@ class TaskEditViewModel constructor(
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
+    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val taskId: String = savedStateHandle["taskId"]!!
 
@@ -75,7 +78,8 @@ class TaskEditViewModel constructor(
                 isComplete = uiState.value.isComplete
             )
             viewModelScope.launch {
-                taskRepository.editTask(taskId, editTask)
+                val token = authRepository.getIdToken()
+                taskRepository.editTask(taskId, editTask, token)
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }
@@ -88,20 +92,22 @@ class TaskEditViewModel constructor(
             val editTask = Task(isComplete = status)
 
             currentTask.id?.let {
-                YnymPortalApi.retrofitService.editTask(id = it, task = editTask)
+                YnymPortalApi.retrofitService.editTask(it, editTask, "")
             }
         }
     }
 
     fun onDelete() {
         viewModelScope.launch {
-            taskRepository.deleteTask(taskId)
+            val token = authRepository.getIdToken()
+            taskRepository.deleteTask(taskId, token)
         }
     }
 
     private fun getTask() {
         viewModelScope.launch {
-            taskRepository.getTask(taskId).let { task ->
+            val token = authRepository.getIdToken()
+            taskRepository.getTask(taskId, token).let { task ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,

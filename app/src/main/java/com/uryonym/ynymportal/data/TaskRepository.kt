@@ -1,39 +1,37 @@
 package com.uryonym.ynymportal.data
 
 import com.uryonym.ynymportal.data.network.YnymPortalApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 interface TaskRepository {
-    fun getTasks(): Flow<List<Task>>
+    suspend fun getTasks(token: String): List<Task>
 
-    suspend fun getTask(id: String): Task
+    suspend fun getTask(id: String, token: String): Task
 
-    suspend fun addTask(task: Task): Task
+    suspend fun addTask(task: Task, token: String): Task
 
-    suspend fun editTask(id: String, task: Task): Task
+    suspend fun editTask(id: String, task: Task, token: String): Task
 
-    suspend fun deleteTask(id: String)
+    suspend fun deleteTask(id: String, token: String)
 }
 
-class DefaultTaskRepository: TaskRepository {
-    override fun getTasks(): Flow<List<Task>> = flow {
-        emit(YnymPortalApi.retrofitService.getTasks())
+class DefaultTaskRepository : TaskRepository {
+    override suspend fun getTasks(token: String): List<Task> {
+        return YnymPortalApi.retrofitService.getTasks(token = "Bearer $token")
     }
 
-    override suspend fun getTask(id: String): Task {
-        return YnymPortalApi.retrofitService.getTask(id)
+    override suspend fun getTask(id: String, token: String): Task {
+        return YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token")
     }
 
-    override suspend fun addTask(task: Task): Task {
-        return YnymPortalApi.retrofitService.addTask(task)
+    override suspend fun addTask(task: Task, token: String): Task {
+        return YnymPortalApi.retrofitService.addTask(task, token = "Bearer $token")
     }
 
-    override suspend fun editTask(id: String, task: Task): Task {
-        return YnymPortalApi.retrofitService.editTask(id, task)
+    override suspend fun editTask(id: String, task: Task, token: String): Task {
+        return YnymPortalApi.retrofitService.editTask(id, task, token = "Bearer $token")
     }
 
-    override suspend fun deleteTask(id: String) {
-        YnymPortalApi.retrofitService.deleteTask(id)
+    override suspend fun deleteTask(id: String, token: String) {
+        YnymPortalApi.retrofitService.deleteTask(id, token = "Bearer $token")
     }
 }

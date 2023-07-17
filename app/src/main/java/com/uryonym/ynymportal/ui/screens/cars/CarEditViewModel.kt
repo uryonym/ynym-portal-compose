@@ -3,8 +3,10 @@ package com.uryonym.ynymportal.ui.screens.cars
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.Car
 import com.uryonym.ynymportal.data.CarRepository
+import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultCarRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +33,7 @@ class CarEditViewModel constructor(
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val carRepository: CarRepository = DefaultCarRepository()
+    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val carId: String = savedStateHandle["carId"]!!
 
@@ -92,7 +95,8 @@ class CarEditViewModel constructor(
                 tankCapacity = uiState.value.tankCapacity,
             )
             viewModelScope.launch {
-                carRepository.editCar(carId, editCar)
+                val token = authRepository.getIdToken()
+                carRepository.editCar(carId, editCar, token)
                 _uiState.update {
                     it.copy(isCarSaved = true)
                 }
@@ -102,13 +106,15 @@ class CarEditViewModel constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            carRepository.deleteCar(carId)
+            val token = authRepository.getIdToken()
+            carRepository.deleteCar(carId, token)
         }
     }
 
     private fun getCar() {
         viewModelScope.launch {
-            carRepository.getCar(carId).let { car ->
+            val token = authRepository.getIdToken()
+            carRepository.getCar(carId, token).let { car ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
