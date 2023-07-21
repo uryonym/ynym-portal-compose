@@ -78,8 +78,7 @@ class TaskEditViewModel constructor(
                 isComplete = uiState.value.isComplete
             )
             viewModelScope.launch {
-                val token = authRepository.getIdToken()
-                taskRepository.editTask(taskId, editTask, token)
+                taskRepository.editTask(taskId, editTask)
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }
