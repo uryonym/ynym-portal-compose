@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class TasksUiState(
+data class TaskListUiState(
     val tasks: List<Task> = emptyList()
 )
 
@@ -21,13 +21,17 @@ class TaskViewModel : ViewModel() {
     // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
 
-    val uiState: StateFlow<TasksUiState> = taskRepository.getTasks()
-        .map { TasksUiState(tasks = it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = TasksUiState()
-        )
+    private val _uiState = MutableStateFlow(TaskListUiState())
+    val uiState: StateFlow<TaskListUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            taskRepository.getTasks()
+                .collect { tasks ->
+                    _uiState.update { it.copy(tasks) }
+                }
+        }
+    }
 
     fun onSaveStatus(task: Task, status: Boolean) {
         viewModelScope.launch {
@@ -35,6 +39,12 @@ class TaskViewModel : ViewModel() {
             task.id?.let {
                 taskRepository.editTask(it, task)
             }
+        }
+    }
+
+    fun refreshTask() {
+        viewModelScope.launch {
+            taskRepository.refreshTask()
         }
     }
 }

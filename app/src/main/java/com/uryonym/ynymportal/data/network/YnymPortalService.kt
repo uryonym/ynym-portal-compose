@@ -5,7 +5,7 @@ import com.uryonym.ynymportal.data.Car
 import com.uryonym.ynymportal.data.Confidential
 import com.uryonym.ynymportal.data.Task
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -19,25 +19,25 @@ import retrofit2.http.Path
 private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
+    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL).build()
 
 interface YnymPortalService {
     @GET("tasks")
-    suspend fun getTasks(@Header("Authorization") token: String): List<Task>
+    suspend fun getTasks(@Header("Authorization") token: String): List<NetworkTask>
 
     @GET("tasks/{id}")
-    suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): Task
+    suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): NetworkTask
 
     @POST("tasks")
-    suspend fun addTask(@Body task: Task, @Header("Authorization") token: String): Task
+    suspend fun addTask(@Body task: Task, @Header("Authorization") token: String): NetworkTask
 
     @PATCH("tasks/{id}")
     suspend fun editTask(
         @Path("id") id: String,
         @Body task: Task,
         @Header("Authorization") token: String
-    ): Task
+    ): NetworkTask
 
     @DELETE("tasks/{id}")
     suspend fun deleteTask(@Path("id") id: String, @Header("Authorization") token: String)
