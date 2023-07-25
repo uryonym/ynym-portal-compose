@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import java.util.UUID
 
 data class TaskAddUiState(
     val isLoading: Boolean = false,
@@ -62,6 +63,7 @@ class TaskAddViewModel : ViewModel() {
     fun onSaveNewTask() {
         if (uiState.value.title.isNotEmpty()) {
             val newTask = Task(
+                id = UUID.randomUUID().toString(),
                 title = uiState.value.title,
                 description = uiState.value.description,
                 deadLine = uiState.value.deadLine,
@@ -69,8 +71,7 @@ class TaskAddViewModel : ViewModel() {
             )
 
             viewModelScope.launch {
-                val token = authRepository.getIdToken()
-                taskRepository.addTask(newTask, token)
+                taskRepository.addTask(newTask)
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }

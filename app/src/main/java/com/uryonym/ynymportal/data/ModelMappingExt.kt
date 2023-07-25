@@ -42,3 +42,13 @@ fun Task.toLocal() = LocalTask(
     createdAt = this.createdAt,
     updatedAt = this.updatedAt
 )
+
+fun Task.toNetwork() = NetworkTask(
+    id = this.id ?: "",
+    title = this.title,
+    description = this.description,
+    deadLine = this.deadLine,
+    isComplete = this.isComplete,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt
+)

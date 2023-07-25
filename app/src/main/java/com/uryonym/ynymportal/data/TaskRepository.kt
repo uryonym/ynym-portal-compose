@@ -16,7 +16,7 @@ interface TaskRepository {
 
     suspend fun getTask(id: String, token: String): Task
 
-    suspend fun addTask(task: Task, token: String)
+    suspend fun addTask(task: Task)
 
     suspend fun editTask(id: String, task: Task)
 
@@ -49,9 +49,12 @@ class DefaultTaskRepository : TaskRepository {
         return YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token").toCommon()
     }
 
-    override suspend fun addTask(task: Task, token: String) {
+    override suspend fun addTask(task: Task) {
         withContext(dispatcher) {
-            YnymPortalApi.retrofitService.addTask(task, token = "Bearer $token")
+            localDataSource.upsertTask(task.toLocal())
+
+            val token = authRepository.getIdToken()
+            YnymPortalApi.retrofitService.addTask(task.toNetwork(), token = "Bearer $token")
         }
     }
 
@@ -76,7 +79,7 @@ class DefaultTaskRepository : TaskRepository {
             val tasks = YnymPortalApi.retrofitService.getTasks(token).toCommon()
             localDataSource.deleteAllTask()
             tasks.map {
-                localDataSource.insertTask(it.toLocal())
+                localDataSource.upsertTask(it.toLocal())
             }
         }
     }

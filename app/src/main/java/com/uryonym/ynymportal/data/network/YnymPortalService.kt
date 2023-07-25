@@ -30,7 +30,7 @@ interface YnymPortalService {
     suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): NetworkTask
 
     @POST("tasks")
-    suspend fun addTask(@Body task: Task, @Header("Authorization") token: String): NetworkTask
+    suspend fun addTask(@Body task: NetworkTask, @Header("Authorization") token: String): NetworkTask
 
     @PATCH("tasks/{id}")
     suspend fun editTask(

@@ -6,12 +6,14 @@ import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class TaskListUiState(
+    val isLoading: Boolean = false,
     val tasks: List<Task> = emptyList()
 )
 
@@ -21,17 +23,22 @@ class TaskViewModel : ViewModel() {
     // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
 
-    private val _uiState = MutableStateFlow(TaskListUiState())
-    val uiState: StateFlow<TaskListUiState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            taskRepository.getTasks()
-                .collect { tasks ->
-                    _uiState.update { it.copy(tasks) }
-                }
+    private val _isLoading = MutableStateFlow(false)
+    val uiState: StateFlow<TaskListUiState> =
+        combine(
+            _isLoading, taskRepository.getTasks()
+        ) { isLoading, tasks ->
+            if (tasks.isNotEmpty()) {
+                TaskListUiState(isLoading = isLoading, tasks = tasks)
+            } else {
+                TaskListUiState(isLoading = isLoading, tasks = emptyList())
+            }
         }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = TaskListUiState()
+            )
 
     fun onSaveStatus(task: Task, status: Boolean) {
         viewModelScope.launch {
