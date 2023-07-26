@@ -36,7 +36,7 @@ fun TaskListScreen(
     onNavigateTaskAdd: () -> Unit,
     onNavigateTaskEdit: (Task) -> Unit,
     onOpenDrawer: () -> Unit,
-    viewModel: TaskViewModel = viewModel()
+    viewModel: TaskListViewModel = viewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -47,7 +47,7 @@ fun TaskListScreen(
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
-            IconButton(onClick = viewModel::refreshTask) {
+            IconButton(onClick = viewModel::refreshTasks) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
@@ -74,7 +74,7 @@ fun TaskListScreen(
 }
 
 @Composable
-fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskViewModel) {
+fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskListViewModel) {
     var isChecked by remember { mutableStateOf(task.isComplete) }
 
     ListItem(

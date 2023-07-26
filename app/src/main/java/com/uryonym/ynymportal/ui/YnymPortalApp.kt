@@ -166,10 +166,7 @@ fun YnymPortalApp(
                             navController.navigate(YnymPortalScreen.TaskList.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     inclusive = true
-                                    saveState = false
                                 }
-                                launchSingleTop = true
-                                restoreState = false
                             }
                         },
                         onNavigateBack = { navController.navigateUp() }

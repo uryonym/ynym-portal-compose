@@ -2,8 +2,6 @@ package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.AuthRepository
-import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
@@ -31,7 +29,6 @@ class TaskAddViewModel : ViewModel() {
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
-    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val _uiState = MutableStateFlow(TaskAddUiState())
     val uiState: StateFlow<TaskAddUiState> = _uiState.asStateFlow()

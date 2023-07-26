@@ -28,6 +28,9 @@ fun NetworkTask.toCommon() = Task(
     updatedAt = this.updatedAt
 )
 
+@JvmName("networkLocal")
+fun NetworkTask.toLocal() = this.toCommon().toLocal()
+
 @JvmName("networkCommon")
 fun List<NetworkTask>.toCommon() = map {
     it.toCommon()

@@ -17,7 +17,7 @@ data class TaskListUiState(
     val tasks: List<Task> = emptyList()
 )
 
-class TaskViewModel : ViewModel() {
+class TaskListViewModel : ViewModel() {
 
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
@@ -49,9 +49,9 @@ class TaskViewModel : ViewModel() {
         }
     }
 
-    fun refreshTask() {
+    fun refreshTasks() {
         viewModelScope.launch {
-            taskRepository.refreshTask()
+            taskRepository.refreshTasks()
         }
     }
 }

@@ -3,12 +3,9 @@ package com.uryonym.ynymportal.ui.screens.tasks
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.AuthRepository
-import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
-import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +31,6 @@ class TaskEditViewModel constructor(
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val taskRepository: TaskRepository = DefaultTaskRepository()
-    private val authRepository: AuthRepository = DefaultAuthRepository()
 
     private val taskId: String = savedStateHandle["taskId"]!!
 
@@ -43,6 +39,7 @@ class TaskEditViewModel constructor(
 
     init {
         getTask()
+        refreshTask()
     }
 
     fun onChangeTitle(value: String) {
@@ -86,27 +83,30 @@ class TaskEditViewModel constructor(
         }
     }
 
-    fun onSaveStatus(currentTask: Task, status: Boolean) {
-        viewModelScope.launch {
-            val editTask = Task(isComplete = status)
-
-            currentTask.id?.let {
-                YnymPortalApi.retrofitService.editTask(it, editTask, "")
-            }
-        }
-    }
-
     fun onDelete() {
         viewModelScope.launch {
-            val token = authRepository.getIdToken()
-            taskRepository.deleteTask(taskId, token)
+            taskRepository.deleteTask(taskId)
         }
     }
 
     private fun getTask() {
         viewModelScope.launch {
-            val token = authRepository.getIdToken()
-            taskRepository.getTask(taskId, token).let { task ->
+            taskRepository.getTask(taskId).let { task ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        title = task.title,
+                        description = task.description ?: "",
+                        deadLine = task.deadLine,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun refreshTask() {
+        viewModelScope.launch {
+            taskRepository.refreshTask(taskId).let { task ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,

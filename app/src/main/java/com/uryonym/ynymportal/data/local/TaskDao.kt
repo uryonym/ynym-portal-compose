@@ -14,7 +14,7 @@ interface TaskDao {
     fun getTasks(): Flow<List<LocalTask>>
 
     @Query("SELECT * FROM task WHERE id = (:taskId)")
-    fun getTask(taskId: String): Flow<LocalTask>
+    suspend fun getTask(taskId: String): LocalTask
 
     @Upsert
     suspend fun upsertTask(task: LocalTask)
@@ -22,8 +22,8 @@ interface TaskDao {
     @Update
     suspend fun updateTask(vararg  task: LocalTask)
 
-    @Delete
-    suspend fun deleteTask(task: LocalTask)
+    @Query("DELETE FROM task WHERE id = (:taskId)")
+    suspend fun deleteTask(taskId: String)
 
     @Query("DELETE FROM task")
     suspend fun deleteAllTask()

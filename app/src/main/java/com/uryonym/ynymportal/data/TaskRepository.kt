@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
 
-    suspend fun getTask(id: String, token: String): Task
+    suspend fun getTask(id: String): Task
 
     suspend fun addTask(task: Task)
 
@@ -22,9 +22,11 @@ interface TaskRepository {
 
     suspend fun changeStatus(id: String, status: Boolean, token: String): Task
 
-    suspend fun deleteTask(id: String, token: String)
+    suspend fun deleteTask(id: String)
 
-    suspend fun refreshTask()
+    suspend fun refreshTasks()
+
+    suspend fun refreshTask(id: String): Task
 }
 
 class DefaultTaskRepository : TaskRepository {
@@ -45,8 +47,8 @@ class DefaultTaskRepository : TaskRepository {
         }
     }
 
-    override suspend fun getTask(id: String, token: String): Task {
-        return YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token").toCommon()
+    override suspend fun getTask(id: String): Task {
+        return localDataSource.getTask(id).toCommon()
     }
 
     override suspend fun addTask(task: Task) {
@@ -60,8 +62,11 @@ class DefaultTaskRepository : TaskRepository {
 
     override suspend fun editTask(id: String, task: Task) {
         withContext(dispatcher) {
+            task.id = id
+            localDataSource.upsertTask(task.toLocal())
+
             val token = authRepository.getIdToken()
-            YnymPortalApi.retrofitService.editTask(id, task, token = "Bearer $token")
+            YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), token = "Bearer $token")
         }
     }
 
@@ -69,11 +74,14 @@ class DefaultTaskRepository : TaskRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteTask(id: String, token: String) {
+    override suspend fun deleteTask(id: String) {
+        localDataSource.deleteTask(id)
+
+        val token = authRepository.getIdToken()
         YnymPortalApi.retrofitService.deleteTask(id, token = "Bearer $token")
     }
 
-    override suspend fun refreshTask() {
+    override suspend fun refreshTasks() {
         withContext(dispatcher) {
             val token = authRepository.getIdToken()
             val tasks = YnymPortalApi.retrofitService.getTasks(token).toCommon()
@@ -82,5 +90,12 @@ class DefaultTaskRepository : TaskRepository {
                 localDataSource.upsertTask(it.toLocal())
             }
         }
+    }
+
+    override suspend fun refreshTask(id: String): Task {
+        val token = authRepository.getIdToken()
+        val networkTask = YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token")
+        localDataSource.upsertTask(networkTask.toLocal())
+        return networkTask.toCommon()
     }
 }
