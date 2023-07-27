@@ -25,8 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -38,7 +38,7 @@ import kotlinx.datetime.toLocalDateTime
 fun TaskAddScreen(
     onTaskSave: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: TaskAddViewModel = viewModel()
+    viewModel: TaskAddViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {

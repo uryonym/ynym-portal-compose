@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import javax.inject.Inject
 
 data class TaskEditUiState(
     val isLoading: Boolean = false,
@@ -24,13 +26,11 @@ data class TaskEditUiState(
     val isTaskSaved: Boolean = false
 )
 
-class TaskEditViewModel constructor(
-    savedStateHandle: SavedStateHandle
+@HiltViewModel
+class TaskEditViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val taskRepository: TaskRepository
 ) : ViewModel() {
-
-    // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
-    // hiltを使って解消すべき部分
-    private val taskRepository: TaskRepository = DefaultTaskRepository()
 
     private val taskId: String = savedStateHandle["taskId"]!!
 

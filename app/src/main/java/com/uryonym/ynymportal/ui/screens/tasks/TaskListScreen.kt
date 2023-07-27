@@ -26,8 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
@@ -36,7 +36,7 @@ fun TaskListScreen(
     onNavigateTaskAdd: () -> Unit,
     onNavigateTaskEdit: (Task) -> Unit,
     onOpenDrawer: () -> Unit,
-    viewModel: TaskListViewModel = viewModel()
+    viewModel: TaskListViewModel = hiltViewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {

@@ -5,23 +5,24 @@ import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class TaskListUiState(
     val isLoading: Boolean = false,
     val tasks: List<Task> = emptyList()
 )
 
-class TaskListViewModel : ViewModel() {
-
-    // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
-    // hiltを使って解消すべき部分
-    private val taskRepository: TaskRepository = DefaultTaskRepository()
+@HiltViewModel
+class TaskListViewModel @Inject constructor(
+    private val taskRepository: TaskRepository
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     val uiState: StateFlow<TaskListUiState> =

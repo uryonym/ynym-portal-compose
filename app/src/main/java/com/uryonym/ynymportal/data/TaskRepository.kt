@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
@@ -29,7 +30,7 @@ interface TaskRepository {
     suspend fun refreshTask(id: String): Task
 }
 
-class DefaultTaskRepository : TaskRepository {
+class DefaultTaskRepository @Inject constructor() : TaskRepository {
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     private val authRepository: AuthRepository = DefaultAuthRepository()
