@@ -16,11 +16,11 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE id = (:taskId)")
     suspend fun getTask(taskId: String): LocalTask
 
-    @Upsert
-    suspend fun upsertTask(task: LocalTask)
+    @Insert
+    suspend fun insertTask(task: LocalTask)
 
     @Update
-    suspend fun updateTask(vararg  task: LocalTask)
+    suspend fun updateTask(task: LocalTask)
 
     @Query("DELETE FROM task WHERE id = (:taskId)")
     suspend fun deleteTask(taskId: String)

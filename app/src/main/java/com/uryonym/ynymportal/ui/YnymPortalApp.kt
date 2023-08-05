@@ -162,26 +162,12 @@ fun YnymPortalApp(
                 }
                 composable(route = YnymPortalScreen.TaskAdd.route) {
                     TaskAddScreen(
-                        onTaskSave = {
-                            navController.navigate(YnymPortalScreen.TaskList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
                 composable(route = YnymPortalScreen.TaskEdit.route) {
                     TaskEditScreen(
-                        onTaskUpdate = {
-                            navController.navigate(YnymPortalScreen.TaskList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
                 composable(route = YnymPortalScreen.ConfidentialList.route) {

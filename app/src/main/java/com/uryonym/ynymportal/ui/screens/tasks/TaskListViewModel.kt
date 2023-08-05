@@ -2,15 +2,12 @@ package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,29 +22,27 @@ class TaskListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    val uiState: StateFlow<TaskListUiState> =
-        combine(
-            _isLoading, taskRepository.getTasks()
-        ) { isLoading, tasks ->
-            if (tasks.isNotEmpty()) {
-                TaskListUiState(isLoading = isLoading, tasks = tasks)
-            } else {
-                TaskListUiState(isLoading = isLoading, tasks = emptyList())
+
+    private val _uiState = MutableStateFlow(TaskListUiState())
+    val uiState: StateFlow<TaskListUiState> = _uiState
+
+    init {
+        viewModelScope.launch {
+            taskRepository.getTasks().collect { tasks ->
+                _uiState.update {
+                    it.copy(tasks = tasks)
+                }
             }
         }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = TaskListUiState()
-            )
+    }
 
     fun onSaveStatus(task: Task, status: Boolean) {
-        viewModelScope.launch {
-            task.isComplete = status
-            task.id?.let {
-                taskRepository.editTask(it, task)
-            }
-        }
+//        viewModelScope.launch {
+//            task.isComplete = status
+//            task.id?.let {
+//                taskRepository.updateTask(it, task)
+//            }
+//        }
     }
 
     fun refreshTasks() {

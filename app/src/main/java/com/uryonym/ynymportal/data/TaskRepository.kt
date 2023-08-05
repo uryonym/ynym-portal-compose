@@ -1,25 +1,28 @@
 package com.uryonym.ynymportal.data
 
-import androidx.room.Room
-import com.uryonym.ynymportal.MyContext
 import com.uryonym.ynymportal.data.local.TaskDao
-import com.uryonym.ynymportal.data.local.TaskDatabase
 import com.uryonym.ynymportal.data.network.YnymPortalApi
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
+import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
 
     suspend fun getTask(id: String): Task
 
-    suspend fun addTask(task: Task)
+    suspend fun insertTask(title: String, description: String, deadLine: LocalDate?)
 
-    suspend fun editTask(id: String, task: Task)
+    suspend fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        deadLine: LocalDate?,
+        isComplete: Boolean
+    )
 
     suspend fun changeStatus(id: String, status: Boolean, token: String): Task
 
@@ -30,21 +33,16 @@ interface TaskRepository {
     suspend fun refreshTask(id: String): Task
 }
 
-class DefaultTaskRepository @Inject constructor() : TaskRepository {
+@Singleton
+class TaskRepositoryImpl @Inject constructor(
+    private val localDataSource: TaskDao
+) : TaskRepository {
 
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     private val authRepository: AuthRepository = DefaultAuthRepository()
-    private val localDataSource: TaskDao = Room.databaseBuilder(
-        context = MyContext.getInstance().applicationContext,
-        klass = TaskDatabase::class.java,
-        name = "task-database"
-    ).build().taskDao()
 
     override fun getTasks(): Flow<List<Task>> {
         return localDataSource.getTasks().map { tasks ->
-            withContext(dispatcher) {
-                tasks.toCommon()
-            }
+            tasks.toCommon()
         }
     }
 
@@ -52,23 +50,38 @@ class DefaultTaskRepository @Inject constructor() : TaskRepository {
         return localDataSource.getTask(id).toCommon()
     }
 
-    override suspend fun addTask(task: Task) {
-        withContext(dispatcher) {
-            localDataSource.upsertTask(task.toLocal())
+    override suspend fun insertTask(title: String, description: String, deadLine: LocalDate?) {
+        val task = Task(
+            id = UUID.randomUUID().toString(),
+            title = title,
+            description = description,
+            deadLine = deadLine,
+            isComplete = false
+        )
+        localDataSource.insertTask(task.toLocal())
 
-            val token = authRepository.getIdToken()
-            YnymPortalApi.retrofitService.addTask(task.toNetwork(), token = "Bearer $token")
-        }
+        val token = authRepository.getIdToken()
+        YnymPortalApi.retrofitService.addTask(task.toNetwork(), "Bearer $token")
     }
 
-    override suspend fun editTask(id: String, task: Task) {
-        withContext(dispatcher) {
-            task.id = id
-            localDataSource.upsertTask(task.toLocal())
+    override suspend fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        deadLine: LocalDate?,
+        isComplete: Boolean
+    ) {
+        val task = Task(
+            id = id,
+            title = title,
+            description = description,
+            deadLine = deadLine,
+            isComplete = isComplete
+        )
+        localDataSource.updateTask(task.toLocal())
 
-            val token = authRepository.getIdToken()
-            YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), token = "Bearer $token")
-        }
+        val token = authRepository.getIdToken()
+        YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), "Bearer $token")
     }
 
     override suspend fun changeStatus(id: String, status: Boolean, token: String): Task {
@@ -83,20 +96,18 @@ class DefaultTaskRepository @Inject constructor() : TaskRepository {
     }
 
     override suspend fun refreshTasks() {
-        withContext(dispatcher) {
-            val token = authRepository.getIdToken()
-            val tasks = YnymPortalApi.retrofitService.getTasks(token).toCommon()
-            localDataSource.deleteAllTask()
-            tasks.map {
-                localDataSource.upsertTask(it.toLocal())
-            }
+        val token = authRepository.getIdToken()
+        val tasks = YnymPortalApi.retrofitService.getTasks(token).toCommon()
+        localDataSource.deleteAllTask()
+        tasks.map {
+            localDataSource.insertTask(it.toLocal())
         }
     }
 
     override suspend fun refreshTask(id: String): Task {
         val token = authRepository.getIdToken()
         val networkTask = YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token")
-        localDataSource.upsertTask(networkTask.toLocal())
+        localDataSource.insertTask(networkTask.toLocal())
         return networkTask.toCommon()
     }
 }

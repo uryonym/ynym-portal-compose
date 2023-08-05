@@ -11,6 +11,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -34,9 +35,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskAddScreen(
-    onTaskSave: () -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: TaskAddViewModel = hiltViewModel()
 ) {
@@ -54,10 +55,7 @@ fun TaskAddScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveNewTask()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = { viewModel.onSaveNewTask() }) {
                         Text(text = "保存")
                     }
                 })
@@ -87,12 +85,13 @@ fun TaskAddScreen(
 
         LaunchedEffect(uiState.isTaskSaved) {
             if (uiState.isTaskSaved) {
-                onTaskSave()
+                onNavigateBack()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskAddForm(
     title: String,
@@ -152,6 +151,7 @@ fun TaskAddForm(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerDialogComponent(
     datePickerState: DatePickerState,

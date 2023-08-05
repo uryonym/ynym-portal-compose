@@ -3,9 +3,8 @@ package com.uryonym.ynymportal.data.network
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.uryonym.ynymportal.data.Car
 import com.uryonym.ynymportal.data.Confidential
-import com.uryonym.ynymportal.data.Task
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -19,7 +18,7 @@ import retrofit2.http.Path
 private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
     .baseUrl(BASE_URL).build()
 
 interface YnymPortalService {
@@ -30,7 +29,10 @@ interface YnymPortalService {
     suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): NetworkTask
 
     @POST("tasks")
-    suspend fun addTask(@Body task: NetworkTask, @Header("Authorization") token: String): NetworkTask
+    suspend fun addTask(
+        @Body task: NetworkTask,
+        @Header("Authorization") token: String
+    ): NetworkTask
 
     @PATCH("tasks/{id}")
     suspend fun editTask(

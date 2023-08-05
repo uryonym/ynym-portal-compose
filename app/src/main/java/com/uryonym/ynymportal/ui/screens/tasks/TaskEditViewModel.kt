@@ -3,13 +3,11 @@ package com.uryonym.ynymportal.ui.screens.tasks
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.DefaultTaskRepository
 import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -17,6 +15,7 @@ import javax.inject.Inject
 
 data class TaskEditUiState(
     val isLoading: Boolean = false,
+    val taskId: String = "",
     val task: Task? = null,
     val title: String = "",
     val description: String = "",
@@ -32,14 +31,15 @@ class TaskEditViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    private val taskId: String = savedStateHandle["taskId"]!!
-
     private val _uiState = MutableStateFlow(TaskEditUiState())
-    val uiState: StateFlow<TaskEditUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<TaskEditUiState> = _uiState
 
     init {
+        _uiState.update {
+            it.copy(taskId = savedStateHandle["taskId"]!!)
+        }
+
         getTask()
-        refreshTask()
     }
 
     fun onChangeTitle(value: String) {
@@ -68,14 +68,14 @@ class TaskEditViewModel @Inject constructor(
 
     fun onSaveEditTask() {
         if (uiState.value.title.isNotEmpty()) {
-            val editTask = Task(
-                title = uiState.value.title,
-                description = uiState.value.description,
-                deadLine = uiState.value.deadLine,
-                isComplete = uiState.value.isComplete
-            )
             viewModelScope.launch {
-                taskRepository.editTask(taskId, editTask)
+                taskRepository.updateTask(
+                    id = uiState.value.taskId,
+                    title = uiState.value.title,
+                    description = uiState.value.description,
+                    deadLine = uiState.value.deadLine,
+                    isComplete = uiState.value.isComplete
+                )
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }
@@ -85,19 +85,23 @@ class TaskEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            taskRepository.deleteTask(taskId)
+            taskRepository.deleteTask(uiState.value.taskId)
+            _uiState.update {
+                it.copy(isTaskSaved = true)
+            }
         }
     }
 
     private fun getTask() {
         viewModelScope.launch {
-            taskRepository.getTask(taskId).let { task ->
+            taskRepository.getTask(uiState.value.taskId).let { task ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         title = task.title,
                         description = task.description ?: "",
                         deadLine = task.deadLine,
+                        isComplete = task.isComplete
                     )
                 }
             }
@@ -106,7 +110,7 @@ class TaskEditViewModel @Inject constructor(
 
     private fun refreshTask() {
         viewModelScope.launch {
-            taskRepository.refreshTask(taskId).let { task ->
+            taskRepository.refreshTask(uiState.value.taskId).let { task ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,

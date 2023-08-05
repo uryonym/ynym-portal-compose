@@ -13,6 +13,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -36,9 +37,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskEditScreen(
-    onTaskUpdate: () -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: TaskEditViewModel = hiltViewModel()
 ) {
@@ -49,27 +50,19 @@ fun TaskEditScreen(
                     Text(stringResource(id = YnymPortalScreen.TaskEdit.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigateBack()
-                    }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveEditTask()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = viewModel::onSaveEditTask) {
                         Text(text = "保存")
                     }
                 })
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = {
-                    viewModel.onDelete()
-                    onNavigateBack()
-                }) {
+                IconButton(onClick = viewModel::onDelete) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -99,12 +92,13 @@ fun TaskEditScreen(
 
         LaunchedEffect(uiState.isTaskSaved) {
             if (uiState.isTaskSaved) {
-                onTaskUpdate()
+                onNavigateBack()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TaskEditForm(
     title: String,
@@ -164,6 +158,7 @@ private fun TaskEditForm(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerDialogComponent(
     datePickerState: DatePickerState,
