@@ -112,8 +112,6 @@ fun TaskListScreen(
 
 @Composable
 fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskListViewModel) {
-    var isChecked by remember { mutableStateOf(task.isComplete) }
-
     ListItem(
         headlineContent = {
             Column {
@@ -125,9 +123,8 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: Task
         },
         leadingContent = {
             Checkbox(
-                checked = isChecked,
+                checked = task.isComplete,
                 onCheckedChange = {
-                    isChecked = !isChecked
                     viewModel.onSaveStatus(
                         task = task,
                         status = it

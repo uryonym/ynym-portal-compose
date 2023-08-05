@@ -39,12 +39,11 @@ class TaskListViewModel @Inject constructor(
     }
 
     fun onSaveStatus(task: Task, status: Boolean) {
-//        viewModelScope.launch {
-//            task.isComplete = status
-//            task.id?.let {
-//                taskRepository.updateTask(it, task)
-//            }
-//        }
+        viewModelScope.launch {
+            task.id?.let {
+                taskRepository.changeStatus(id = it, status = status)
+            }
+        }
     }
 
     fun refreshTasks() {

@@ -23,7 +23,7 @@ interface TaskRepository {
         isComplete: Boolean
     )
 
-    suspend fun changeStatus(id: String, status: Boolean, token: String): Task
+    suspend fun changeStatus(id: String, status: Boolean)
 
     suspend fun deleteTask(id: String)
 
@@ -83,8 +83,16 @@ class TaskRepositoryImpl @Inject constructor(
         localDataSource.updateTask(networkTask.toLocal())
     }
 
-    override suspend fun changeStatus(id: String, status: Boolean, token: String): Task {
-        TODO("Not yet implemented")
+    override suspend fun changeStatus(id: String, status: Boolean) {
+        val task = Task(
+            id = id,
+            isComplete = status
+        )
+        val token = authRepository.getIdToken()
+        val networkTask =
+            YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), "Bearer $token")
+
+        localDataSource.updateTask(networkTask.toLocal())
     }
 
     override suspend fun deleteTask(id: String) {
