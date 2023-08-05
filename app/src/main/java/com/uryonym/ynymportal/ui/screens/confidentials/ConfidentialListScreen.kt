@@ -12,6 +12,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.data.Confidential
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfidentialListScreen(
     onNavigateConfidentialAdd: () -> Unit,
