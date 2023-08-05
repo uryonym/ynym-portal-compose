@@ -1,16 +1,14 @@
 package com.uryonym.ynymportal.data.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM task")
+    @Query("SELECT * FROM task ORDER BY dead_line is null, dead_line, created_at")
     fun getTasks(): Flow<List<LocalTask>>
 
     @Query("SELECT * FROM task WHERE id = (:taskId)")
