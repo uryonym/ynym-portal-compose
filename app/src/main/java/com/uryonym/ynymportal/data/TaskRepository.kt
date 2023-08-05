@@ -52,16 +52,15 @@ class TaskRepositoryImpl @Inject constructor(
 
     override suspend fun insertTask(title: String, description: String, deadLine: LocalDate?) {
         val task = Task(
-            id = UUID.randomUUID().toString(),
             title = title,
             description = description,
             deadLine = deadLine,
             isComplete = false
         )
-        localDataSource.insertTask(task.toLocal())
-
         val token = authRepository.getIdToken()
-        YnymPortalApi.retrofitService.addTask(task.toNetwork(), "Bearer $token")
+        val networkTask = YnymPortalApi.retrofitService.addTask(task.toNetwork(), "Bearer $token")
+
+        localDataSource.insertTask(networkTask.toLocal())
     }
 
     override suspend fun updateTask(
@@ -78,10 +77,11 @@ class TaskRepositoryImpl @Inject constructor(
             deadLine = deadLine,
             isComplete = isComplete
         )
-        localDataSource.updateTask(task.toLocal())
-
         val token = authRepository.getIdToken()
-        YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), "Bearer $token")
+        val networkTask =
+            YnymPortalApi.retrofitService.editTask(id, task.toNetwork(), "Bearer $token")
+
+        localDataSource.updateTask(networkTask.toLocal())
     }
 
     override suspend fun changeStatus(id: String, status: Boolean, token: String): Task {
