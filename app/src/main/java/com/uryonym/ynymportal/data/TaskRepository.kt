@@ -5,7 +5,6 @@ import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 

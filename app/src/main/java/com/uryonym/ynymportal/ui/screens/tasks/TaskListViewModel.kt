@@ -34,6 +34,8 @@ class TaskListViewModel @Inject constructor(
                 }
             }
         }
+
+        refreshTasks()
     }
 
     fun onSaveStatus(task: Task, status: Boolean) {
