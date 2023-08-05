@@ -96,10 +96,10 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(id: String) {
-        localDataSource.deleteTask(id)
-
         val token = authRepository.getIdToken()
         YnymPortalApi.retrofitService.deleteTask(id, token = "Bearer $token")
+
+        localDataSource.deleteTask(id)
     }
 
     override suspend fun refreshTasks() {
