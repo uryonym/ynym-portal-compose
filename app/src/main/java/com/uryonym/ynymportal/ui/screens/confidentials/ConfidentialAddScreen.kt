@@ -20,16 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfidentialAddScreen(
-    onConfidentialSave: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: ConfidentialAddViewModel = viewModel()
+    viewModel: ConfidentialAddViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -45,10 +44,7 @@ fun ConfidentialAddScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveNewConfidential()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = viewModel::onSaveNewConfidential) {
                         Text(text = "保存")
                     }
                 }
@@ -80,7 +76,7 @@ fun ConfidentialAddScreen(
 
         LaunchedEffect(uiState.isConfidentialSaved) {
             if (uiState.isConfidentialSaved) {
-                onConfidentialSave()
+                onNavigateBack()
             }
         }
     }

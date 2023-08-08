@@ -2,10 +2,13 @@ package com.uryonym.ynymportal.di
 
 import android.content.Context
 import androidx.room.Room
+import com.uryonym.ynymportal.data.ConfidentialRepository
+import com.uryonym.ynymportal.data.ConfidentialRepositoryImpl
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.TaskRepositoryImpl
+import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.local.TaskDao
-import com.uryonym.ynymportal.data.local.TaskDatabase
+import com.uryonym.ynymportal.data.local.YnymPortalDatabase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,6 +23,10 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindTaskRepository(repository: TaskRepositoryImpl): TaskRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindConfidentialRepository(repository: ConfidentialRepositoryImpl): ConfidentialRepository
 }
 
 @Module
@@ -27,14 +34,18 @@ abstract class RepositoryModule {
 object DatabaseModule {
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context): TaskDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): YnymPortalDatabase {
         return Room.databaseBuilder(
             context = context.applicationContext,
-            klass = TaskDatabase::class.java,
-            name = "Tasks.db"
+            klass = YnymPortalDatabase::class.java,
+            name = "YnymPortal.db"
         ).build()
     }
 
     @Provides
-    fun provideTaskDao(database: TaskDatabase): TaskDao = database.taskDao()
+    fun provideTaskDao(database: YnymPortalDatabase): TaskDao = database.taskDao()
+
+    @Provides
+    fun provideConfidentialDao(database: YnymPortalDatabase): ConfidentialDao =
+        database.confidentialDao()
 }

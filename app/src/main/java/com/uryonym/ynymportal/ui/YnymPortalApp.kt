@@ -187,26 +187,12 @@ fun YnymPortalApp(
                 }
                 composable(route = YnymPortalScreen.ConfidentialAdd.route) {
                     ConfidentialAddScreen(
-                        onConfidentialSave = {
-                            navController.navigate(YnymPortalScreen.ConfidentialList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
                 composable(route = YnymPortalScreen.ConfidentialEdit.route) {
                     ConfidentialEditScreen(
-                        onConfidentialUpdate = {
-                            navController.navigate(YnymPortalScreen.ConfidentialList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
                 composable(route = YnymPortalScreen.CarList.route) {

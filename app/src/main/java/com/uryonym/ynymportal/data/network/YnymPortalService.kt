@@ -2,7 +2,6 @@ package com.uryonym.ynymportal.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.uryonym.ynymportal.data.Car
-import com.uryonym.ynymportal.data.Confidential
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
@@ -45,25 +44,26 @@ interface YnymPortalService {
     suspend fun deleteTask(@Path("id") id: String, @Header("Authorization") token: String)
 
     @GET("confidentials")
-    suspend fun getConfidentials(@Header("Authorization") token: String): List<Confidential>
+    suspend fun getConfidentials(@Header("Authorization") token: String): List<NetworkConfidential>
 
     @GET("confidentials/{id}")
     suspend fun getConfidential(
         @Path("id") id: String,
         @Header("Authorization") token: String
-    ): Confidential
+    ): NetworkConfidential
 
     @POST("confidentials")
     suspend fun addConfidential(
-        @Body confidential: Confidential,
+        @Body confidential: NetworkConfidential,
         @Header("Authorization") token: String
-    ): Confidential
+    ): NetworkConfidential
 
     @PATCH("confidentials/{id}")
     suspend fun editConfidential(
         @Path("id") id: String,
-        @Body confidential: Confidential, @Header("Authorization") token: String
-    ): Confidential
+        @Body confidential: NetworkConfidential,
+        @Header("Authorization") token: String
+    ): NetworkConfidential
 
     @DELETE("confidentials/{id}")
     suspend fun deleteConfidential(@Path("id") id: String, @Header("Authorization") token: String)

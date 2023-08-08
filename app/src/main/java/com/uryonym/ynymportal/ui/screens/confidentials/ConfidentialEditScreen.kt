@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
@@ -29,9 +30,8 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfidentialEditScreen(
-    onConfidentialUpdate: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: ConfidentialEditViewModel = viewModel()
+    viewModel: ConfidentialEditViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -47,10 +47,7 @@ fun ConfidentialEditScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveEditConfidential()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = viewModel::onSaveEditConfidential) {
                         Text(text = "保存")
                     }
                 }
@@ -58,10 +55,7 @@ fun ConfidentialEditScreen(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = {
-                    viewModel.onDelete()
-                    onNavigateBack()
-                }) {
+                IconButton(onClick = viewModel::onDelete) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -92,7 +86,7 @@ fun ConfidentialEditScreen(
 
         LaunchedEffect(uiState.isConfidentialSaved) {
             if (uiState.isConfidentialSaved) {
-                onConfidentialUpdate()
+                onNavigateBack()
             }
         }
     }

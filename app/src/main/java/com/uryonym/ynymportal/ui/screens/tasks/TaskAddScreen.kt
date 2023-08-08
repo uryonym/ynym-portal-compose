@@ -55,7 +55,7 @@ fun TaskAddScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = { viewModel.onSaveNewTask() }) {
+                    TextButton(onClick = viewModel::onSaveNewTask) {
                         Text(text = "保存")
                     }
                 })
