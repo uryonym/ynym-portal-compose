@@ -2,8 +2,8 @@ package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.Task
 import com.uryonym.ynymportal.data.TaskRepository
+import com.uryonym.ynymportal.data.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,9 +40,7 @@ class TaskListViewModel @Inject constructor(
 
     fun onSaveStatus(task: Task, status: Boolean) {
         viewModelScope.launch {
-            task.id?.let {
-                taskRepository.changeStatus(id = it, status = status)
-            }
+            taskRepository.changeStatus(task = task, status = status)
         }
     }
 

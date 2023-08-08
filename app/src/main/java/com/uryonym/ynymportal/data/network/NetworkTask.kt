@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkTask(
-    val id: String? = null,
+    val id: String = "",
     var title: String = "",
     var description: String? = null,
     @SerialName(value = "dead_line") var deadLine: LocalDate? = null,

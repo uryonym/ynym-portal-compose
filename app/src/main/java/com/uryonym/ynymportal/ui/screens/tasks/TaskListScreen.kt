@@ -33,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.data.Task
+import com.uryonym.ynymportal.data.model.Task
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
