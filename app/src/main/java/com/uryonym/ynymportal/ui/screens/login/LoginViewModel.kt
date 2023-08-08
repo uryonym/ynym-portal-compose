@@ -3,15 +3,16 @@ package com.uryonym.ynymportal.ui.screens.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.AuthRepository
-import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.model.Response
 import com.uryonym.ynymportal.data.model.Response.Loading
 import com.uryonym.ynymportal.data.model.Response.Success
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class LoginUiState(
     val signInResponse: Response<Boolean> = Success(false),
@@ -19,9 +20,10 @@ data class LoginUiState(
     val password: String = "",
 )
 
-class LoginViewModel : ViewModel() {
-
-    private val authRepository: AuthRepository = DefaultAuthRepository()
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -55,4 +57,5 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
+
 }

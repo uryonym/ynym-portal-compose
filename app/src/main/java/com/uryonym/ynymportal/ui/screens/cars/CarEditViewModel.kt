@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.AuthRepository
+import com.uryonym.ynymportal.data.AuthRepositoryImpl
 import com.uryonym.ynymportal.data.Car
 import com.uryonym.ynymportal.data.CarRepository
-import com.uryonym.ynymportal.data.DefaultAuthRepository
 import com.uryonym.ynymportal.data.DefaultCarRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +33,7 @@ class CarEditViewModel constructor(
     // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
     // hiltを使って解消すべき部分
     private val carRepository: CarRepository = DefaultCarRepository()
-    private val authRepository: AuthRepository = DefaultAuthRepository()
+    private val authRepository: AuthRepository = AuthRepositoryImpl()
 
     private val carId: String = savedStateHandle["carId"]!!
 

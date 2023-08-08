@@ -34,10 +34,9 @@ interface TaskRepository {
 
 @Singleton
 class TaskRepositoryImpl @Inject constructor(
-    private val localDataSource: TaskDao
+    private val localDataSource: TaskDao,
+    private val authRepository: AuthRepository
 ) : TaskRepository {
-
-    private val authRepository = DefaultAuthRepository()
 
     override fun getTasks(): Flow<List<Task>> {
         return localDataSource.getTasks()
@@ -115,4 +114,5 @@ class TaskRepositoryImpl @Inject constructor(
 
         return task
     }
+
 }

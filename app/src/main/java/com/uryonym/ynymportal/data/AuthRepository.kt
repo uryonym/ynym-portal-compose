@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface AuthRepository {
     val currentUser: FirebaseUser?
@@ -28,7 +30,8 @@ interface AuthRepository {
     fun getAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 }
 
-class DefaultAuthRepository : AuthRepository {
+@Singleton
+class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     private val auth = Firebase.auth
 

@@ -2,6 +2,8 @@ package com.uryonym.ynymportal.di
 
 import android.content.Context
 import androidx.room.Room
+import com.uryonym.ynymportal.data.AuthRepository
+import com.uryonym.ynymportal.data.AuthRepositoryImpl
 import com.uryonym.ynymportal.data.ConfidentialRepository
 import com.uryonym.ynymportal.data.ConfidentialRepositoryImpl
 import com.uryonym.ynymportal.data.TaskRepository
@@ -20,6 +22,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Singleton
+    @Binds
+    abstract fun bindAuthRepository(repository: AuthRepositoryImpl): AuthRepository
+
     @Singleton
     @Binds
     abstract fun bindTaskRepository(repository: TaskRepositoryImpl): TaskRepository

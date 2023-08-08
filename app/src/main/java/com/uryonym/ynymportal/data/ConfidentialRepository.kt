@@ -36,10 +36,9 @@ interface ConfidentialRepository {
 
 @Singleton
 class ConfidentialRepositoryImpl @Inject constructor(
-    private val localDataSource: ConfidentialDao
+    private val localDataSource: ConfidentialDao,
+    private val authRepository: AuthRepository
 ) : ConfidentialRepository {
-
-    private val authRepository = DefaultAuthRepository()
 
     override fun getConfidentials(): Flow<List<Confidential>> {
         return localDataSource.getConfidentials()
@@ -117,4 +116,5 @@ class ConfidentialRepositoryImpl @Inject constructor(
 
         return confidential
     }
+
 }
