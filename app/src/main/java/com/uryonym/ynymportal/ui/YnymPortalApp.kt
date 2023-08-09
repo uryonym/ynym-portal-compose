@@ -2,27 +2,11 @@ package com.uryonym.ynymportal.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DirectionsCar
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -97,171 +81,163 @@ fun YnymPortalApp(
             drawerState.close()
         }
     }
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Spacer(modifier = Modifier.height(12.dp))
-                NavigationDrawerItem(
-                    icon = { Icon(imageVector = Icons.Outlined.Task, contentDescription = "task") },
-                    label = { Text(text = "タスク") },
-                    selected = false,
-                    onClick = {
-                        navController.navigate(YnymPortalScreen.TaskList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-                NavigationDrawerItem(
-                    icon = { Icon(imageVector = Icons.Outlined.Lock, contentDescription = "lock") },
-                    label = { Text(text = "認証情報") },
-                    selected = false,
-                    onClick = {
-                        navController.navigate(YnymPortalScreen.ConfidentialList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.DirectionsCar,
-                            contentDescription = "car"
-                        )
-                    },
-                    label = { Text(text = "車") },
-                    selected = false,
-                    onClick = {
-                        navController.navigate(YnymPortalScreen.CarList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-                HorizontalDivider()
-                NavigationDrawerItem(
-                    label = { Text(text = "ログアウト") },
-                    selected = false,
-                    onClick = {
-                        viewModel.signOut()
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                )
-            }
-        }, content = {
-            NavHost(
+
+    NavHost(
+        navController = navController,
+        startDestination = YnymPortalScreen.Login.route
+    ) {
+        composable(route = YnymPortalScreen.Login.route) {
+            LoginScreen()
+        }
+        composable(route = YnymPortalScreen.TaskList.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
                 navController = navController,
-                startDestination = YnymPortalScreen.Login.route
+                scope = scope,
+                viewModel = viewModel
             ) {
-                composable(route = YnymPortalScreen.Login.route) {
-                    LoginScreen(
-                        onOpenDrawer = { scope.launch { drawerState.open() } }
-                    )
-                }
-                composable(route = YnymPortalScreen.TaskList.route) {
-                    TaskListScreen(
-                        onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
-                        onNavigateTaskEdit = { task ->
-                            task.id?.let {
-                                navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
-                            }
-                        },
-                        onOpenDrawer = { scope.launch { drawerState.open() } }
-                    )
-                }
-                composable(route = YnymPortalScreen.TaskAdd.route) {
-                    TaskAddScreen(
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-                composable(route = YnymPortalScreen.TaskEdit.route) {
-                    TaskEditScreen(
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-                composable(route = YnymPortalScreen.ConfidentialList.route) {
-                    ConfidentialListScreen(
-                        onNavigateConfidentialAdd = {
-                            navController.navigate(YnymPortalScreen.ConfidentialAdd.route)
-                        },
-                        onNavigateConfidentialEdit = { confidential ->
-                            confidential.id?.let {
-                                navController.navigate(
-                                    YnymPortalScreen.ConfidentialEdit.createRoute(it)
-                                )
-                            }
-                        },
-                        onOpenDrawer = { scope.launch { drawerState.open() } }
-                    )
-                }
-                composable(route = YnymPortalScreen.ConfidentialAdd.route) {
-                    ConfidentialAddScreen(
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-                composable(route = YnymPortalScreen.ConfidentialEdit.route) {
-                    ConfidentialEditScreen(
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-                composable(route = YnymPortalScreen.CarList.route) {
-                    CarListScreen(
-                        onNavigateCarAdd = {
-                            navController.navigate(YnymPortalScreen.CarAdd.route)
-                        },
-                        onNavigateCarEdit = { car ->
-                            car.id?.let {
-                                navController.navigate(
-                                    YnymPortalScreen.CarEdit.createRoute(it)
-                                )
-                            }
-                        },
-                        onOpenDrawer = { scope.launch { drawerState.open() } }
-                    )
-                }
-                composable(route = YnymPortalScreen.CarAdd.route) {
-                    CarAddScreen(
-                        onCarSave = {
-                            navController.navigate(YnymPortalScreen.CarList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
-                    )
-                }
-                composable(route = YnymPortalScreen.CarEdit.route) {
-                    CarEditScreen(
-                        onCarUpdate = {
-                            navController.navigate(YnymPortalScreen.CarList.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onNavigateBack = { navController.navigateUp() }
-                    )
-                }
+                TaskListScreen(
+                    onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
+                    onNavigateTaskEdit = { task ->
+                        task.id?.let {
+                            navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
+                        }
+                    },
+                    onOpenDrawer = { scope.launch { drawerState.open() } }
+                )
             }
         }
-    )
+        composable(route = YnymPortalScreen.TaskAdd.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                TaskAddScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.TaskEdit.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                TaskEditScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.ConfidentialList.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                ConfidentialListScreen(
+                    onNavigateConfidentialAdd = {
+                        navController.navigate(YnymPortalScreen.ConfidentialAdd.route)
+                    },
+                    onNavigateConfidentialEdit = { confidential ->
+                        confidential.id?.let {
+                            navController.navigate(
+                                YnymPortalScreen.ConfidentialEdit.createRoute(it)
+                            )
+                        }
+                    },
+                    onOpenDrawer = { scope.launch { drawerState.open() } }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.ConfidentialAdd.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                ConfidentialAddScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.ConfidentialEdit.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                ConfidentialEditScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.CarList.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                CarListScreen(
+                    onNavigateCarAdd = {
+                        navController.navigate(YnymPortalScreen.CarAdd.route)
+                    },
+                    onNavigateCarEdit = { car ->
+                        car.id?.let {
+                            navController.navigate(
+                                YnymPortalScreen.CarEdit.createRoute(it)
+                            )
+                        }
+                    },
+                    onOpenDrawer = { scope.launch { drawerState.open() } }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.CarAdd.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                CarAddScreen(
+                    onCarSave = {
+                        navController.navigate(YnymPortalScreen.CarList.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    onNavigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.CarEdit.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                navController = navController,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                CarEditScreen(
+                    onCarUpdate = {
+                        navController.navigate(YnymPortalScreen.CarList.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    onNavigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+    }
 
     val isUserSignedOut = viewModel.getAuthState().collectAsState().value
     if (isUserSignedOut) {

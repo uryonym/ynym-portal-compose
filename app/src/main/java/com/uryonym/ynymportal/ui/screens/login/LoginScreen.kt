@@ -3,14 +3,9 @@ package com.uryonym.ynymportal.ui.screens.login
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,18 +21,11 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onOpenDrawer: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(stringResource(id = YnymPortalScreen.Login.title))
-        })
-    }, bottomBar = {
-        BottomAppBar(actions = {
-            IconButton(onClick = onOpenDrawer) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
-            }
         })
     }) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
