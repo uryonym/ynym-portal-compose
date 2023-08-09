@@ -123,7 +123,7 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: Task
                 checked = task.isComplete,
                 onCheckedChange = {
                     viewModel.onSaveStatus(
-                        task = task,
+                        taskId = task.id,
                         status = it
                     )
                 })

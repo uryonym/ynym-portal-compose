@@ -2,6 +2,7 @@ package com.uryonym.ynymportal.data
 
 import com.uryonym.ynymportal.data.local.TaskDao
 import com.uryonym.ynymportal.data.model.Task
+import com.uryonym.ynymportal.data.network.NetworkTask
 import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
@@ -23,7 +24,7 @@ interface TaskRepository {
         isComplete: Boolean
     )
 
-    suspend fun changeStatus(task: Task, status: Boolean)
+    suspend fun changeStatus(taskId: String, status: Boolean)
 
     suspend fun deleteTask(id: String)
 
@@ -81,12 +82,15 @@ class TaskRepositoryImpl @Inject constructor(
         localDataSource.updateTask(networkTask.toLocal())
     }
 
-    override suspend fun changeStatus(task: Task, status: Boolean) {
-        task.isComplete = status
+    override suspend fun changeStatus(taskId: String, status: Boolean) {
+        val task = NetworkTask(
+            id = taskId,
+            isComplete = status
+        )
 
         val token = authRepository.getIdToken()
         val networkTask =
-            YnymPortalApi.retrofitService.editTask(task.id, task.toNetwork(), "Bearer $token")
+            YnymPortalApi.retrofitService.editTask(taskId, task, "Bearer $token")
 
         localDataSource.updateTask(networkTask.toLocal())
     }
