@@ -5,8 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -34,7 +39,6 @@ import com.uryonym.ynymportal.ui.screens.login.LoginScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
@@ -99,6 +103,7 @@ fun YnymPortalApp(
             ModalDrawerSheet {
                 Spacer(modifier = Modifier.height(12.dp))
                 NavigationDrawerItem(
+                    icon = { Icon(imageVector = Icons.Outlined.Task, contentDescription = "task") },
                     label = { Text(text = "タスク") },
                     selected = false,
                     onClick = {
@@ -113,6 +118,7 @@ fun YnymPortalApp(
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
                 NavigationDrawerItem(
+                    icon = { Icon(imageVector = Icons.Outlined.Lock, contentDescription = "lock") },
                     label = { Text(text = "認証情報") },
                     selected = false,
                     onClick = {
@@ -127,6 +133,12 @@ fun YnymPortalApp(
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
                 NavigationDrawerItem(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.DirectionsCar,
+                            contentDescription = "car"
+                        )
+                    },
                     label = { Text(text = "車") },
                     selected = false,
                     onClick = {
