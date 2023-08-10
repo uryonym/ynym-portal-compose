@@ -40,10 +40,11 @@ fun NavigationDrawer(
                     label = { Text(text = "タスク") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.TaskList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
+                        viewModel.onChangeNavigate(YnymPortalScreen.TaskList.route)
+//                        navController.navigate(YnymPortalScreen.TaskList.route) {
+//                            launchSingleTop = true
+//                            popUpTo(YnymPortalScreen.Login.route)
+//                        }
                         scope.launch {
                             drawerState.close()
                         }
@@ -55,10 +56,11 @@ fun NavigationDrawer(
                     label = { Text(text = "認証情報") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.ConfidentialList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
+                        viewModel.onChangeNavigate(YnymPortalScreen.ConfidentialList.route)
+//                        navController.navigate(YnymPortalScreen.ConfidentialList.route) {
+//                            launchSingleTop = true
+//                            popUpTo(YnymPortalScreen.Login.route)
+//                        }
                         scope.launch {
                             drawerState.close()
                         }
@@ -75,10 +77,11 @@ fun NavigationDrawer(
                     label = { Text(text = "車") },
                     selected = false,
                     onClick = {
-                        navController.navigate(YnymPortalScreen.CarList.route) {
-                            launchSingleTop = true
-                            popUpTo(YnymPortalScreen.Login.route)
-                        }
+                        viewModel.onChangeNavigate(YnymPortalScreen.CarList.route)
+//                        navController.navigate(YnymPortalScreen.CarList.route) {
+//                            launchSingleTop = true
+//                            popUpTo(YnymPortalScreen.Login.route)
+//                        }
                         scope.launch {
                             drawerState.close()
                         }
@@ -90,6 +93,7 @@ fun NavigationDrawer(
                     label = { Text(text = "ログアウト") },
                     selected = false,
                     onClick = {
+                        viewModel.onChangeNavigate("")
                         viewModel.signOut()
                         scope.launch {
                             drawerState.close()

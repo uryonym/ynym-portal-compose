@@ -6,8 +6,10 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -239,6 +241,8 @@ fun YnymPortalApp(
         }
     }
 
+    val currentNavigate by viewModel.currentNavigate.collectAsStateWithLifecycle()
+
     val isUserSignedOut = viewModel.getAuthState().collectAsState().value
     if (isUserSignedOut) {
         navController.navigate(YnymPortalScreen.Login.route) {
@@ -247,7 +251,7 @@ fun YnymPortalApp(
             }
         }
     } else {
-        navController.navigate(YnymPortalScreen.TaskList.route) {
+        navController.navigate(currentNavigate) {
             popUpTo(navController.graph.id) {
                 inclusive = true
             }
