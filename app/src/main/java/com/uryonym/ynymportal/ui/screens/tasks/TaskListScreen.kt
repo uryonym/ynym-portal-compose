@@ -100,7 +100,7 @@ fun TaskListScreen(
                         onNavigateTaskEdit = onNavigateTaskEdit,
                         viewModel = viewModel
                     )
-                    Divider()
+                    HorizontalDivider()
                 }
             }
         }

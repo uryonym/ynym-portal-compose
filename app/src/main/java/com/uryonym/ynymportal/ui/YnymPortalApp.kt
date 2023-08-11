@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -209,13 +208,6 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 CarAddScreen(
-                    onCarSave = {
-                        navController.navigate(YnymPortalScreen.CarList.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                        }
-                    },
                     onNavigateBack = { navController.navigateUp() }
                 )
             }
@@ -228,13 +220,6 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 CarEditScreen(
-                    onCarUpdate = {
-                        navController.navigate(YnymPortalScreen.CarList.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                        }
-                    },
                     onNavigateBack = { navController.navigateUp() }
                 )
             }

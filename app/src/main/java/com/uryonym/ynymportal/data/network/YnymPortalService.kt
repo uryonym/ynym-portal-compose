@@ -1,7 +1,6 @@
 package com.uryonym.ynymportal.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.uryonym.ynymportal.data.Car
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
@@ -69,20 +68,20 @@ interface YnymPortalService {
     suspend fun deleteConfidential(@Path("id") id: String, @Header("Authorization") token: String)
 
     @GET("cars")
-    suspend fun getCars(@Header("Authorization") token: String): List<Car>
+    suspend fun getCars(@Header("Authorization") token: String): List<NetworkCar>
 
     @GET("cars/{id}")
-    suspend fun getCar(@Path("id") id: String, @Header("Authorization") token: String): Car
+    suspend fun getCar(@Path("id") id: String, @Header("Authorization") token: String): NetworkCar
 
     @POST("cars")
-    suspend fun addCar(@Body car: Car, @Header("Authorization") token: String): Car
+    suspend fun addCar(@Body car: NetworkCar, @Header("Authorization") token: String): NetworkCar
 
     @PATCH("cars/{id}")
     suspend fun editCar(
         @Path("id") id: String,
-        @Body car: Car,
+        @Body car: NetworkCar,
         @Header("Authorization") token: String
-    ): Car
+    ): NetworkCar
 
     @DELETE("cars/{id}")
     suspend fun deleteCar(@Path("id") id: String, @Header("Authorization") token: String)

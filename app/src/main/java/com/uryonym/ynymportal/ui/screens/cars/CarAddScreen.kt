@@ -22,16 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarAddScreen(
-    onCarSave: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: CarAddViewModel = viewModel()
+    viewModel: CarAddViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -47,10 +46,7 @@ fun CarAddScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveNewCar()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = viewModel::onSaveNewCar) {
                         Text(text = "保存")
                     }
                 }
@@ -86,7 +82,7 @@ fun CarAddScreen(
 
         LaunchedEffect(uiState.isCarSaved) {
             if (uiState.isCarSaved) {
-                onCarSave()
+                onNavigateBack()
             }
         }
     }

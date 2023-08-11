@@ -3,44 +3,42 @@ package com.uryonym.ynymportal.ui.screens.cars
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.AuthRepository
-import com.uryonym.ynymportal.data.AuthRepositoryImpl
-import com.uryonym.ynymportal.data.Car
+import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.CarRepository
-import com.uryonym.ynymportal.data.DefaultCarRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class CarEditUiState(
     val isLoading: Boolean = false,
+    val carId: String = "",
     val car: Car? = null,
     val name: String = "",
     val maker: String = "",
     val model: String = "",
     val modelYear: Int = 0,
     val licensePlate: String = "",
-    val tankCapacity: Int? = null,
+    val tankCapacity: Int = 0,
     val isCarSaved: Boolean = false
 )
 
-class CarEditViewModel constructor(
-    savedStateHandle: SavedStateHandle
+@HiltViewModel
+class CarEditViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val carRepository: CarRepository
 ) : ViewModel() {
 
-    // ViewModelの中でRepositoryのインスタンスを作っているのが依存関係になっている
-    // hiltを使って解消すべき部分
-    private val carRepository: CarRepository = DefaultCarRepository()
-    private val authRepository: AuthRepository = AuthRepositoryImpl()
-
-    private val carId: String = savedStateHandle["carId"]!!
-
     private val _uiState = MutableStateFlow(CarEditUiState())
-    val uiState: StateFlow<CarEditUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<CarEditUiState> = _uiState
 
     init {
+        _uiState.update {
+            it.copy(carId = savedStateHandle["carId"]!!)
+        }
+
         getCar()
     }
 
@@ -86,17 +84,16 @@ class CarEditViewModel constructor(
             uiState.value.maker.isNotEmpty() &&
             uiState.value.model.isNotEmpty()
         ) {
-            val editCar = Car(
-                name = uiState.value.name,
-                maker = uiState.value.maker,
-                model = uiState.value.model,
-                modelYear = uiState.value.modelYear,
-                licensePlate = uiState.value.licensePlate,
-                tankCapacity = uiState.value.tankCapacity,
-            )
             viewModelScope.launch {
-                val token = authRepository.getIdToken()
-                carRepository.editCar(carId, editCar, token)
+                carRepository.updateCar(
+                    id = uiState.value.carId,
+                    name = uiState.value.name,
+                    maker = uiState.value.maker,
+                    model = uiState.value.model,
+                    modelYear = uiState.value.modelYear,
+                    licensePlate = uiState.value.licensePlate,
+                    tankCapacity = uiState.value.tankCapacity
+                )
                 _uiState.update {
                     it.copy(isCarSaved = true)
                 }
@@ -106,15 +103,16 @@ class CarEditViewModel constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            val token = authRepository.getIdToken()
-            carRepository.deleteCar(carId, token)
+            carRepository.deleteCar(uiState.value.carId)
+            _uiState.update {
+                it.copy(isCarSaved = true)
+            }
         }
     }
 
     private fun getCar() {
         viewModelScope.launch {
-            val token = authRepository.getIdToken()
-            carRepository.getCar(carId, token).let { car ->
+            carRepository.getCar(uiState.value.carId).let { car ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -123,7 +121,25 @@ class CarEditViewModel constructor(
                         model = car.model,
                         modelYear = car.modelYear,
                         licensePlate = car.licensePlate ?: "",
-                        tankCapacity = car.tankCapacity
+                        tankCapacity = car.tankCapacity ?: 0
+                    )
+                }
+            }
+        }
+    }
+
+    private fun refreshCar() {
+        viewModelScope.launch {
+            carRepository.refreshCar(uiState.value.carId).let { car ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        name = car.name,
+                        maker = car.maker,
+                        model = car.model,
+                        modelYear = car.modelYear,
+                        licensePlate = car.licensePlate ?: "",
+                        tankCapacity = car.tankCapacity ?: 0
                     )
                 }
             }

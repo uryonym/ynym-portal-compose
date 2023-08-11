@@ -24,16 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarEditScreen(
-    onCarUpdate: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: CarEditViewModel = viewModel()
+    viewModel: CarEditViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -42,17 +41,12 @@ fun CarEditScreen(
                     Text(stringResource(id = YnymPortalScreen.CarEdit.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigateBack()
-                    }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },
                 actions = {
-                    TextButton(onClick = {
-                        viewModel.onSaveEditCar()
-                        onNavigateBack()
-                    }) {
+                    TextButton(onClick = viewModel::onSaveEditCar) {
                         Text(text = "保存")
                     }
                 }
@@ -60,10 +54,7 @@ fun CarEditScreen(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = {
-                    viewModel.onDelete()
-                    onNavigateBack()
-                }) {
+                IconButton(onClick = viewModel::onDelete) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -98,7 +89,7 @@ fun CarEditScreen(
 
         LaunchedEffect(uiState.isCarSaved) {
             if (uiState.isCarSaved) {
-                onCarUpdate()
+                onNavigateBack()
             }
         }
     }

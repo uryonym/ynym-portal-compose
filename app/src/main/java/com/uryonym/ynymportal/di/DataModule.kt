@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.AuthRepositoryImpl
+import com.uryonym.ynymportal.data.CarRepository
+import com.uryonym.ynymportal.data.CarRepositoryImpl
 import com.uryonym.ynymportal.data.ConfidentialRepository
 import com.uryonym.ynymportal.data.ConfidentialRepositoryImpl
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.TaskRepositoryImpl
+import com.uryonym.ynymportal.data.local.CarDao
 import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.local.TaskDao
 import com.uryonym.ynymportal.data.local.YnymPortalDatabase
@@ -33,6 +36,10 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindConfidentialRepository(repository: ConfidentialRepositoryImpl): ConfidentialRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindCarRepository(repository: CarRepositoryImpl): CarRepository
 }
 
 @Module
@@ -54,4 +61,7 @@ object DatabaseModule {
     @Provides
     fun provideConfidentialDao(database: YnymPortalDatabase): ConfidentialDao =
         database.confidentialDao()
+
+    @Provides
+    fun provideCarDao(database: YnymPortalDatabase): CarDao = database.carDao()
 }

@@ -1,17 +1,18 @@
-package com.uryonym.ynymportal.data
+package com.uryonym.ynymportal.data.network
 
+import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Car(
-    val id: String? = null,
+data class NetworkCar(
+    val id: String = "",
     var name: String = "",
     var maker: String = "",
     var model: String = "",
     @SerialName(value = "model_year") var modelYear: Int = 0,
     @SerialName(value = "license_plate") var licensePlate: String? = null,
     @SerialName(value = "tank_capacity") var tankCapacity: Int? = null,
-    @SerialName(value = "created_at") val createdAt: String? = null,
-    @SerialName(value = "updated_at") val updatedAt: String? = null,
+    @SerialName(value = "created_at") val createdAt: Instant? = null,
+    @SerialName(value = "updated_at") val updatedAt: Instant? = null,
 )
