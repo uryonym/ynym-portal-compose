@@ -1,8 +1,12 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Description
@@ -22,7 +26,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -65,8 +68,7 @@ fun TaskAddScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
         ) {
             TaskAddForm(
                 title = uiState.title,
@@ -124,21 +126,21 @@ fun TaskAddForm(
         maxLines = 5,
         modifier = modifier
     )
-    OutlinedTextField(
-        value = deadLine.toString(),
-        label = { Text("期日") },
-        onValueChange = { },
-        trailingIcon = {
-            IconButton(onClick = { onChangeShowPicker(true) }) {
-                Icon(
-                    imageVector = Icons.Outlined.EditCalendar,
-                    contentDescription = "期日",
-                )
-            }
-        },
-        singleLine = true,
-        modifier = modifier
-    )
+    Row(
+        modifier = modifier.padding(horizontal = 0.dp, vertical = 12.dp).clickable { onChangeShowPicker(true) }
+    ) {
+        Spacer(modifier = Modifier.size(12.dp))
+        Icon(
+            imageVector = Icons.Outlined.EditCalendar,
+            contentDescription = "期日",
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = "期日")
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(
+            text = deadLine?.toString() ?: "yyyy-mm-dd",
+        )
+    }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
