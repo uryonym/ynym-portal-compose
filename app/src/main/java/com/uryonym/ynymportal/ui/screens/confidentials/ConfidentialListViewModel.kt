@@ -34,11 +34,9 @@ class ConfidentialListViewModel @Inject constructor(
                 }
             }
         }
-
-        refreshConfidentials()
     }
 
-    private fun refreshConfidentials() {
+    fun refreshConfidentials() {
         viewModelScope.launch {
             confidentialRepository.refreshConfidentials()
         }

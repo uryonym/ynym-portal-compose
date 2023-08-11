@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -44,6 +45,9 @@ fun ConfidentialListScreen(
         BottomAppBar(actions = {
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
+            }
+            IconButton(onClick = viewModel::refreshConfidentials) {
+                Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
             FloatingActionButton(onClick = onNavigateConfidentialAdd) {
