@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -62,9 +61,6 @@ fun ConfidentialListScreen(
                 Column {
                     ListItem(
                         headlineContent = { Text(text = confidential.serviceName) },
-                        leadingContent = {
-                            Checkbox(checked = false, onCheckedChange = {})
-                        },
                         modifier = Modifier.clickable {
                             onNavigateConfidentialEdit(confidential)
                         })
