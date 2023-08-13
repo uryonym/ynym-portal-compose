@@ -93,7 +93,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.TaskList.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -111,7 +110,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.TaskAdd.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -123,7 +121,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.TaskEdit.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -135,7 +132,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.ConfidentialList.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -157,7 +153,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.ConfidentialAdd.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -169,7 +164,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.ConfidentialEdit.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -181,7 +175,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.CarList.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -203,7 +196,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.CarAdd.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {
@@ -215,7 +207,6 @@ fun YnymPortalApp(
         composable(route = YnymPortalScreen.CarEdit.route) {
             NavigationDrawer(
                 drawerState = drawerState,
-                navController = navController,
                 scope = scope,
                 viewModel = viewModel
             ) {

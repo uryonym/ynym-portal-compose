@@ -18,14 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,
-    navController: NavHostController,
     scope: CoroutineScope,
     viewModel: YnymPortalAppViewModel,
     content: @Composable () -> Unit
@@ -41,10 +39,6 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.TaskList.route)
-//                        navController.navigate(YnymPortalScreen.TaskList.route) {
-//                            launchSingleTop = true
-//                            popUpTo(YnymPortalScreen.Login.route)
-//                        }
                         scope.launch {
                             drawerState.close()
                         }
@@ -57,10 +51,6 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.ConfidentialList.route)
-//                        navController.navigate(YnymPortalScreen.ConfidentialList.route) {
-//                            launchSingleTop = true
-//                            popUpTo(YnymPortalScreen.Login.route)
-//                        }
                         scope.launch {
                             drawerState.close()
                         }
@@ -74,14 +64,10 @@ fun NavigationDrawer(
                             contentDescription = "car"
                         )
                     },
-                    label = { Text(text = "車") },
+                    label = { Text(text = "車両") },
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.CarList.route)
-//                        navController.navigate(YnymPortalScreen.CarList.route) {
-//                            launchSingleTop = true
-//                            popUpTo(YnymPortalScreen.Login.route)
-//                        }
                         scope.launch {
                             drawerState.close()
                         }
