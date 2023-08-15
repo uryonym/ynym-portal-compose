@@ -4,10 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
+import java.util.UUID
 
 @Entity(tableName = "car")
 data class Car(
-    @PrimaryKey val id: String,
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
     var name: String = "",
     var maker: String = "",
     var model: String = "",

@@ -5,10 +5,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.Confidential
+import com.uryonym.ynymportal.data.model.Refueling
 import com.uryonym.ynymportal.data.model.Task
 
 @Database(
-    entities = [Task::class, Confidential::class, Car::class],
+    entities = [Task::class, Confidential::class, Car::class, Refueling::class],
     version = 1,
     exportSchema = false
 )
@@ -19,4 +20,6 @@ abstract class YnymPortalDatabase : RoomDatabase() {
     abstract fun confidentialDao(): ConfidentialDao
 
     abstract fun carDao(): CarDao
+
+    abstract fun refuelingDao(): RefuelingDao
 }

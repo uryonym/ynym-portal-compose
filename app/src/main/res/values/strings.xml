@@ -9,5 +9,8 @@
     <string name="car_list">車</string>
     <string name="add_car">車の追加</string>
     <string name="edit_car">車の編集</string>
+    <string name="refueling_list">燃費記録</string>
+    <string name="add_refueling">燃費記録の追加</string>
+    <string name="edit_refueling">燃費記録の編集</string>
     <string name="login">ログイン</string>
 </resources>

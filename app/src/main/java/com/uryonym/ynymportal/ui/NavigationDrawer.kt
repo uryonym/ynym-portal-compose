@@ -39,9 +39,7 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.TaskList.route)
-                        scope.launch {
-                            drawerState.close()
-                        }
+                        scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
@@ -51,9 +49,7 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.ConfidentialList.route)
-                        scope.launch {
-                            drawerState.close()
-                        }
+                        scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
@@ -68,9 +64,22 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         viewModel.onChangeNavigate(YnymPortalScreen.CarList.route)
-                        scope.launch {
-                            drawerState.close()
-                        }
+                        scope.launch { drawerState.close() }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+                NavigationDrawerItem(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.DirectionsCar,
+                            contentDescription = "refueling"
+                        )
+                    },
+                    label = { Text(text = "燃費記録") },
+                    selected = false,
+                    onClick = {
+                        viewModel.onChangeNavigate(YnymPortalScreen.RefuelingList.route)
+                        scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
@@ -81,9 +90,7 @@ fun NavigationDrawer(
                     onClick = {
                         viewModel.onChangeNavigate("")
                         viewModel.signOut()
-                        scope.launch {
-                            drawerState.close()
-                        }
+                        scope.launch { drawerState.close() }
                     }
                 )
             }

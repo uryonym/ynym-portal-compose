@@ -1,10 +1,13 @@
 package com.uryonym.ynymportal.data
 
+import com.uryonym.ynymportal.data.local.RefuelingDao
 import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.Confidential
+import com.uryonym.ynymportal.data.model.Refueling
 import com.uryonym.ynymportal.data.model.Task
 import com.uryonym.ynymportal.data.network.NetworkCar
 import com.uryonym.ynymportal.data.network.NetworkConfidential
+import com.uryonym.ynymportal.data.network.NetworkRefueling
 import com.uryonym.ynymportal.data.network.NetworkTask
 
 fun Task.toNetwork() = NetworkTask(
@@ -98,5 +101,43 @@ fun NetworkCar.toLocal() = Car(
 
 @JvmName("listCarToLocal")
 fun List<NetworkCar>.toLocal() = map {
+    it.toLocal()
+}
+
+fun Refueling.toNetwork() = NetworkRefueling(
+    id = this.id,
+    refuelDateTime = this.refuelDateTime,
+    odometer = this.odometer,
+    fuelType = this.fuelType,
+    price = this.price,
+    quantity = this.quantity,
+    fullFlag = this.fullFlag,
+    gasStand = this.gasStand,
+    carId = this.carId,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt
+)
+
+@JvmName("listRefuelingToNetwork")
+fun List<Refueling>.toNetwork() = map {
+    it.toNetwork()
+}
+
+fun NetworkRefueling.toLocal() = Refueling(
+    id = this.id,
+    refuelDateTime = this.refuelDateTime,
+    odometer = this.odometer,
+    fuelType = this.fuelType,
+    price = this.price,
+    quantity = this.quantity,
+    fullFlag = this.fullFlag,
+    gasStand = this.gasStand,
+    carId = this.carId,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt
+)
+
+@JvmName("listRefuelingToLocal")
+fun List<NetworkRefueling>.toLocal() = map {
     it.toLocal()
 }

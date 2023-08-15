@@ -21,28 +21,32 @@ import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialAddScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialEditScreen
 import com.uryonym.ynymportal.ui.screens.confidentials.ConfidentialListScreen
 import com.uryonym.ynymportal.ui.screens.login.LoginScreen
+import com.uryonym.ynymportal.ui.screens.refuelings.RefuelingAddScreen
+import com.uryonym.ynymportal.ui.screens.refuelings.RefuelingEditScreen
+import com.uryonym.ynymportal.ui.screens.refuelings.RefuelingListScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
 import kotlinx.coroutines.launch
 
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
-    object Login : YnymPortalScreen(route = "login", title = R.string.login)
-    object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
-    object TaskAdd : YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
-    object TaskEdit : YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
+    data object Login : YnymPortalScreen(route = "login", title = R.string.login)
+    data object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
+    data object TaskAdd : YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
+    data object TaskEdit :
+        YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
         fun createRoute(taskId: String): String {
             return "taskEdit/$taskId"
         }
     }
 
-    object ConfidentialList :
+    data object ConfidentialList :
         YnymPortalScreen(route = "confidentialList", title = R.string.confidential_list)
 
-    object ConfidentialAdd :
+    data object ConfidentialAdd :
         YnymPortalScreen(route = "confidentialAdd", title = R.string.add_confidential)
 
-    object ConfidentialEdit : YnymPortalScreen(
+    data object ConfidentialEdit : YnymPortalScreen(
         route = "confidentialEdit/{confidentialId}",
         title = R.string.edit_confidential
     ) {
@@ -51,18 +55,33 @@ sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
         }
     }
 
-    object CarList :
+    data object CarList :
         YnymPortalScreen(route = "carList", title = R.string.car_list)
 
-    object CarAdd :
+    data object CarAdd :
         YnymPortalScreen(route = "carAdd", title = R.string.add_car)
 
-    object CarEdit : YnymPortalScreen(
+    data object CarEdit : YnymPortalScreen(
         route = "carEdit/{carId}",
         title = R.string.edit_car
     ) {
         fun createRoute(carId: String): String {
             return "carEdit/$carId"
+        }
+    }
+
+    data object RefuelingList :
+        YnymPortalScreen(route = "refuelingList", title = R.string.refueling_list)
+
+    data object RefuelingAdd :
+        YnymPortalScreen(route = "refuelingAdd", title = R.string.add_refueling)
+
+    data object RefuelingEdit : YnymPortalScreen(
+        route = "refuelingEdit/{refuelingId}",
+        title = R.string.edit_refueling
+    ) {
+        fun createRoute(refuelingId: String): String {
+            return "refuelingEdit/$refuelingId"
         }
     }
 }
@@ -211,6 +230,46 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 CarEditScreen(
+                    onNavigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+
+        composable(route = YnymPortalScreen.RefuelingList.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                RefuelingListScreen(
+                    onNavigateRefuelingAdd = {
+                        navController.navigate(YnymPortalScreen.RefuelingAdd.route)
+                    },
+                    onNavigateRefuelingEdit = { refueling ->
+                        navController.navigate(YnymPortalScreen.CarEdit.createRoute(refueling.id))
+                    },
+                    onOpenDrawer = { scope.launch { drawerState.open() } }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.RefuelingAdd.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                RefuelingAddScreen(
+                    onNavigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(route = YnymPortalScreen.RefuelingEdit.route) {
+            NavigationDrawer(
+                drawerState = drawerState,
+                scope = scope,
+                viewModel = viewModel
+            ) {
+                RefuelingEditScreen(
                     onNavigateBack = { navController.navigateUp() }
                 )
             }

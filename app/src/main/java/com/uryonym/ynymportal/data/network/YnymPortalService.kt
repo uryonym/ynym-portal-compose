@@ -85,6 +85,31 @@ interface YnymPortalService {
 
     @DELETE("cars/{id}")
     suspend fun deleteCar(@Path("id") id: String, @Header("Authorization") token: String)
+
+    @GET("refuelings")
+    suspend fun getRefuelings(@Header("Authorization") token: String): List<NetworkRefueling>
+
+    @GET("refuelings/{id}")
+    suspend fun getRefueling(
+        @Path("id") id: String,
+        @Header("Authorization") token: String
+    ): NetworkRefueling
+
+    @POST("refuelings")
+    suspend fun addRefueling(
+        @Body refueling: NetworkRefueling,
+        @Header("Authorization") token: String
+    ): NetworkRefueling
+
+    @PATCH("refuelings/{id}")
+    suspend fun editRefueling(
+        @Path("id") id: String,
+        @Body refueling: NetworkRefueling,
+        @Header("Authorization") token: String
+    ): NetworkRefueling
+
+    @DELETE("refuelings/{id}")
+    suspend fun deleteRefueling(@Path("id") id: String, @Header("Authorization") token: String)
 }
 
 object YnymPortalApi {
