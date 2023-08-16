@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 data class RefuelingAddUiState(
@@ -25,6 +31,8 @@ data class RefuelingAddUiState(
     val fullFlag: Boolean = true,
     val gasStand: String = "",
     val selectedCar: Car = Car(),
+    val isShowDatePicker: Boolean = false,
+    val isShowTimePicker: Boolean = false,
     val isRefuelingSaved: Boolean = false
 )
 
@@ -36,9 +44,29 @@ class RefuelingAddViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RefuelingAddUiState())
     val uiState: StateFlow<RefuelingAddUiState> = _uiState
 
-    fun onChangeRefuelDateTime(value: Instant) {
+    fun onChangeRefuelDate(value: LocalDate) {
+        val localDateTime =
+            uiState.value.refuelDateTime.toLocalDateTime(TimeZone.currentSystemDefault())
+        val newDateTime = LocalDateTime(
+            date = value,
+            time = localDateTime.time
+        ).toInstant(TimeZone.currentSystemDefault())
+
         _uiState.update {
-            it.copy(refuelDateTime = value)
+            it.copy(refuelDateTime = newDateTime)
+        }
+    }
+
+    fun onChangeRefuelTime(value: LocalTime) {
+        val localDateTime =
+            uiState.value.refuelDateTime.toLocalDateTime(TimeZone.currentSystemDefault())
+        val newDateTime = LocalDateTime(
+            date = localDateTime.date,
+            time = value
+        ).toInstant(TimeZone.currentSystemDefault())
+
+        _uiState.update {
+            it.copy(refuelDateTime = newDateTime)
         }
     }
 
@@ -75,6 +103,18 @@ class RefuelingAddViewModel @Inject constructor(
     fun onChangeGasStand(value: String) {
         _uiState.update {
             it.copy(gasStand = value)
+        }
+    }
+
+    fun onChangeShowDatePicker(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowDatePicker = value)
+        }
+    }
+
+    fun onChangeShowTimePicker(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowTimePicker = value)
         }
     }
 

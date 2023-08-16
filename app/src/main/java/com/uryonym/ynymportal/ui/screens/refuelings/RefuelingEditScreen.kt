@@ -74,13 +74,18 @@ fun RefuelingEditScreen(
                 quantity = uiState.quantity,
                 fullFlag = uiState.fullFlag,
                 gasStand = uiState.gasStand,
-                onChangeRefuelDateTime = viewModel::onChangeRefuelDateTime,
+                isShowDatePicker = false,
+                isShowTimePicker = false,
+                onChangeRefuelDate = viewModel::onChangeRefuelDate,
+                onChangeRefuelTime = viewModel::onChangeRefuelTime,
                 onChangeOdometer = viewModel::onChangeOdometer,
                 onChangeFuelType = viewModel::onChangeFuelType,
                 onChangePrice = viewModel::onChangePrice,
                 onChangeQuantity = viewModel::onChangeQuantity,
                 onChangeFullFlag = viewModel::onChangeFullFlag,
                 onChangeGasStand = viewModel::onChangeGasStand,
+                onChangeShowDatePicker = viewModel::onChangeShowDatePicker,
+                onChangeShowTimePicker = viewModel::onChangeShowDatePicker,
                 modifier = Modifier
                     .padding(16.dp, 8.dp)
                     .fillMaxWidth()
