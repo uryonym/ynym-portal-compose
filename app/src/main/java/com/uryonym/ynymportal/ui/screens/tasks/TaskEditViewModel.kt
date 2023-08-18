@@ -54,7 +54,7 @@ class TaskEditViewModel @Inject constructor(
         }
     }
 
-    fun onChangeDeadLine(value: LocalDate) {
+    fun onChangeDeadLine(value: LocalDate?) {
         _uiState.update {
             it.copy(deadLine = value)
         }

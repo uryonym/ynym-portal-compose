@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +31,7 @@ fun TaskAddEditForm(
     isShowPicker: Boolean,
     onChangeTitle: (String) -> Unit,
     onChangeDescription: (String) -> Unit,
-    onChangeDeadLine: (LocalDate) -> Unit,
+    onChangeDeadLine: (LocalDate?) -> Unit,
     onChangeShowPicker: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,23 +55,28 @@ fun TaskAddEditForm(
         maxLines = 5,
         modifier = modifier
     )
-    Row(
+    ClickableOutlinedTextField(
+        value = deadLine?.toString() ?: "",
+        label = { Text(text = "期日") },
+        onValueChange = {},
+        onClick = { onChangeShowPicker(true) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.EditCalendar,
+                contentDescription = "期日",
+            )
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Delete,
+                contentDescription = "削除",
+                modifier = Modifier.clickable {
+                    onChangeDeadLine(null)
+                }
+            )
+        },
         modifier = modifier
-            .padding(horizontal = 0.dp, vertical = 12.dp)
-            .clickable { onChangeShowPicker(true) }
-    ) {
-        Spacer(modifier = Modifier.size(12.dp))
-        Icon(
-            imageVector = Icons.Outlined.EditCalendar,
-            contentDescription = "期日",
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = "期日")
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(
-            text = deadLine?.toString() ?: "yyyy-mm-dd",
-        )
-    }
+    )
 
     if (isShowPicker) {
         val datePickerState = rememberDatePickerState(

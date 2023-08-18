@@ -13,7 +13,9 @@ fun ClickableOutlinedTextField(
     label: @Composable (() -> Unit)?,
     onValueChange: (String) -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -21,12 +23,16 @@ fun ClickableOutlinedTextField(
         onValueChange = onValueChange,
         singleLine = true,
         enabled = false,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         modifier = modifier.clickable { onClick() },
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
             disabledBorderColor = MaterialTheme.colorScheme.outline,
             disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
             disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }

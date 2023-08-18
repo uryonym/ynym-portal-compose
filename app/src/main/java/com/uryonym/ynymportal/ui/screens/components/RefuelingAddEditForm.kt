@@ -55,7 +55,6 @@ fun RefuelingAddEditForm(
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             ClickableOutlinedTextField(
                 value = "${localDateTime.date}",
                 label = { Text("給油日") },
