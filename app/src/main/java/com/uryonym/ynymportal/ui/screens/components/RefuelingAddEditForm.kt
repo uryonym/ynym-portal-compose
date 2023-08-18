@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,7 +67,7 @@ fun RefuelingAddEditForm(
                 value = "${localDateTime.hour}:${localDateTime.minute}",
                 label = { Text("給油時間") },
                 onValueChange = {},
-                onClick = { Log.d("test", "click time") },
+                onClick = { onChangeShowTimePicker(true) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -139,7 +138,12 @@ fun RefuelingAddEditForm(
 
         TimePickerDialog(
             onCancel = { onChangeShowTimePicker(false) },
-            onConfirm = { onChangeShowTimePicker(false) }
+            onConfirm = {
+                val newTime =
+                    LocalTime(hour = timePickerState.hour, minute = timePickerState.minute)
+                onChangeRefuelTime(newTime)
+                onChangeShowTimePicker(false)
+            }
         ) {
             TimePicker(state = timePickerState)
         }
