@@ -26,7 +26,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun RefuelingAddEditForm(
     refuelDateTime: Instant,
-    odometer: Int,
+    odometer: Int?,
     fuelType: String,
     price: Int,
     quantity: Int,
@@ -72,10 +72,11 @@ fun RefuelingAddEditForm(
         }
 
         OutlinedTextField(
-            value = odometer.toString(),
+            value = odometer?.toString() ?: "",
             label = { Text("総走行距離") },
             onValueChange = { onChangeOdometer(it) },
             singleLine = true,
+            suffix = { Text("km") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
@@ -138,9 +139,12 @@ fun RefuelingAddEditForm(
         TimePickerDialog(
             onCancel = { onChangeShowTimePicker(false) },
             onConfirm = {
-                val newTime =
-                    LocalTime(hour = timePickerState.hour, minute = timePickerState.minute)
-                onChangeRefuelTime(newTime)
+                onChangeRefuelTime(
+                    LocalTime(
+                        hour = timePickerState.hour,
+                        minute = timePickerState.minute
+                    )
+                )
                 onChangeShowTimePicker(false)
             }
         ) {

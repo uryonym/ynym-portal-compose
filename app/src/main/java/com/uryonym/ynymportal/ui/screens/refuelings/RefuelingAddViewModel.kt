@@ -24,7 +24,7 @@ data class RefuelingAddUiState(
     val isLoading: Boolean = false,
     val refueling: Refueling? = null,
     val refuelDateTime: Instant = Clock.System.now(),
-    val odometer: Int = 0,
+    val odometer: Int? = null,
     val fuelType: String = "",
     val price: Int = 0,
     val quantity: Int = 0,
@@ -72,7 +72,7 @@ class RefuelingAddViewModel @Inject constructor(
 
     fun onChangeOdometer(value: String) {
         _uiState.update {
-            it.copy(odometer = value.toInt())
+            it.copy(odometer = if (value.isEmpty()) null else value.toInt())
         }
     }
 
@@ -120,19 +120,21 @@ class RefuelingAddViewModel @Inject constructor(
 
     fun onSaveNewRefueling() {
         if (uiState.value.fuelType.isNotEmpty()) {
-            viewModelScope.launch {
-                refuelingRepository.insertRefueling(
-                    refuelDateTime = uiState.value.refuelDateTime,
-                    odometer = uiState.value.odometer,
-                    fuelType = uiState.value.fuelType,
-                    price = uiState.value.price,
-                    quantity = uiState.value.quantity,
-                    fullFlag = uiState.value.fullFlag,
-                    gasStand = uiState.value.gasStand,
-                    carId = uiState.value.selectedCar.id
-                )
-                _uiState.update {
-                    it.copy(isRefuelingSaved = true)
+            uiState.value.odometer?.let { odometer ->
+                viewModelScope.launch {
+                    refuelingRepository.insertRefueling(
+                        refuelDateTime = uiState.value.refuelDateTime,
+                        odometer = odometer,
+                        fuelType = uiState.value.fuelType,
+                        price = uiState.value.price,
+                        quantity = uiState.value.quantity,
+                        fullFlag = uiState.value.fullFlag,
+                        gasStand = uiState.value.gasStand,
+                        carId = uiState.value.selectedCar.id
+                    )
+                    _uiState.update {
+                        it.copy(isRefuelingSaved = true)
+                    }
                 }
             }
         }
