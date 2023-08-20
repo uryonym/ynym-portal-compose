@@ -2,6 +2,7 @@ package com.uryonym.ynymportal.ui.screens.refuelings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,7 +12,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -19,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -55,16 +61,50 @@ fun RefuelingListScreen(
         })
     }) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        Column(
+            modifier = Modifier.padding(padding)
+        ) {
+            ExposedDropdownMenuBox(
+                expanded = uiState.carListExpanded,
+                onExpandedChange = viewModel::onChangeCarListExpanded
+            ) {
+                TextField(
+                    value = uiState.selectedCar.name,
+                    onValueChange = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    readOnly = true,
+                    label = { Text("車両") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.carListExpanded) }
+                )
+                DropdownMenu(
+                    expanded = uiState.carListExpanded,
+                    onDismissRequest = { viewModel.onChangeCarListExpanded(false) },
+                    modifier = Modifier.exposedDropdownSize()
+                ) {
+                    uiState.cars.forEach { car ->
+                        DropdownMenuItem(
+                            text = { Text(car.name) },
+                            onClick = {
+                                viewModel.onChangeSelectedCar(car)
+                                viewModel.onChangeCarListExpanded(false)
+                            }
+                        )
+                    }
+                }
+            }
 
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            items(items = uiState.refuelings) { refueling ->
-                Column {
-                    ListItem(
-                        headlineContent = { Text(text = refueling.refuelDateTime.toString()) },
-                        modifier = Modifier.clickable {
-                            onNavigateRefuelingEdit(refueling)
-                        })
-                    HorizontalDivider()
+            LazyColumn {
+                items(items = uiState.refuelings) { refueling ->
+                    Column {
+                        ListItem(
+                            headlineContent = { Text(text = refueling.refuelDateTime.toString()) },
+                            modifier = Modifier.clickable {
+                                onNavigateRefuelingEdit(refueling)
+                            })
+                        HorizontalDivider()
+                    }
                 }
             }
         }
