@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface RefuelingRepository {
-    fun getRefuelings(): Flow<List<Refueling>>
+    fun getRefuelings(carId: String): Flow<List<Refueling>>
 
     suspend fun getRefueling(id: String): Refueling
 
@@ -49,8 +49,8 @@ class RefuelingRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : RefuelingRepository {
 
-    override fun getRefuelings(): Flow<List<Refueling>> {
-        return localDataSource.getRefuelings()
+    override fun getRefuelings(carId: String): Flow<List<Refueling>> {
+        return localDataSource.getRefuelings(carId)
     }
 
     override suspend fun getRefueling(id: String): Refueling {

@@ -69,7 +69,7 @@ fun RefuelingListScreen(
                 onExpandedChange = viewModel::onChangeCarListExpanded
             ) {
                 TextField(
-                    value = uiState.selectedCar.name,
+                    value = uiState.selectedCar?.name ?: "",
                     onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()

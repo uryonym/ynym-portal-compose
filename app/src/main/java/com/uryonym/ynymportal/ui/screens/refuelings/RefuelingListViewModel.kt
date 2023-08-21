@@ -18,7 +18,7 @@ data class RefuelingListUiState(
     val refuelings: List<Refueling> = emptyList(),
     val carListExpanded: Boolean = false,
     val cars: List<Car> = emptyList(),
-    val selectedCar: Car = Car()
+    val selectedCar: Car? = null
 )
 
 @HiltViewModel
@@ -39,11 +39,6 @@ class RefuelingListViewModel @Inject constructor(
                     it.copy(cars = cars)
                 }
             }
-            refuelingRepository.getRefuelings().collect { refuelings ->
-                _uiState.update {
-                    it.copy(refuelings = refuelings)
-                }
-            }
         }
     }
 
@@ -57,11 +52,25 @@ class RefuelingListViewModel @Inject constructor(
         _uiState.update {
             it.copy(selectedCar = car)
         }
+
+        getRefuelingList()
     }
 
     fun refreshRefuelings() {
         viewModelScope.launch {
             refuelingRepository.refreshRefuelings()
+        }
+    }
+
+    private fun getRefuelingList() {
+        viewModelScope.launch {
+            uiState.value.selectedCar?.let {car ->
+                refuelingRepository.getRefuelings(car.id).collect { refuelings ->
+                    _uiState.update {
+                        it.copy(refuelings = refuelings)
+                    }
+                }
+            }
         }
     }
 }
