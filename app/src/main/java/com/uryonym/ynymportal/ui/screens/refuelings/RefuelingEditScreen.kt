@@ -76,6 +76,7 @@ fun RefuelingEditScreen(
                 totalCost = uiState.totalCost,
                 fullFlag = uiState.fullFlag,
                 gasStand = uiState.gasStand,
+                quantity = null,
                 isShowDatePicker = false,
                 isShowTimePicker = false,
                 onChangeRefuelDate = viewModel::onChangeRefuelDate,

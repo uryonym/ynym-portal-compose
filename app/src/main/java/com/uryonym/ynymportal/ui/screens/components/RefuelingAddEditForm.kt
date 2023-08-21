@@ -38,6 +38,7 @@ fun RefuelingAddEditForm(
     totalCost: Int?,
     fullFlag: Boolean,
     gasStand: String,
+    quantity: Float?,
     isShowDatePicker: Boolean,
     isShowTimePicker: Boolean,
     onChangeRefuelDate: (LocalDate) -> Unit,
@@ -140,6 +141,12 @@ fun RefuelingAddEditForm(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.weight(1.5f)
             )
+        }
+
+        Row {
+            Text(text = "給油量： ")
+            Text(text = quantity?.toString() ?: "")
+            Text(text = "L")
         }
 
         OutlinedTextField(

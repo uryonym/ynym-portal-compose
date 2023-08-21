@@ -33,6 +33,7 @@ data class RefuelingAddUiState(
     val fullFlag: Boolean = true,
     val gasStand: String = "",
     val carId: String? = null,
+    val quantity: Float? = 0f,
     val isShowDatePicker: Boolean = false,
     val isShowTimePicker: Boolean = false,
     val isRefuelingSaved: Boolean = false
@@ -98,14 +99,40 @@ class RefuelingAddViewModel @Inject constructor(
     }
 
     fun onChangePrice(value: String) {
+        var calcQuantity: Float? = null
+        uiState.value.totalCost?.let { totalCost ->
+            if (value.isNotEmpty()) {
+                if (totalCost == 0 || value.toInt() == 0) {
+                    calcQuantity = 0f
+                }
+                calcQuantity = totalCost.toFloat() / value.toFloat()
+            }
+        }
+
         _uiState.update {
-            it.copy(price = if (value.isEmpty()) null else value.toInt())
+            it.copy(
+                price = if (value.isEmpty()) null else value.toInt(),
+                quantity = calcQuantity
+            )
         }
     }
 
     fun onChangeTotalCost(value: String) {
+        var calcQuantity: Float? = null
+        uiState.value.price?.let { price ->
+            if (value.isNotEmpty()) {
+                if (price == 0 || value.toInt() == 0) {
+                    calcQuantity = 0f
+                }
+                calcQuantity = value.toFloat() / price
+            }
+        }
+
         _uiState.update {
-            it.copy(totalCost = if (value.isEmpty()) null else value.toInt())
+            it.copy(
+                totalCost = if (value.isEmpty()) null else value.toInt(),
+                quantity = calcQuantity
+            )
         }
     }
 

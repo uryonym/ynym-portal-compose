@@ -58,6 +58,7 @@ fun RefuelingAddScreen(
             totalCost = uiState.totalCost,
             fullFlag = uiState.fullFlag,
             gasStand = uiState.gasStand,
+            quantity = uiState.quantity,
             isShowDatePicker = uiState.isShowDatePicker,
             isShowTimePicker = uiState.isShowTimePicker,
             onChangeRefuelDate = viewModel::onChangeRefuelDate,
