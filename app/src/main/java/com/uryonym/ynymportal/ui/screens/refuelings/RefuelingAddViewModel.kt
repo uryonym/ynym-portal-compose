@@ -1,8 +1,8 @@
 package com.uryonym.ynymportal.ui.screens.refuelings
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.RefuelingRepository
 import com.uryonym.ynymportal.data.model.Refueling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ data class RefuelingAddUiState(
     val quantity: Int = 0,
     val fullFlag: Boolean = true,
     val gasStand: String = "",
-    val selectedCar: Car = Car(),
+    val carId: String? = null,
     val isShowDatePicker: Boolean = false,
     val isShowTimePicker: Boolean = false,
     val isRefuelingSaved: Boolean = false
@@ -38,11 +38,18 @@ data class RefuelingAddUiState(
 
 @HiltViewModel
 class RefuelingAddViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val refuelingRepository: RefuelingRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RefuelingAddUiState())
     val uiState: StateFlow<RefuelingAddUiState> = _uiState
+
+    init {
+        _uiState.update {
+            it.copy(carId = savedStateHandle["carId"]!!)
+        }
+    }
 
     fun onChangeRefuelDate(value: LocalDate) {
         val localDateTime =
@@ -121,19 +128,21 @@ class RefuelingAddViewModel @Inject constructor(
     fun onSaveNewRefueling() {
         if (uiState.value.fuelType.isNotEmpty()) {
             uiState.value.odometer?.let { odometer ->
-                viewModelScope.launch {
-                    refuelingRepository.insertRefueling(
-                        refuelDateTime = uiState.value.refuelDateTime,
-                        odometer = odometer,
-                        fuelType = uiState.value.fuelType,
-                        price = uiState.value.price,
-                        quantity = uiState.value.quantity,
-                        fullFlag = uiState.value.fullFlag,
-                        gasStand = uiState.value.gasStand,
-                        carId = uiState.value.selectedCar.id
-                    )
-                    _uiState.update {
-                        it.copy(isRefuelingSaved = true)
+                uiState.value.carId?.let { carId ->
+                    viewModelScope.launch {
+                        refuelingRepository.insertRefueling(
+                            refuelDateTime = uiState.value.refuelDateTime,
+                            odometer = odometer,
+                            fuelType = uiState.value.fuelType,
+                            price = uiState.value.price,
+                            quantity = uiState.value.quantity,
+                            fullFlag = uiState.value.fullFlag,
+                            gasStand = uiState.value.gasStand,
+                            carId = carId
+                        )
+                        _uiState.update {
+                            it.copy(isRefuelingSaved = true)
+                        }
                     }
                 }
             }

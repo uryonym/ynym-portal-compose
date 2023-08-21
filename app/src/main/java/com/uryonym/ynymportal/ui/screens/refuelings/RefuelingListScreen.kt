@@ -37,11 +37,13 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RefuelingListScreen(
-    onNavigateRefuelingAdd: () -> Unit,
+    onNavigateRefuelingAdd: (String) -> Unit,
     onNavigateRefuelingEdit: (Refueling) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: RefuelingListViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(stringResource(id = YnymPortalScreen.RefuelingList.title))
@@ -55,12 +57,13 @@ fun RefuelingListScreen(
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateRefuelingAdd) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+            uiState.selectedCar?.id?.let { carId ->
+                FloatingActionButton(onClick = { onNavigateRefuelingAdd(carId) }) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+                }
             }
         })
     }) { padding ->
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         Column(
             modifier = Modifier.padding(padding)
         ) {

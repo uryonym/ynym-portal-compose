@@ -73,8 +73,14 @@ sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
     data object RefuelingList :
         YnymPortalScreen(route = "refuelingList", title = R.string.refueling_list)
 
-    data object RefuelingAdd :
-        YnymPortalScreen(route = "refuelingAdd", title = R.string.add_refueling)
+    data object RefuelingAdd : YnymPortalScreen(
+        route = "refuelingAdd/{carId}",
+        title = R.string.add_refueling
+    ) {
+        fun createRoute(carId: String): String {
+            return "refuelingAdd/$carId"
+        }
+    }
 
     data object RefuelingEdit : YnymPortalScreen(
         route = "refuelingEdit/{refuelingId}",
@@ -242,8 +248,8 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 RefuelingListScreen(
-                    onNavigateRefuelingAdd = {
-                        navController.navigate(YnymPortalScreen.RefuelingAdd.route)
+                    onNavigateRefuelingAdd = { carId ->
+                        navController.navigate(YnymPortalScreen.RefuelingAdd.createRoute(carId))
                     },
                     onNavigateRefuelingEdit = { refueling ->
                         navController.navigate(YnymPortalScreen.CarEdit.createRoute(refueling.id))
