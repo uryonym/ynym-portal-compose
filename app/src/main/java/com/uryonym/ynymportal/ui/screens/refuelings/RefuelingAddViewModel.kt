@@ -24,7 +24,7 @@ data class RefuelingAddUiState(
     val isLoading: Boolean = false,
     val refueling: Refueling? = null,
     val refuelDateTime: Instant = Clock.System.now(),
-    val odometer: Int? = null,
+    val odometer: Int? = 0,
     val fuelTypeListExtended: Boolean = false,
     val fuelTypeList: List<String> = listOf("ガソリン", "ハイオク", "軽油"),
     val fuelType: String = "ガソリン",
