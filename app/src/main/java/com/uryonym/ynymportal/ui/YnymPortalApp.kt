@@ -124,9 +124,7 @@ fun YnymPortalApp(
                 TaskListScreen(
                     onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
                     onNavigateTaskEdit = { task ->
-                        task.id?.let {
-                            navController.navigate(YnymPortalScreen.TaskEdit.createRoute(it))
-                        }
+                        navController.navigate(YnymPortalScreen.TaskEdit.createRoute(task.id))
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )
@@ -165,11 +163,9 @@ fun YnymPortalApp(
                         navController.navigate(YnymPortalScreen.ConfidentialAdd.route)
                     },
                     onNavigateConfidentialEdit = { confidential ->
-                        confidential.id?.let {
-                            navController.navigate(
-                                YnymPortalScreen.ConfidentialEdit.createRoute(it)
-                            )
-                        }
+                        navController.navigate(
+                            YnymPortalScreen.ConfidentialEdit.createRoute(confidential.id)
+                        )
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )
@@ -208,11 +204,9 @@ fun YnymPortalApp(
                         navController.navigate(YnymPortalScreen.CarAdd.route)
                     },
                     onNavigateCarEdit = { car ->
-                        car.id?.let {
-                            navController.navigate(
-                                YnymPortalScreen.CarEdit.createRoute(it)
-                            )
-                        }
+                        navController.navigate(
+                            YnymPortalScreen.CarEdit.createRoute(car.id)
+                        )
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )
