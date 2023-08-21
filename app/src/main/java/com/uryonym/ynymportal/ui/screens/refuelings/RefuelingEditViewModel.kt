@@ -27,7 +27,9 @@ data class RefuelingEditUiState(
     val refueling: Refueling? = null,
     val refuelDateTime: Instant = Clock.System.now(),
     val odometer: Int? = null,
-    val fuelType: String = "",
+    val fuelTypeListExtended: Boolean = false,
+    val fuelTypeList: List<String> = listOf("ガソリン", "ハイオク", "軽油"),
+    val fuelType: String = "ガソリン",
     val price: Int = 0,
     val quantity: Int = 0,
     val fullFlag: Boolean = true,
@@ -84,6 +86,12 @@ class RefuelingEditViewModel @Inject constructor(
     fun onChangeOdometer(value: String) {
         _uiState.update {
             it.copy(odometer = if (value.isEmpty()) null else value.toInt())
+        }
+    }
+
+    fun onChangeFuelTypeListExpanded(status: Boolean) {
+        _uiState.update {
+            it.copy(fuelTypeListExtended = status)
         }
     }
 

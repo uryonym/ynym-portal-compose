@@ -51,6 +51,8 @@ fun RefuelingAddScreen(
         RefuelingAddEditForm(
             refuelDateTime = uiState.refuelDateTime,
             odometer = uiState.odometer,
+            fuelTypeListExtended = uiState.fuelTypeListExtended,
+            fuelTypeList = uiState.fuelTypeList,
             fuelType = uiState.fuelType,
             price = uiState.price,
             quantity = uiState.quantity,
@@ -61,6 +63,7 @@ fun RefuelingAddScreen(
             onChangeRefuelDate = viewModel::onChangeRefuelDate,
             onChangeRefuelTime = viewModel::onChangeRefuelTime,
             onChangeOdometer = viewModel::onChangeOdometer,
+            onChangeFuelTypeListExtended = viewModel::onChangeFuelTypeListExpanded,
             onChangeFuelType = viewModel::onChangeFuelType,
             onChangePrice = viewModel::onChangePrice,
             onChangeQuantity = viewModel::onChangeQuantity,

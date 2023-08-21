@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
@@ -27,6 +31,8 @@ import kotlinx.datetime.toLocalDateTime
 fun RefuelingAddEditForm(
     refuelDateTime: Instant,
     odometer: Int?,
+    fuelTypeListExtended: Boolean,
+    fuelTypeList: List<String>,
     fuelType: String,
     price: Int,
     quantity: Int,
@@ -37,6 +43,7 @@ fun RefuelingAddEditForm(
     onChangeRefuelDate: (LocalDate) -> Unit,
     onChangeRefuelTime: (LocalTime) -> Unit,
     onChangeOdometer: (String) -> Unit,
+    onChangeFuelTypeListExtended: (Boolean) -> Unit,
     onChangeFuelType: (String) -> Unit,
     onChangePrice: (String) -> Unit,
     onChangeQuantity: (String) -> Unit,
@@ -80,13 +87,36 @@ fun RefuelingAddEditForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
-        OutlinedTextField(
-            value = fuelType,
-            label = { Text("種類") },
-            onValueChange = { onChangeFuelType(it) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
+        ExposedDropdownMenuBox(
+            expanded = fuelTypeListExtended,
+            onExpandedChange = onChangeFuelTypeListExtended
+        ) {
+            OutlinedTextField(
+                value = fuelType,
+                label = { Text("種類") },
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = fuelTypeListExtended) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
+            )
+            DropdownMenu(
+                expanded = fuelTypeListExtended,
+                onDismissRequest = { onChangeFuelTypeListExtended(false) },
+                modifier = Modifier.exposedDropdownSize()
+            ) {
+                fuelTypeList.forEach { fuelType ->
+                    DropdownMenuItem(
+                        text = { Text(fuelType) },
+                        onClick = {
+                            onChangeFuelType(fuelType)
+                            onChangeFuelTypeListExtended(false)
+                        }
+                    )
+                }
+            }
+        }
         OutlinedTextField(
             value = price.toString(),
             label = { Text("単価") },

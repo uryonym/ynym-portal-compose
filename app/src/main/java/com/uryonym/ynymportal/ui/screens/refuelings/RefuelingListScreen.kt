@@ -73,13 +73,13 @@ fun RefuelingListScreen(
             ) {
                 TextField(
                     value = uiState.selectedCar?.name ?: "",
+                    label = { Text("車両") },
                     onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.carListExpanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(),
-                    readOnly = true,
-                    label = { Text("車両") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.carListExpanded) }
+                        .menuAnchor()
                 )
                 DropdownMenu(
                     expanded = uiState.carListExpanded,
