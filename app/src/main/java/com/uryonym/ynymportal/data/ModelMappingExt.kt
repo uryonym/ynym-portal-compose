@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.data
 
-import com.uryonym.ynymportal.data.local.RefuelingDao
 import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.Confidential
 import com.uryonym.ynymportal.data.model.Refueling
@@ -110,7 +109,7 @@ fun Refueling.toNetwork() = NetworkRefueling(
     odometer = this.odometer,
     fuelType = this.fuelType,
     price = this.price,
-    quantity = this.quantity,
+    totalCost = this.totalCost,
     fullFlag = this.fullFlag,
     gasStand = this.gasStand,
     carId = this.carId,
@@ -129,7 +128,7 @@ fun NetworkRefueling.toLocal() = Refueling(
     odometer = this.odometer,
     fuelType = this.fuelType,
     price = this.price,
-    quantity = this.quantity,
+    totalCost = this.totalCost,
     fullFlag = this.fullFlag,
     gasStand = this.gasStand,
     carId = this.carId,

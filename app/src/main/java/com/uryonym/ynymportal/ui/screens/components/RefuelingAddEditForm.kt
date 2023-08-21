@@ -34,8 +34,8 @@ fun RefuelingAddEditForm(
     fuelTypeListExtended: Boolean,
     fuelTypeList: List<String>,
     fuelType: String,
-    price: Int,
-    quantity: Int,
+    price: Int?,
+    totalCost: Int?,
     fullFlag: Boolean,
     gasStand: String,
     isShowDatePicker: Boolean,
@@ -46,7 +46,7 @@ fun RefuelingAddEditForm(
     onChangeFuelTypeListExtended: (Boolean) -> Unit,
     onChangeFuelType: (String) -> Unit,
     onChangePrice: (String) -> Unit,
-    onChangeQuantity: (String) -> Unit,
+    onChangeTotalCost: (String) -> Unit,
     onChangeFullFlag: (Boolean) -> Unit,
     onChangeGasStand: (String) -> Unit,
     onChangeShowDatePicker: (Boolean) -> Unit,
@@ -87,6 +87,7 @@ fun RefuelingAddEditForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
+
         ExposedDropdownMenuBox(
             expanded = fuelTypeListExtended,
             onExpandedChange = onChangeFuelTypeListExtended
@@ -117,22 +118,30 @@ fun RefuelingAddEditForm(
                 }
             }
         }
-        OutlinedTextField(
-            value = price.toString(),
-            label = { Text("単価") },
-            onValueChange = { onChangePrice(it) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = quantity.toString(),
-            label = { Text("給油量") },
-            onValueChange = { onChangeQuantity(it) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedTextField(
+                value = price?.toString() ?: "",
+                label = { Text("単価") },
+                onValueChange = { onChangePrice(it) },
+                singleLine = true,
+                suffix = { Text("円/L") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(1f)
+            )
+            OutlinedTextField(
+                value = totalCost?.toString() ?: "",
+                label = { Text("総費用") },
+                onValueChange = { onChangeTotalCost(it) },
+                singleLine = true,
+                suffix = { Text("円") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(1.5f)
+            )
+        }
+
         OutlinedTextField(
             value = fullFlag.toString(),
             label = { Text("満タン") },

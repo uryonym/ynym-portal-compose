@@ -11,7 +11,7 @@ data class NetworkRefueling(
     var odometer: Int,
     @SerialName(value = "fuel_type") var fuelType: String,
     var price: Int,
-    var quantity: Int,
+    @SerialName(value = "total_cost") var totalCost: Int,
     @SerialName(value = "full_flag") var fullFlag: Boolean = true,
     @SerialName(value = "gas_stand") var gasStand: String = "",
     @SerialName(value = "car_id") var carId: String,

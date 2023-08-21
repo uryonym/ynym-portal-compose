@@ -12,7 +12,7 @@ data class Refueling(
     var odometer: Int,
     @ColumnInfo(name = "fuel_type") var fuelType: String,
     var price: Int,
-    var quantity: Int,
+    @ColumnInfo(name = "total_cost") var totalCost: Int,
     @ColumnInfo(name = "full_flag") var fullFlag: Boolean = true,
     @ColumnInfo(name = "gas_stand") var gasStand: String = "",
     @ColumnInfo(name = "car_id") var carId: String,

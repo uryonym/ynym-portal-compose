@@ -18,7 +18,7 @@ interface RefuelingRepository {
         odometer: Int,
         fuelType: String,
         price: Int,
-        quantity: Int,
+        totalCost: Int,
         fullFlag: Boolean,
         gasStand: String,
         carId: String
@@ -30,7 +30,7 @@ interface RefuelingRepository {
         odometer: Int,
         fuelType: String,
         price: Int,
-        quantity: Int,
+        totalCost: Int,
         fullFlag: Boolean,
         gasStand: String,
         carId: String
@@ -62,7 +62,7 @@ class RefuelingRepositoryImpl @Inject constructor(
         odometer: Int,
         fuelType: String,
         price: Int,
-        quantity: Int,
+        totalCost: Int,
         fullFlag: Boolean,
         gasStand: String,
         carId: String
@@ -73,7 +73,7 @@ class RefuelingRepositoryImpl @Inject constructor(
             odometer = odometer,
             fuelType = fuelType,
             price = price,
-            quantity = quantity,
+            totalCost = totalCost,
             fullFlag = fullFlag,
             gasStand = gasStand,
             carId = carId
@@ -91,7 +91,7 @@ class RefuelingRepositoryImpl @Inject constructor(
         odometer: Int,
         fuelType: String,
         price: Int,
-        quantity: Int,
+        totalCost: Int,
         fullFlag: Boolean,
         gasStand: String,
         carId: String
@@ -102,7 +102,7 @@ class RefuelingRepositoryImpl @Inject constructor(
             odometer = odometer,
             fuelType = fuelType,
             price = price,
-            quantity = quantity,
+            totalCost = totalCost,
             fullFlag = fullFlag,
             gasStand = gasStand,
             carId = carId
