@@ -20,6 +20,7 @@ data class ConfidentialEditUiState(
     val loginId: String = "",
     val password: String = "",
     val other: String = "",
+    val isShowDeleteDialog: Boolean = false,
     val isConfidentialSaved: Boolean = false
 )
 
@@ -61,6 +62,12 @@ class ConfidentialEditViewModel @Inject constructor(
     fun onChangeOther(value: String) {
         _uiState.update {
             it.copy(other = value)
+        }
+    }
+
+    fun onChangeShowDeleteDialog(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowDeleteDialog = value)
         }
     }
 

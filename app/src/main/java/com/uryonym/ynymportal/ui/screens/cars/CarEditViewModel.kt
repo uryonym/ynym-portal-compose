@@ -22,6 +22,7 @@ data class CarEditUiState(
     val modelYear: Int = 0,
     val licensePlate: String = "",
     val tankCapacity: Int = 0,
+    val isShowDeleteDialog: Boolean = false,
     val isCarSaved: Boolean = false
 )
 
@@ -75,6 +76,12 @@ class CarEditViewModel @Inject constructor(
     fun onChangeTankCapacity(value: String) {
         _uiState.update {
             it.copy(tankCapacity = value.toInt())
+        }
+    }
+
+    fun onChangeShowDeleteDialog(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowDeleteDialog = value)
         }
     }
 

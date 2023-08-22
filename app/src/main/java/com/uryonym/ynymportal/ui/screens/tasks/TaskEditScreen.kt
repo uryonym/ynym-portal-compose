@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 import com.uryonym.ynymportal.ui.screens.components.TaskAddEditForm
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,7 @@ fun TaskEditScreen(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = viewModel::onDelete) {
+                IconButton(onClick = { viewModel.onChangeShowDeleteDialog(true) }) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -84,5 +85,11 @@ fun TaskEditScreen(
                 onNavigateBack()
             }
         }
+
+        DeleteConfirmDialog(
+            isShow = uiState.isShowDeleteDialog,
+            onChangeShow = viewModel::onChangeShowDeleteDialog,
+            onDelete = viewModel::onDelete
+        )
     }
 }

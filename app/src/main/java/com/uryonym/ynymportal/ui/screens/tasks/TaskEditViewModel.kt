@@ -22,6 +22,7 @@ data class TaskEditUiState(
     val deadLine: LocalDate? = null,
     val isComplete: Boolean = false,
     val isShowPicker: Boolean = false,
+    val isShowDeleteDialog: Boolean = false,
     val isTaskSaved: Boolean = false
 )
 
@@ -63,6 +64,12 @@ class TaskEditViewModel @Inject constructor(
     fun onChangeShowPicker(value: Boolean) {
         _uiState.update {
             it.copy(isShowPicker = value)
+        }
+    }
+
+    fun onChangeShowDeleteDialog(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowDeleteDialog = value)
         }
     }
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 import com.uryonym.ynymportal.ui.screens.components.RefuelingAddEditForm
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,7 @@ fun RefuelingEditScreen(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = viewModel::onDelete) {
+                IconButton(onClick = { viewModel.onChangeShowDeleteDialog(true) }) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -91,5 +92,11 @@ fun RefuelingEditScreen(
                 onNavigateBack()
             }
         }
+
+        DeleteConfirmDialog(
+            isShow = uiState.isShowDeleteDialog,
+            onChangeShow = viewModel::onChangeShowDeleteDialog,
+            onDelete = viewModel::onDelete
+        )
     }
 }

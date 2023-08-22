@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,7 @@ fun CarEditScreen(
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = viewModel::onDelete) {
+                IconButton(onClick = { viewModel.onChangeShowDeleteDialog(true) }) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "削除")
                 }
             })
@@ -92,6 +93,12 @@ fun CarEditScreen(
                 onNavigateBack()
             }
         }
+
+        DeleteConfirmDialog(
+            isShow = uiState.isShowDeleteDialog,
+            onChangeShow = viewModel::onChangeShowDeleteDialog,
+            onDelete = viewModel::onDelete
+        )
     }
 }
 

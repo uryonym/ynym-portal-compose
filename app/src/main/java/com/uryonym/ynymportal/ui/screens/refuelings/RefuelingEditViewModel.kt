@@ -37,6 +37,7 @@ data class RefuelingEditUiState(
     val quantity: Float? = 0f,
     val isShowDatePicker: Boolean = false,
     val isShowTimePicker: Boolean = false,
+    val isShowDeleteDialog: Boolean = false,
     val isRefuelingSaved: Boolean = false
 )
 
@@ -160,6 +161,12 @@ class RefuelingEditViewModel @Inject constructor(
     fun onChangeShowTimePicker(value: Boolean) {
         _uiState.update {
             it.copy(isShowTimePicker = value)
+        }
+    }
+
+    fun onChangeShowDeleteDialog(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowDeleteDialog = value)
         }
     }
 
