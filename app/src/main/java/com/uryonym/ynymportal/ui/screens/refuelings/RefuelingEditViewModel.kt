@@ -3,7 +3,6 @@ package com.uryonym.ynymportal.ui.screens.refuelings
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.RefuelingRepository
 import com.uryonym.ynymportal.data.model.Refueling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,8 +32,9 @@ data class RefuelingEditUiState(
     val price: Int? = 0,
     val totalCost: Int? = 0,
     val fullFlag: Boolean = true,
-    val gasStand: String = "",
-    val selectedCar: Car = Car(),
+    val gasStand: String = "apollostation セルフ大池橋SS",
+    val carId: String? = null,
+    val quantity: Float? = 0f,
     val isShowDatePicker: Boolean = false,
     val isShowTimePicker: Boolean = false,
     val isRefuelingSaved: Boolean = false
@@ -102,14 +102,40 @@ class RefuelingEditViewModel @Inject constructor(
     }
 
     fun onChangePrice(value: String) {
+        var calcQuantity: Float? = null
+        uiState.value.totalCost?.let { totalCost ->
+            if (value.isNotEmpty()) {
+                if (totalCost == 0 || value.toInt() == 0) {
+                    calcQuantity = 0f
+                }
+                calcQuantity = totalCost.toFloat() / value.toFloat()
+            }
+        }
+
         _uiState.update {
-            it.copy(price = if (value.isEmpty()) null else value.toInt())
+            it.copy(
+                price = if (value.isEmpty()) null else value.toInt(),
+                quantity = calcQuantity
+            )
         }
     }
 
     fun onChangeTotalCost(value: String) {
+        var calcQuantity: Float? = null
+        uiState.value.price?.let { price ->
+            if (value.isNotEmpty()) {
+                if (price == 0 || value.toInt() == 0) {
+                    calcQuantity = 0f
+                }
+                calcQuantity = value.toFloat() / price
+            }
+        }
+
         _uiState.update {
-            it.copy(totalCost = if (value.isEmpty()) null else value.toInt())
+            it.copy(
+                totalCost = if (value.isEmpty()) null else value.toInt(),
+                quantity = calcQuantity
+            )
         }
     }
 
@@ -142,20 +168,22 @@ class RefuelingEditViewModel @Inject constructor(
             uiState.value.odometer?.let { odometer ->
                 uiState.value.price?.let { price ->
                     uiState.value.totalCost?.let { totalCost ->
-                        viewModelScope.launch {
-                            refuelingRepository.updateRefueling(
-                                id = uiState.value.refuelingId,
-                                refuelDateTime = uiState.value.refuelDateTime,
-                                odometer = odometer,
-                                fuelType = uiState.value.fuelType,
-                                price = price,
-                                totalCost = totalCost,
-                                fullFlag = uiState.value.fullFlag,
-                                gasStand = uiState.value.gasStand,
-                                carId = uiState.value.selectedCar.id
-                            )
-                            _uiState.update {
-                                it.copy(isRefuelingSaved = true)
+                        uiState.value.carId?.let { carId ->
+                            viewModelScope.launch {
+                                refuelingRepository.updateRefueling(
+                                    id = uiState.value.refuelingId,
+                                    refuelDateTime = uiState.value.refuelDateTime,
+                                    odometer = odometer,
+                                    fuelType = uiState.value.fuelType,
+                                    price = price,
+                                    totalCost = totalCost,
+                                    fullFlag = uiState.value.fullFlag,
+                                    gasStand = uiState.value.gasStand,
+                                    carId = carId
+                                )
+                                _uiState.update {
+                                    it.copy(isRefuelingSaved = true)
+                                }
                             }
                         }
                     }
@@ -185,7 +213,9 @@ class RefuelingEditViewModel @Inject constructor(
                         price = refueling.price,
                         totalCost = refueling.totalCost,
                         fullFlag = refueling.fullFlag,
-                        gasStand = refueling.gasStand
+                        gasStand = refueling.gasStand,
+                        carId = refueling.carId,
+                        quantity = refueling.totalCost.toFloat() / refueling.price.toFloat()
                     )
                 }
             }

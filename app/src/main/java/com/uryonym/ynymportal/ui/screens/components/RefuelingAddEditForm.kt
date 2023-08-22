@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,7 +19,9 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Instant
@@ -70,8 +74,11 @@ fun RefuelingAddEditForm(
                 onClick = { onChangeShowDatePicker(true) },
                 modifier = Modifier.weight(1f)
             )
+
+            val hour = localDateTime.hour.toString().padStart(2, '0')
+            val minute = localDateTime.minute.toString().padStart(2, '0')
             ClickableOutlinedTextField(
-                value = "${localDateTime.hour}:${localDateTime.minute}",
+                value = "${hour}:${minute}",
                 label = { Text("給油時間") },
                 onValueChange = {},
                 onClick = { onChangeShowTimePicker(true) },
@@ -144,18 +151,27 @@ fun RefuelingAddEditForm(
         }
 
         Row {
-            Text(text = "給油量： ")
-            Text(text = quantity?.toString() ?: "")
-            Text(text = "L")
+            Row(modifier = Modifier.weight(1f)) {
+                Text(text = "給油量： ")
+                Text(text = if (quantity == null) "" else String.format("%.2f", quantity))
+                Text(text = "L")
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(1f)
+                    .toggleable(
+                        value = fullFlag,
+                        onValueChange = onChangeFullFlag,
+                        role = Role.Checkbox
+                    )
+            ) {
+                Checkbox(checked = fullFlag, onCheckedChange = null)
+                Text(text = "満タン", modifier = Modifier.padding(start = 16.dp))
+            }
         }
 
-        OutlinedTextField(
-            value = fullFlag.toString(),
-            label = { Text("満タン") },
-            onValueChange = { onChangeFullFlag(it.toBoolean()) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
         OutlinedTextField(
             value = gasStand,
             label = { Text("ガソリンスタンド") },

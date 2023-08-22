@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.refuelings
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,10 +16,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.ui.YnymPortalScreen
@@ -60,41 +57,34 @@ fun RefuelingEditScreen(
     ) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        Column(
+        RefuelingAddEditForm(
+            refuelDateTime = uiState.refuelDateTime,
+            odometer = uiState.odometer,
+            fuelTypeListExtended = uiState.fuelTypeListExtended,
+            fuelTypeList = uiState.fuelTypeList,
+            fuelType = uiState.fuelType,
+            price = uiState.price,
+            totalCost = uiState.totalCost,
+            fullFlag = uiState.fullFlag,
+            gasStand = uiState.gasStand,
+            quantity = uiState.quantity,
+            isShowDatePicker = uiState.isShowDatePicker,
+            isShowTimePicker = uiState.isShowTimePicker,
+            onChangeRefuelDate = viewModel::onChangeRefuelDate,
+            onChangeRefuelTime = viewModel::onChangeRefuelTime,
+            onChangeOdometer = viewModel::onChangeOdometer,
+            onChangeFuelTypeListExtended = viewModel::onChangeFuelTypeListExpanded,
+            onChangeFuelType = viewModel::onChangeFuelType,
+            onChangePrice = viewModel::onChangePrice,
+            onChangeTotalCost = viewModel::onChangeTotalCost,
+            onChangeFullFlag = viewModel::onChangeFullFlag,
+            onChangeGasStand = viewModel::onChangeGasStand,
+            onChangeShowDatePicker = viewModel::onChangeShowDatePicker,
+            onChangeShowTimePicker = viewModel::onChangeShowTimePicker,
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            RefuelingAddEditForm(
-                refuelDateTime = uiState.refuelDateTime,
-                odometer = uiState.odometer,
-                fuelTypeListExtended = uiState.fuelTypeListExtended,
-                fuelTypeList = uiState.fuelTypeList,
-                fuelType = uiState.fuelType,
-                price = uiState.price,
-                totalCost = uiState.totalCost,
-                fullFlag = uiState.fullFlag,
-                gasStand = uiState.gasStand,
-                quantity = null,
-                isShowDatePicker = false,
-                isShowTimePicker = false,
-                onChangeRefuelDate = viewModel::onChangeRefuelDate,
-                onChangeRefuelTime = viewModel::onChangeRefuelTime,
-                onChangeOdometer = viewModel::onChangeOdometer,
-                onChangeFuelTypeListExtended = viewModel::onChangeFuelTypeListExpanded,
-                onChangeFuelType = viewModel::onChangeFuelType,
-                onChangePrice = viewModel::onChangePrice,
-                onChangeTotalCost = viewModel::onChangeTotalCost,
-                onChangeFullFlag = viewModel::onChangeFullFlag,
-                onChangeGasStand = viewModel::onChangeGasStand,
-                onChangeShowDatePicker = viewModel::onChangeShowDatePicker,
-                onChangeShowTimePicker = viewModel::onChangeShowDatePicker,
-                modifier = Modifier
-                    .padding(16.dp, 8.dp)
-                    .fillMaxWidth()
-            )
-        }
+                .fillMaxWidth()
+        )
 
         LaunchedEffect(uiState.isRefuelingSaved) {
             if (uiState.isRefuelingSaved) {

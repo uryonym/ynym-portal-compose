@@ -31,7 +31,7 @@ data class RefuelingAddUiState(
     val price: Int? = 0,
     val totalCost: Int? = 0,
     val fullFlag: Boolean = true,
-    val gasStand: String = "",
+    val gasStand: String = "apollostation セルフ大池橋SS",
     val carId: String? = null,
     val quantity: Float? = 0f,
     val isShowDatePicker: Boolean = false,
