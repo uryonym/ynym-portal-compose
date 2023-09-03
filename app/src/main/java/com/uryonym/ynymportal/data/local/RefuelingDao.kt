@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RefuelingDao {
-    @Query("SELECT * FROM refueling WHERE car_id = (:carId) ORDER BY created_at")
+    @Query("SELECT * FROM refueling WHERE car_id = (:carId) ORDER BY created_at DESC")
     fun getRefuelings(carId: String): Flow<List<Refueling>>
 
     @Query("SELECT * FROM refueling WHERE id = (:refuelingId)")
