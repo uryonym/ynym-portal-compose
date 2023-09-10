@@ -1,7 +1,10 @@
 package com.uryonym.ynymportal.data
 
+import android.util.Log
 import com.uryonym.ynymportal.data.local.TaskDao
+import com.uryonym.ynymportal.data.local.TaskListDao
 import com.uryonym.ynymportal.data.model.Task
+import com.uryonym.ynymportal.data.model.TaskList
 import com.uryonym.ynymportal.data.network.NetworkTask
 import com.uryonym.ynymportal.data.network.YnymPortalApi
 import kotlinx.coroutines.flow.Flow
@@ -10,11 +13,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface TaskRepository {
+    fun getTaskLists(): Flow<List<TaskList>>
+
+    suspend fun refreshTaskLists()
+
     fun getTasks(): Flow<List<Task>>
 
     suspend fun getTask(id: String): Task
 
-    suspend fun insertTask(title: String, description: String, deadLine: LocalDate?)
+    suspend fun insertTask(
+        title: String,
+        description: String,
+        deadLine: LocalDate?,
+        taskListId: String
+    )
 
     suspend fun updateTask(
         id: String,
@@ -36,8 +48,22 @@ interface TaskRepository {
 @Singleton
 class TaskRepositoryImpl @Inject constructor(
     private val localDataSource: TaskDao,
+    private val taskListDataSource: TaskListDao,
     private val authRepository: AuthRepository
 ) : TaskRepository {
+
+    override fun getTaskLists(): Flow<List<TaskList>> {
+        return taskListDataSource.getTaskLists(authRepository.uid)
+    }
+
+    override suspend fun refreshTaskLists() {
+        val token = authRepository.getIdToken()
+        val taskLists = YnymPortalApi.retrofitService.getTaskLists(token).toLocal()
+        taskListDataSource.deleteAllTaskList()
+        taskLists.map {
+            taskListDataSource.insertTaskList(it)
+        }
+    }
 
     override fun getTasks(): Flow<List<Task>> {
         return localDataSource.getTasks()
@@ -47,16 +73,23 @@ class TaskRepositoryImpl @Inject constructor(
         return localDataSource.getTask(id)
     }
 
-    override suspend fun insertTask(title: String, description: String, deadLine: LocalDate?) {
+    override suspend fun insertTask(
+        title: String,
+        description: String,
+        deadLine: LocalDate?,
+        taskListId: String
+    ) {
         val task = Task(
-            id = "",
             title = title,
             description = description,
             deadLine = deadLine,
-            isComplete = false
+            isComplete = false,
+            uid = authRepository.uid,
+            taskListId = taskListId
         )
         val token = authRepository.getIdToken()
         val networkTask = YnymPortalApi.retrofitService.addTask(task.toNetwork(), "Bearer $token")
+        Log.d("debug", networkTask.toString())
 
         localDataSource.insertTask(networkTask.toLocal())
     }
@@ -73,7 +106,9 @@ class TaskRepositoryImpl @Inject constructor(
             title = title,
             description = description,
             deadLine = deadLine,
-            isComplete = isComplete
+            isComplete = isComplete,
+            uid = authRepository.uid,
+            taskListId = ""
         )
         val token = authRepository.getIdToken()
         val networkTask =

@@ -32,7 +32,13 @@ import kotlinx.coroutines.launch
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
     data object Login : YnymPortalScreen(route = "login", title = R.string.login)
     data object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
-    data object TaskAdd : YnymPortalScreen(route = "taskAdd", title = R.string.add_task)
+    data object TaskAdd :
+        YnymPortalScreen(route = "taskAdd/{taskListId}", title = R.string.add_task) {
+        fun createRoute(taskListId: String): String {
+            return "taskAdd/$taskListId"
+        }
+    }
+
     data object TaskEdit :
         YnymPortalScreen(route = "taskEdit/{taskId}", title = R.string.edit_task) {
         fun createRoute(taskId: String): String {
@@ -122,7 +128,9 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 TaskListScreen(
-                    onNavigateTaskAdd = { navController.navigate(YnymPortalScreen.TaskAdd.route) },
+                    onNavigateTaskAdd = { taskListId ->
+                        navController.navigate(YnymPortalScreen.TaskAdd.createRoute(taskListId))
+                    },
                     onNavigateTaskEdit = { task ->
                         navController.navigate(YnymPortalScreen.TaskEdit.createRoute(task.id))
                     },

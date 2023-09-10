@@ -11,15 +11,19 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
-//private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
-private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
+private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
+//private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
     .baseUrl(BASE_URL).build()
 
 interface YnymPortalService {
+    @GET("task_lists")
+    suspend fun getTaskLists(@Header("Authorization") token: String): List<NetworkTaskList>
+
     @GET("tasks")
     suspend fun getTasks(@Header("Authorization") token: String): List<NetworkTask>
 

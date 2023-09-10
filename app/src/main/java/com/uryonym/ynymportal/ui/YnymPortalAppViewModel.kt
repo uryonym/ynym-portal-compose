@@ -13,7 +13,7 @@ class YnymPortalAppViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _currentNavigate = MutableStateFlow(YnymPortalScreen.RefuelingList.route)
+    private val _currentNavigate = MutableStateFlow(YnymPortalScreen.TaskList.route)
     val currentNavigate: StateFlow<String> = _currentNavigate
 
     init {

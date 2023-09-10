@@ -21,6 +21,8 @@ import javax.inject.Singleton
 interface AuthRepository {
     val currentUser: FirebaseUser?
 
+    val uid: String
+
     suspend fun getIdToken(): String
 
     suspend fun signInWithEmailAndPassword(email: String, password: String): Response<Boolean>
@@ -37,6 +39,9 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     override val currentUser: FirebaseUser?
         get() = auth.currentUser
+
+    override val uid: String
+        get() = currentUser?.uid ?: ""
 
     override suspend fun getIdToken(): String {
         var token = ""

@@ -24,6 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,11 +41,13 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateTaskAdd: () -> Unit,
+    onNavigateTaskAdd: (String) -> Unit,
     onNavigateTaskEdit: (Task) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: TaskListViewModel = hiltViewModel()
 ) {
+    val currentTaskListId by viewModel.currentTaskListId.collectAsStateWithLifecycle()
+
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(stringResource(id = YnymPortalScreen.TaskList.title))
@@ -57,49 +61,70 @@ fun TaskListScreen(
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateTaskAdd) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+            currentTaskListId?.let {
+                FloatingActionButton(onClick = { onNavigateTaskAdd(it) }) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
+                }
             }
         })
     }) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            items(items = uiState.tasks.filter { !it.isComplete }) { task ->
-                Column {
-                    TaskListItem(
-                        task = task,
-                        onNavigateTaskEdit = onNavigateTaskEdit,
-                        viewModel = viewModel
-                    )
-                    HorizontalDivider()
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .height(32.dp)
+        Column(
+            modifier = Modifier.padding(padding)
+        ) {
+            uiState.selectedTaskListIndex?.let { selectedTaskListIndex ->
+                ScrollableTabRow(
+                    selectedTabIndex = selectedTaskListIndex,
+                    edgePadding = 16.dp
                 ) {
-                    Text(
-                        text = "Completed",
-                        style = MaterialTheme.typography.titleSmall
-                    )
+                    uiState.taskLists.forEachIndexed { index, taskList ->
+                        Tab(
+                            selected = selectedTaskListIndex == index,
+                            onClick = { viewModel.onClickTaskListTab(index) },
+                            text = { Text(text = taskList.name) }
+                        )
+                    }
                 }
             }
 
-            items(items = uiState.tasks.filter { it.isComplete }) { task ->
-                Column {
-                    TaskListItem(
-                        task = task,
-                        onNavigateTaskEdit = onNavigateTaskEdit,
-                        viewModel = viewModel
-                    )
-                    HorizontalDivider()
+            LazyColumn {
+                items(items = uiState.tasks.filter { !it.isComplete }) { task ->
+                    Column {
+                        TaskListItem(
+                            task = task,
+                            onNavigateTaskEdit = onNavigateTaskEdit,
+                            viewModel = viewModel
+                        )
+                        HorizontalDivider()
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                            .height(32.dp)
+                    ) {
+                        Text(
+                            text = "Completed",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                }
+
+                items(items = uiState.tasks.filter { it.isComplete }) { task ->
+                    Column {
+                        TaskListItem(
+                            task = task,
+                            onNavigateTaskEdit = onNavigateTaskEdit,
+                            viewModel = viewModel
+                        )
+                        HorizontalDivider()
+                    }
                 }
             }
         }

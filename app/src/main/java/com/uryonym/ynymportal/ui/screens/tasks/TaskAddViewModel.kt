@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.TaskRepository
@@ -25,8 +26,11 @@ data class TaskAddUiState(
 
 @HiltViewModel
 class TaskAddViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
+    private val currenTaskListId: String = savedStateHandle["taskListId"]!!
 
     private val _uiState = MutableStateFlow(TaskAddUiState())
     val uiState: StateFlow<TaskAddUiState> = _uiState
@@ -61,7 +65,8 @@ class TaskAddViewModel @Inject constructor(
                 taskRepository.insertTask(
                     title = uiState.value.title,
                     description = uiState.value.description,
-                    deadLine = uiState.value.deadLine
+                    deadLine = uiState.value.deadLine,
+                    taskListId = currenTaskListId
                 )
                 _uiState.update {
                     it.copy(isTaskSaved = true)

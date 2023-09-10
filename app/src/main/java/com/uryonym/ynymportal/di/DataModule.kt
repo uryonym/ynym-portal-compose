@@ -16,6 +16,7 @@ import com.uryonym.ynymportal.data.local.CarDao
 import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.local.RefuelingDao
 import com.uryonym.ynymportal.data.local.TaskDao
+import com.uryonym.ynymportal.data.local.TaskListDao
 import com.uryonym.ynymportal.data.local.YnymPortalDatabase
 import dagger.Binds
 import dagger.Module
@@ -61,6 +62,9 @@ object DatabaseModule {
             name = "YnymPortal.db"
         ).build()
     }
+
+    @Provides
+    fun provideTaskListDao(database: YnymPortalDatabase): TaskListDao = database.taskListDao()
 
     @Provides
     fun provideTaskDao(database: YnymPortalDatabase): TaskDao = database.taskDao()
