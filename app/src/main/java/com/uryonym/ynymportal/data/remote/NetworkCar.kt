@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.data.network
+package com.uryonym.ynymportal.data.remote
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName

@@ -3,75 +3,9 @@ package com.uryonym.ynymportal.data
 import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.Confidential
 import com.uryonym.ynymportal.data.model.Refueling
-import com.uryonym.ynymportal.data.model.Task
-import com.uryonym.ynymportal.data.model.TaskList
-import com.uryonym.ynymportal.data.network.NetworkCar
-import com.uryonym.ynymportal.data.network.NetworkConfidential
-import com.uryonym.ynymportal.data.network.NetworkRefueling
-import com.uryonym.ynymportal.data.network.NetworkTask
-import com.uryonym.ynymportal.data.network.NetworkTaskList
-
-fun TaskList.toNetwork() = NetworkTaskList(
-    id = this.id,
-    name = this.name,
-    uid = this.uid,
-    seq = this.seq,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listTaskListToNetwork")
-fun List<TaskList>.toNetwork() = map {
-    it.toNetwork()
-}
-
-fun NetworkTaskList.toLocal() = TaskList(
-    id = this.id,
-    name = this.name,
-    uid = this.uid,
-    seq = this.seq,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listTaskListToLocal")
-fun List<NetworkTaskList>.toLocal() = map {
-    it.toLocal()
-}
-
-fun Task.toNetwork() = NetworkTask(
-    id = this.id,
-    title = this.title,
-    description = this.description,
-    deadLine = this.deadLine,
-    isComplete = this.isComplete,
-    uid = this.uid,
-    taskListId = this.taskListId,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listTaskToNetwork")
-fun List<Task>.toNetwork() = map {
-    it.toNetwork()
-}
-
-fun NetworkTask.toLocal() = Task(
-    id = this.id,
-    title = this.title,
-    description = this.description,
-    deadLine = this.deadLine,
-    isComplete = this.isComplete,
-    uid = this.uid,
-    taskListId = this.taskListId,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listTaskToLocal")
-fun List<NetworkTask>.toLocal() = map {
-    it.toLocal()
-}
+import com.uryonym.ynymportal.data.remote.NetworkCar
+import com.uryonym.ynymportal.data.remote.NetworkConfidential
+import com.uryonym.ynymportal.data.remote.NetworkRefueling
 
 fun Confidential.toNetwork() = NetworkConfidential(
     id = this.id,

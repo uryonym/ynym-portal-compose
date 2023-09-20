@@ -2,7 +2,7 @@ package com.uryonym.ynymportal.data
 
 import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.model.Confidential
-import com.uryonym.ynymportal.data.network.YnymPortalApi
+import com.uryonym.ynymportal.data.remote.YnymPortalApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

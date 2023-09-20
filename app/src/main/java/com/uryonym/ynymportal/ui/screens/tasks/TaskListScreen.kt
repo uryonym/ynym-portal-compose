@@ -46,7 +46,7 @@ fun TaskListScreen(
     onOpenDrawer: () -> Unit,
     viewModel: TaskListViewModel = hiltViewModel()
 ) {
-    val currentTaskListId by viewModel.currentTaskListId.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -57,102 +57,99 @@ fun TaskListScreen(
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
-            IconButton(onClick = viewModel::refreshTasks) {
+            IconButton(onClick = viewModel::refreshTaskLists) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
-            currentTaskListId?.let {
+            uiState.selectedTaskListId?.let {
                 FloatingActionButton(onClick = { onNavigateTaskAdd(it) }) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
                 }
             }
         })
     }) { padding ->
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            uiState.selectedTaskListIndex?.let { selectedTaskListIndex ->
+            uiState.selectedTaskListId?.let { selectedTaskListId ->
+                val taskListIndex = uiState.taskLists.indexOfFirst { it.id == selectedTaskListId }
+
                 ScrollableTabRow(
-                    selectedTabIndex = selectedTaskListIndex,
+                    selectedTabIndex = taskListIndex,
                     edgePadding = 16.dp
                 ) {
                     uiState.taskLists.forEachIndexed { index, taskList ->
                         Tab(
-                            selected = selectedTaskListIndex == index,
+                            selected = taskListIndex == index,
                             onClick = { viewModel.onClickTaskListTab(index) },
                             text = { Text(text = taskList.name) }
                         )
                     }
                 }
-            }
 
-            LazyColumn {
-                items(items = uiState.tasks.filter { !it.isComplete }) { task ->
-                    Column {
-                        TaskListItem(
-                            task = task,
-                            onNavigateTaskEdit = onNavigateTaskEdit,
-                            viewModel = viewModel
-                        )
-                        HorizontalDivider()
-                    }
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-                            .height(32.dp)
-                    ) {
-                        Text(
-                            text = "Completed",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                    }
-                }
-
-                items(items = uiState.tasks.filter { it.isComplete }) { task ->
-                    Column {
-                        TaskListItem(
-                            task = task,
-                            onNavigateTaskEdit = onNavigateTaskEdit,
-                            viewModel = viewModel
-                        )
-                        HorizontalDivider()
-                    }
-                }
+//                LazyColumn {
+//                    items(items = uiState.tasks.filter { !it.isComplete }) { task ->
+//                        Column {
+//                            TaskListItem(
+//                                task = task,
+//                                onNavigateTaskEdit = onNavigateTaskEdit,
+//                                viewModel = viewModel
+//                            )
+//                            HorizontalDivider()
+//                        }
+//                    }
+//
+//                    item {
+//                        Spacer(modifier = Modifier.height(16.dp))
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            modifier = Modifier
+//                                .padding(horizontal = 16.dp)
+//                                .fillMaxWidth()
+//                                .height(32.dp)
+//                        ) {
+//                            Text(
+//                                text = "Completed",
+//                                style = MaterialTheme.typography.titleSmall
+//                            )
+//                        }
+//                    }
+//
+//                    items(items = uiState.tasks.filter { it.isComplete }) { task ->
+//                        Column {
+//                            TaskListItem(
+//                                task = task,
+//                                onNavigateTaskEdit = onNavigateTaskEdit,
+//                                viewModel = viewModel
+//                            )
+//                            HorizontalDivider()
+//                        }
+//                    }
+//                }
             }
         }
     }
 }
 
-@Composable
-fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskListViewModel) {
-    ListItem(
-        headlineContent = {
-            Column {
-                Text(text = task.title)
-                task.deadLine?.let {
-                    Text(text = it.toString())
-                }
-            }
-        },
-        leadingContent = {
-            Checkbox(
-                checked = task.isComplete,
-                onCheckedChange = {
-                    viewModel.onSaveStatus(
-                        taskId = task.id,
-                        status = it
-                    )
-                })
-        },
-        modifier = Modifier.clickable {
-            onNavigateTaskEdit(task)
-        })
-}
+//@Composable
+//fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskListViewModel) {
+//    ListItem(
+//        headlineContent = {
+//            Column {
+//                Text(text = task.title)
+//                task.deadLine?.let {
+//                    Text(text = it.toString())
+//                }
+//            }
+//        },
+//        leadingContent = {
+//            Checkbox(
+//                checked = task.isComplete,
+//                onCheckedChange = {
+//                    viewModel.onSaveStatus(task = task, status = it)
+//                }
+//            )
+//        },
+//        modifier = Modifier.clickable { onNavigateTaskEdit(task) }
+//    )
+//}

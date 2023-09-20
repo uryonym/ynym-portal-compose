@@ -2,7 +2,7 @@ package com.uryonym.ynymportal.data
 
 import com.uryonym.ynymportal.data.local.RefuelingDao
 import com.uryonym.ynymportal.data.model.Refueling
-import com.uryonym.ynymportal.data.network.YnymPortalApi
+import com.uryonym.ynymportal.data.remote.YnymPortalApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import javax.inject.Inject

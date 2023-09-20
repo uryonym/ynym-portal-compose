@@ -76,13 +76,13 @@ class TaskEditViewModel @Inject constructor(
     fun onSaveEditTask() {
         if (uiState.value.title.isNotEmpty()) {
             viewModelScope.launch {
-                taskRepository.updateTask(
-                    id = uiState.value.taskId,
-                    title = uiState.value.title,
-                    description = uiState.value.description,
-                    deadLine = uiState.value.deadLine,
-                    isComplete = uiState.value.isComplete
-                )
+//                taskRepository.updateTask(
+//                    id = uiState.value.taskId,
+//                    title = uiState.value.title,
+//                    description = uiState.value.description,
+//                    deadLine = uiState.value.deadLine,
+//                    isComplete = uiState.value.isComplete
+//                )
                 _uiState.update {
                     it.copy(isTaskSaved = true)
                 }
@@ -92,7 +92,7 @@ class TaskEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            taskRepository.deleteTask(uiState.value.taskId)
+//            taskRepository.deleteTask(uiState.value.taskId)
             _uiState.update {
                 it.copy(isTaskSaved = true)
             }
@@ -101,32 +101,32 @@ class TaskEditViewModel @Inject constructor(
 
     private fun getTask() {
         viewModelScope.launch {
-            taskRepository.getTask(uiState.value.taskId).let { task ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        title = task.title,
-                        description = task.description ?: "",
-                        deadLine = task.deadLine,
-                        isComplete = task.isComplete
-                    )
-                }
-            }
+//            taskRepository.getTask(uiState.value.taskId).let { task ->
+//                _uiState.update {
+//                    it.copy(
+//                        isLoading = false,
+//                        title = task.title,
+//                        description = task.description ?: "",
+//                        deadLine = task.deadLine,
+//                        isComplete = task.isComplete
+//                    )
+//                }
+//            }
         }
     }
 
     private fun refreshTask() {
         viewModelScope.launch {
-            taskRepository.refreshTask(uiState.value.taskId).let { task ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        title = task.title,
-                        description = task.description ?: "",
-                        deadLine = task.deadLine,
-                    )
-                }
-            }
+//            taskRepository.refreshTask(uiState.value.taskId).let { task ->
+//                _uiState.update {
+//                    it.copy(
+//                        isLoading = false,
+//                        title = task.title,
+//                        description = task.description ?: "",
+//                        deadLine = task.deadLine,
+//                    )
+//                }
+//            }
         }
     }
 }

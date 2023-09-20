@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.data.network
+package com.uryonym.ynymportal.data.remote
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -11,7 +11,6 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
 //private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
@@ -20,32 +19,21 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
     .baseUrl(BASE_URL).build()
 
+object YnymPortalApi {
+    val taskListService: TaskListApiService by lazy {
+        retrofit.create(TaskListApiService::class.java)
+    }
+
+    val taskService: TaskApiService by lazy {
+        retrofit.create(TaskApiService::class.java)
+    }
+
+    val retrofitService: YnymPortalService by lazy {
+        retrofit.create(YnymPortalService::class.java)
+    }
+}
+
 interface YnymPortalService {
-    @GET("task_lists")
-    suspend fun getTaskLists(@Header("Authorization") token: String): List<NetworkTaskList>
-
-    @GET("tasks")
-    suspend fun getTasks(@Header("Authorization") token: String): List<NetworkTask>
-
-    @GET("tasks/{id}")
-    suspend fun getTask(@Path("id") id: String, @Header("Authorization") token: String): NetworkTask
-
-    @POST("tasks")
-    suspend fun addTask(
-        @Body task: NetworkTask,
-        @Header("Authorization") token: String
-    ): NetworkTask
-
-    @PATCH("tasks/{id}")
-    suspend fun editTask(
-        @Path("id") id: String,
-        @Body task: NetworkTask,
-        @Header("Authorization") token: String
-    ): NetworkTask
-
-    @DELETE("tasks/{id}")
-    suspend fun deleteTask(@Path("id") id: String, @Header("Authorization") token: String)
-
     @GET("confidentials")
     suspend fun getConfidentials(@Header("Authorization") token: String): List<NetworkConfidential>
 
@@ -116,8 +104,3 @@ interface YnymPortalService {
     suspend fun deleteRefueling(@Path("id") id: String, @Header("Authorization") token: String)
 }
 
-object YnymPortalApi {
-    val retrofitService: YnymPortalService by lazy {
-        retrofit.create(YnymPortalService::class.java)
-    }
-}
