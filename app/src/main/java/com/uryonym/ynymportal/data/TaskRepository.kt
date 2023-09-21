@@ -1,20 +1,17 @@
 package com.uryonym.ynymportal.data
 
-import com.uryonym.ynymportal.data.local.TaskListLocalDataSource
-import com.uryonym.ynymportal.data.model.RemoteTaskList
+import com.uryonym.ynymportal.data.local.TaskLocalDataSource
 import com.uryonym.ynymportal.data.model.Task
-import com.uryonym.ynymportal.data.model.TaskList
-import com.uryonym.ynymportal.data.remote.TaskListRemoteDataSource
-import com.uryonym.ynymportal.data.remote.YnymPortalApi
+import com.uryonym.ynymportal.data.remote.TaskRemoteDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface TaskRepository {
-//    fun getTasks(taskListId: String): Flow<List<Task>>
-//
+    fun getTasks(): Flow<List<Task>>
+
+    suspend fun refreshTasks()
+
 //    suspend fun insertTask(task: Task)
 //
 //    suspend fun updateTask(taskListId: String, task: Task)
@@ -26,14 +23,24 @@ interface TaskRepository {
 
 @Singleton
 class TaskRepositoryImpl @Inject constructor(
-    private val taskListLocalDataSource: TaskListLocalDataSource,
-    private val taskListRemoteDataSource: TaskListRemoteDataSource
+    private val taskLocalDataSource: TaskLocalDataSource,
+    private val taskRemoteDataSource: TaskRemoteDataSource
 ) : TaskRepository {
+    override fun getTasks(): Flow<List<Task>> {
+        return taskLocalDataSource.fetchTasks()
+    }
 
-//    override fun getTaskLists(): Flow<List<TaskList>> {
-//        return taskListLocalDataSource.getTaskLists(
-//    }
-//
+    override suspend fun refreshTasks() {
+        val localTasks = taskLocalDataSource.getTasks()
+        val remoteTasks = taskRemoteDataSource.getTasks()
+        val localIds = localTasks.map { it.id }.toSet()
+        val remoteIds = remoteTasks.map { it.id }.toSet()
+        val deleteIds = localIds.subtract(remoteIds).toList()
+
+        taskLocalDataSource.upsertTasks(remoteTasks)
+        taskLocalDataSource.deleteTasksById(deleteIds)
+    }
+
 //    override fun getTasks(taskListId: String): Flow<List<Task>> = flow {
 //        val token = authRepository.getIdToken()
 //        emit(YnymPortalApi.retrofitService.getTasks(taskListId, token))

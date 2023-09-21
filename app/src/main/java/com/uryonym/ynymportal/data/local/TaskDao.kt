@@ -4,26 +4,36 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.uryonym.ynymportal.data.model.Task
+import androidx.room.Upsert
+import com.uryonym.ynymportal.data.model.LocalTask
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM task ORDER BY dead_line is null, dead_line, created_at")
-    fun getTasks(): Flow<List<Task>>
+    fun fetchTasks(): Flow<List<LocalTask>>
 
-    @Query("SELECT * FROM task WHERE id = (:taskId)")
-    suspend fun getTask(taskId: String): Task
+    @Query("SELECT * FROM task ORDER BY dead_line is null, dead_line, created_at")
+    suspend fun getTasks(): List<LocalTask>
 
-    @Insert
-    suspend fun insertTask(task: Task)
+    @Upsert
+    suspend fun upsertTasks(tasks: List<LocalTask>)
 
-    @Update
-    suspend fun updateTask(task: Task)
+    @Query("DELETE FROM task WHERE id = (:id)")
+    suspend fun deleteTaskById(id: String)
 
-    @Query("DELETE FROM task WHERE id = (:taskId)")
-    suspend fun deleteTask(taskId: String)
-
-    @Query("DELETE FROM task")
-    suspend fun deleteAllTask()
+//    @Query("SELECT * FROM task WHERE id = (:taskId)")
+//    suspend fun getTask(taskId: String): Task
+//
+//    @Insert
+//    suspend fun insertTask(task: Task)
+//
+//    @Update
+//    suspend fun updateTask(task: Task)
+//
+//    @Query("DELETE FROM task WHERE id = (:taskId)")
+//    suspend fun deleteTask(taskId: String)
+//
+//    @Query("DELETE FROM task")
+//    suspend fun deleteAllTask()
 }

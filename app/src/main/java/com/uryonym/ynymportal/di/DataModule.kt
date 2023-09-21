@@ -22,6 +22,8 @@ import com.uryonym.ynymportal.data.local.TaskDao
 import com.uryonym.ynymportal.data.local.TaskListDao
 import com.uryonym.ynymportal.data.local.TaskListLocalDataSource
 import com.uryonym.ynymportal.data.local.TaskListLocalDataSourceImpl
+import com.uryonym.ynymportal.data.local.TaskLocalDataSource
+import com.uryonym.ynymportal.data.local.TaskLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.YnymPortalDatabase
 import com.uryonym.ynymportal.data.remote.TaskApiService
 import com.uryonym.ynymportal.data.remote.TaskListApiService
@@ -82,6 +84,10 @@ abstract class DataSourceModule {
 
     @Singleton
     @Binds
+    abstract fun bindTaskLocalDataSource(dataSource: TaskLocalDataSourceImpl): TaskLocalDataSource
+
+    @Singleton
+    @Binds
     abstract fun bindTaskRemoteDataSource(dataSource: TaskRemoteDataSourceImpl): TaskRemoteDataSource
 }
 
@@ -127,8 +133,8 @@ object DatabaseModule {
     @Provides
     fun provideTaskListDao(database: YnymPortalDatabase): TaskListDao = database.taskListDao()
 
-//    @Provides
-//    fun provideTaskDao(database: YnymPortalDatabase): TaskDao = database.taskDao()
+    @Provides
+    fun provideTaskDao(database: YnymPortalDatabase): TaskDao = database.taskDao()
 
     @Provides
     fun provideConfidentialDao(database: YnymPortalDatabase): ConfidentialDao =

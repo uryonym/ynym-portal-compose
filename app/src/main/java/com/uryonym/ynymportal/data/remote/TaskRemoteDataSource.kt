@@ -2,14 +2,20 @@ package com.uryonym.ynymportal.data.remote
 
 import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.model.RemoteTask
+import com.uryonym.ynymportal.data.model.Task
+import com.uryonym.ynymportal.data.model.toModel
 import com.uryonym.ynymportal.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface TaskRemoteDataSource {
-    suspend fun getTasks(taskListId: String): List<RemoteTask>
+    fun fetchTasks(): Flow<List<Task>>
+
+    suspend fun getTasks(): List<Task>
 
     suspend fun getTask(id: String): RemoteTask
 
@@ -26,11 +32,17 @@ class TaskRemoteDataSourceImpl @Inject constructor(
     private val taskApiService: TaskApiService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : TaskRemoteDataSource {
-    override suspend fun getTasks(taskListId: String): List<RemoteTask> {
+    override fun fetchTasks(): Flow<List<Task>> = flow {
         val token = authRepository.getIdToken()
+        withContext(ioDispatcher) {
+            emit(taskApiService.getTasks(token).toModel())
+        }
+    }
 
+    override suspend fun getTasks(): List<Task> {
+        val token = authRepository.getIdToken()
         return withContext(ioDispatcher) {
-            taskApiService.getTasks(taskListId, token)
+            taskApiService.getTasks(token).toModel()
         }
     }
 

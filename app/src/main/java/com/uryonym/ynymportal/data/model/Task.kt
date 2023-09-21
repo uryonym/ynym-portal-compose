@@ -7,41 +7,94 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
 data class Task(
-    val id: String = "",
-    var title: String,
-    var description: String? = null,
-    var deadLine: LocalDate? = null,
-    var isComplete: Boolean,
-    var uid: String,
-    var taskListId: String,
-    val createdAt: Instant? = null,
-    val updatedAt: Instant? = null,
+    val id: String = UUID.randomUUID().toString(),
+    val title: String,
+    val description: String,
+    val deadLine: LocalDate?,
+    val isComplete: Boolean,
+    val taskListId: String,
+    val createdAt: Instant
 )
 
 @Entity(tableName = "task")
 data class LocalTask(
-    @PrimaryKey val id: String = "",
-    var title: String,
-    var description: String? = null,
-    @ColumnInfo(name = "dead_line") var deadLine: LocalDate? = null,
-    @ColumnInfo(name = "is_complete") var isComplete: Boolean,
-    var uid: String,
-    @ColumnInfo(name = "task_list_id") var taskListId: String,
-    @ColumnInfo(name = "created_at") val createdAt: Instant? = null,
-    @ColumnInfo(name = "updated_at") val updatedAt: Instant? = null,
+    @PrimaryKey val id: String,
+    val title: String,
+    val description: String,
+    @ColumnInfo(name = "dead_line") val deadLine: LocalDate?,
+    @ColumnInfo(name = "is_complete") val isComplete: Boolean,
+    @ColumnInfo(name = "task_list_id") val taskListId: String,
+    @ColumnInfo(name = "created_at") val createdAt: Instant
 )
 
 @Serializable
 data class RemoteTask(
-    val id: String = "",
-    var title: String = "",
-    var description: String? = null,
-    @SerialName(value = "dead_line") var deadLine: LocalDate? = null,
-    @SerialName(value = "is_complete") var isComplete: Boolean,
-    val uid: String = "",
-    @SerialName(value = "task_list_id") val taskListId: String = "",
-    @SerialName(value = "created_at") val createdAt: Instant? = null,
-    @SerialName(value = "updated_at") val updatedAt: Instant? = null,
+    val id: String,
+    val title: String,
+    val description: String,
+    @SerialName(value = "dead_line") val deadLine: LocalDate?,
+    @SerialName(value = "is_complete") val isComplete: Boolean,
+    @SerialName(value = "task_list_id") val taskListId: String,
+    @SerialName(value = "created_at") val createdAt: Instant
 )
+
+fun Task.toLocal() = LocalTask(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    deadLine = this.deadLine,
+    isComplete = this.isComplete,
+    taskListId = this.taskListId,
+    createdAt = this.createdAt
+)
+
+fun Task.toRemote() = RemoteTask(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    deadLine = this.deadLine,
+    isComplete = this.isComplete,
+    taskListId = this.taskListId,
+    createdAt = this.createdAt
+)
+
+fun LocalTask.toModel() = Task(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    deadLine = this.deadLine,
+    isComplete = this.isComplete,
+    taskListId = this.taskListId,
+    createdAt = this.createdAt
+)
+
+fun RemoteTask.toModel() = Task(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    deadLine = this.deadLine,
+    isComplete = this.isComplete,
+    taskListId = this.taskListId,
+    createdAt = this.createdAt
+)
+
+fun List<Task>.toLocal() = map {
+    it.toLocal()
+}
+
+fun List<Task>.toRemote() = map {
+    it.toRemote()
+}
+
+@JvmName("listLocalTaskToModel")
+fun List<LocalTask>.toModel() = map {
+    it.toModel()
+}
+
+@JvmName("listRemoteTaskToModel")
+fun List<RemoteTask>.toModel() = map {
+    it.toModel()
+}

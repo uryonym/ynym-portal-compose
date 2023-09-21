@@ -18,7 +18,6 @@ class TaskListRepositoryImpl @Inject constructor(
     private val taskListLocalDataSource: TaskListLocalDataSource,
     private val taskListRemoteDataSource: TaskListRemoteDataSource
 ) : TaskListRepository {
-
     override fun getTaskLists(): Flow<List<TaskList>> {
         return taskListLocalDataSource.fetchTaskLists()
     }

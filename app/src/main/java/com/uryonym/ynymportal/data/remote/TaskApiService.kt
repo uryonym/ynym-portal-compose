@@ -13,7 +13,6 @@ import retrofit2.http.Query
 interface TaskApiService {
     @GET("tasks")
     suspend fun getTasks(
-        @Query("task_list_id") taskListId: String,
         @Header("Authorization") token: String
     ): List<RemoteTask>
 
