@@ -16,6 +16,7 @@ import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 data class TaskEditUiState(
+    val task: Task? = null,
     val taskList: TaskList? = null,
     val title: String = "",
     val description: String = "",
@@ -43,6 +44,7 @@ class TaskEditViewModel @Inject constructor(
             val taskList = taskListRepository.getTaskList(task.taskListId)
             _uiState.update {
                 it.copy(
+                    task = task,
                     taskList = taskList,
                     title = task.title,
                     description = task.description,
@@ -84,17 +86,20 @@ class TaskEditViewModel @Inject constructor(
     }
 
     fun onSaveEditTask() {
-        if (uiState.value.title.isNotEmpty()) {
-            viewModelScope.launch {
-//                taskRepository.updateTask(
-//                    id = uiState.value.taskId,
-//                    title = uiState.value.title,
-//                    description = uiState.value.description,
-//                    deadLine = uiState.value.deadLine,
-//                    isComplete = uiState.value.isComplete
-//                )
-                _uiState.update {
-                    it.copy(isTaskSaved = true)
+        viewModelScope.launch {
+            if (uiState.value.title.isNotEmpty()) {
+                uiState.value.task?.let { task ->
+                    val updateTask = task.copy(
+                        title = uiState.value.title,
+                        description = uiState.value.description,
+                        deadLine = uiState.value.deadLine,
+                        isComplete = uiState.value.isComplete,
+                    )
+                    taskRepository.updateTask(updateTask)
+
+                    _uiState.update {
+                        it.copy(isTaskSaved = true)
+                    }
                 }
             }
         }
