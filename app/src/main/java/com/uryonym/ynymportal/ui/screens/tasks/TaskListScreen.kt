@@ -146,7 +146,7 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: Task
             Checkbox(
                 checked = task.isComplete,
                 onCheckedChange = {
-//                    viewModel.onSaveStatus(task = task, status = it)
+                    viewModel.onSaveStatus(task = task, status = it)
                 }
             )
         },

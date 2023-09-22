@@ -8,7 +8,6 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface TaskApiService {
     @GET("tasks")
@@ -33,7 +32,7 @@ interface TaskApiService {
         @Path("id") id: String,
         @Body task: RemoteTask,
         @Header("Authorization") token: String
-    ): RemoteTask
+    )
 
     @DELETE("tasks/{id}")
     suspend fun deleteTask(@Path("id") id: String, @Header("Authorization") token: String)

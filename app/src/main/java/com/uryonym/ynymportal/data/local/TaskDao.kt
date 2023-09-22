@@ -1,9 +1,7 @@
 package com.uryonym.ynymportal.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import androidx.room.Upsert
 import com.uryonym.ynymportal.data.model.LocalTask
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +15,9 @@ interface TaskDao {
     suspend fun getTasks(): List<LocalTask>
 
     @Upsert
+    suspend fun upsertTask(task: LocalTask)
+
+    @Upsert
     suspend fun upsertTasks(tasks: List<LocalTask>)
 
     @Query("DELETE FROM task WHERE id = (:id)")
@@ -24,12 +25,6 @@ interface TaskDao {
 
 //    @Query("SELECT * FROM task WHERE id = (:taskId)")
 //    suspend fun getTask(taskId: String): Task
-//
-//    @Insert
-//    suspend fun insertTask(task: Task)
-//
-//    @Update
-//    suspend fun updateTask(task: Task)
 //
 //    @Query("DELETE FROM task WHERE id = (:taskId)")
 //    suspend fun deleteTask(taskId: String)

@@ -10,6 +10,8 @@ import javax.inject.Singleton
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
 
+    suspend fun updateTask(task: Task)
+
     suspend fun refreshTasks()
 
 //    suspend fun insertTask(task: Task)
@@ -28,6 +30,11 @@ class TaskRepositoryImpl @Inject constructor(
 ) : TaskRepository {
     override fun getTasks(): Flow<List<Task>> {
         return taskLocalDataSource.fetchTasks()
+    }
+
+    override suspend fun updateTask(task: Task) {
+        taskRemoteDataSource.updateTask(task)
+        taskLocalDataSource.upsertTask(task)
     }
 
     override suspend fun refreshTasks() {

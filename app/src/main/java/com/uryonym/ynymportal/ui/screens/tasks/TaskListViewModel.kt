@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -57,16 +56,12 @@ class TaskListViewModel @Inject constructor(
         _selectedTaskListid.value = taskListId
     }
 
-//    fun onSaveStatus(task: Task, status: Boolean) {
-//        val updateTask = task.copy(isComplete = status)
-//        viewModelScope.launch {
-//            uiState.value.selectedTaskListId?.let {
-//                taskRepository.updateTask(it, updateTask)
-//            }
-//
-//            refreshTasks()
-//        }
-//    }
+    fun onSaveStatus(task: Task, status: Boolean) {
+        val updateTask = task.copy(isComplete = status)
+        viewModelScope.launch {
+            taskRepository.updateTask(updateTask)
+        }
+    }
 
     fun refresh() {
         viewModelScope.launch {
@@ -74,19 +69,4 @@ class TaskListViewModel @Inject constructor(
             taskRepository.refreshTasks()
         }
     }
-
-//    fun refreshTasks() {
-//        viewModelScope.launch {
-//            uiState.value.selectedTaskListId?.let {
-//                taskRepository.getTasks(it).collect { tasks ->
-//                    _uiState.update {
-//                        it.copy(
-//                            tasks = tasks
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-
 }
