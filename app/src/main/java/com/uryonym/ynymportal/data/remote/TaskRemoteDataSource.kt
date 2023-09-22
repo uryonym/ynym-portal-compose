@@ -20,7 +20,7 @@ interface TaskRemoteDataSource {
 
     suspend fun getTask(id: String): RemoteTask
 
-    suspend fun createTask(task: RemoteTask)
+    suspend fun createTask(task: Task)
 
     suspend fun updateTask(task: Task)
 
@@ -49,23 +49,20 @@ class TaskRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getTask(id: String): RemoteTask {
         val token = authRepository.getIdToken()
-
         return withContext(ioDispatcher) {
             taskApiService.getTask(id, token)
         }
     }
 
-    override suspend fun createTask(task: RemoteTask) {
+    override suspend fun createTask(task: Task) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
-            taskApiService.createTask(task, token)
+            taskApiService.createTask(task.toRemote(), token)
         }
     }
 
     override suspend fun updateTask(task: Task) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
             taskApiService.updateTask(task.id, task.toRemote(), token)
         }
@@ -73,7 +70,6 @@ class TaskRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteTask(id: String) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
             taskApiService.deleteTask(id, token)
         }

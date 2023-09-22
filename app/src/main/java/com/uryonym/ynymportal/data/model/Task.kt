@@ -3,6 +3,7 @@ package com.uryonym.ynymportal.data.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
@@ -16,7 +17,7 @@ data class Task(
     val deadLine: LocalDate?,
     val isComplete: Boolean,
     val taskListId: String,
-    val createdAt: Instant
+    val createdAt: Instant = Clock.System.now()
 )
 
 @Entity(tableName = "task")

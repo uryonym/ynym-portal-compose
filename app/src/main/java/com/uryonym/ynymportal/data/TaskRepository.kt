@@ -10,13 +10,11 @@ import javax.inject.Singleton
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
 
+    suspend fun insertTask(task: Task)
+
     suspend fun updateTask(task: Task)
 
     suspend fun refreshTasks()
-
-//    suspend fun insertTask(task: Task)
-//
-//    suspend fun updateTask(taskListId: String, task: Task)
 
 //    suspend fun deleteTask(id: String)
 //
@@ -30,6 +28,11 @@ class TaskRepositoryImpl @Inject constructor(
 ) : TaskRepository {
     override fun getTasks(): Flow<List<Task>> {
         return taskLocalDataSource.fetchTasks()
+    }
+
+    override suspend fun insertTask(task: Task) {
+        taskRemoteDataSource.createTask(task)
+        taskLocalDataSource.upsertTask(task)
     }
 
     override suspend fun updateTask(task: Task) {
@@ -47,25 +50,6 @@ class TaskRepositoryImpl @Inject constructor(
         taskLocalDataSource.upsertTasks(remoteTasks)
         taskLocalDataSource.deleteTasksById(deleteIds)
     }
-
-//    override fun getTasks(taskListId: String): Flow<List<Task>> = flow {
-//        val token = authRepository.getIdToken()
-//        emit(YnymPortalApi.retrofitService.getTasks(taskListId, token))
-//    }
-
-    //    override suspend fun getTask(id: String): Task {
-//        return localDataSource.getTask(id)
-//    }
-//
-//    override suspend fun insertTask(task: Task) {
-//        val token = authRepository.getIdToken()
-//        YnymPortalApi.retrofitService.addTask(task, "Bearer $token")
-//    }
-//
-//    override suspend fun updateTask(taskListId: String, task: Task) {
-//        val token = authRepository.getIdToken()
-//        YnymPortalApi.retrofitService.editTask(taskListId, task.id, task, "Bearer $token")
-//    }
 
 //    override suspend fun deleteTask(id: String) {
 //        val token = authRepository.getIdToken()

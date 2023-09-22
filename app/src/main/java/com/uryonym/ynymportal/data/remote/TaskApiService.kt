@@ -25,7 +25,7 @@ interface TaskApiService {
     suspend fun createTask(
         @Body task: RemoteTask,
         @Header("Authorization") token: String
-    ): RemoteTask
+    )
 
     @PATCH("tasks/{id}")
     suspend fun updateTask(
