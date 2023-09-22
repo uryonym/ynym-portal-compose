@@ -16,11 +16,9 @@ interface TaskRepository {
 
     suspend fun updateTask(task: Task)
 
-    suspend fun refreshTasks()
+    suspend fun deleteTask(id: String)
 
-//    suspend fun deleteTask(id: String)
-//
-//    suspend fun refreshTask(id: String): Task
+    suspend fun refreshTasks()
 }
 
 @Singleton
@@ -46,6 +44,11 @@ class TaskRepositoryImpl @Inject constructor(
         taskLocalDataSource.upsertTask(task)
     }
 
+    override suspend fun deleteTask(id: String) {
+        taskRemoteDataSource.deleteTask(id)
+        taskLocalDataSource.deleteTasksById(listOf(id))
+    }
+
     override suspend fun refreshTasks() {
         val localTasks = taskLocalDataSource.getTasks()
         val remoteTasks = taskRemoteDataSource.getTasks()
@@ -56,20 +59,4 @@ class TaskRepositoryImpl @Inject constructor(
         taskLocalDataSource.upsertTasks(remoteTasks)
         taskLocalDataSource.deleteTasksById(deleteIds)
     }
-
-//    override suspend fun deleteTask(id: String) {
-//        val token = authRepository.getIdToken()
-//        YnymPortalApi.retrofitService.deleteTask(id, token = "Bearer $token")
-//
-//        localDataSource.deleteTask(id)
-//    }
-//
-//    override suspend fun refreshTask(id: String): Task {
-//        val token = authRepository.getIdToken()
-//        val task = YnymPortalApi.retrofitService.getTask(id, token = "Bearer $token").toLocal()
-//        localDataSource.insertTask(task)
-//
-//        return task
-//    }
-
 }

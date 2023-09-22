@@ -107,25 +107,11 @@ class TaskEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-//            taskRepository.deleteTask(uiState.value.taskId)
+            taskRepository.deleteTask(taskId)
+
             _uiState.update {
                 it.copy(isTaskSaved = true)
             }
-        }
-    }
-
-    private fun refreshTask() {
-        viewModelScope.launch {
-//            taskRepository.refreshTask(uiState.value.taskId).let { task ->
-//                _uiState.update {
-//                    it.copy(
-//                        isLoading = false,
-//                        title = task.title,
-//                        description = task.description ?: "",
-//                        deadLine = task.deadLine,
-//                    )
-//                }
-//            }
         }
     }
 }
