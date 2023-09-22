@@ -1,6 +1,7 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -55,6 +56,17 @@ fun TaskAddScreen(
                 .padding(padding)
                 .fillMaxWidth()
         ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "リスト名：")
+                uiState.taskList?.name?.let {
+                    Text(text = it)
+                }
+            }
+
             TaskAddEditForm(
                 title = uiState.title,
                 description = uiState.description,

@@ -3,8 +3,10 @@ package com.uryonym.ynymportal.ui.screens.tasks
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.TaskListRepository
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.model.Task
+import com.uryonym.ynymportal.data.model.TaskList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +17,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 data class TaskAddUiState(
-    val isLoading: Boolean = false,
-    val task: Task? = null,
+    val taskList: TaskList? = null,
     val title: String = "",
     val description: String = "",
     val deadLine: LocalDate? = null,
@@ -28,13 +29,22 @@ data class TaskAddUiState(
 @HiltViewModel
 class TaskAddViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val taskListRepository: TaskListRepository,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-
     private val taskListId: String = savedStateHandle["taskListId"]!!
 
     private val _uiState = MutableStateFlow(TaskAddUiState())
     val uiState: StateFlow<TaskAddUiState> = _uiState
+
+    init {
+        viewModelScope.launch {
+            val taskList = taskListRepository.getTaskList(taskListId)
+            _uiState.update {
+                it.copy(taskList = taskList)
+            }
+        }
+    }
 
     fun onChangeTitle(value: String) {
         _uiState.update {
