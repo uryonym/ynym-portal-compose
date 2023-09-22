@@ -42,7 +42,7 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @Composable
 fun TaskListScreen(
     onNavigateTaskAdd: (String) -> Unit,
-    onNavigateTaskEdit: (Task) -> Unit,
+    onNavigateTaskEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: TaskListViewModel = hiltViewModel()
 ) {
@@ -132,7 +132,7 @@ fun TaskListScreen(
 }
 
 @Composable
-fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: TaskListViewModel) {
+fun TaskListItem(task: Task, onNavigateTaskEdit: (String) -> Unit, viewModel: TaskListViewModel) {
     ListItem(
         headlineContent = {
             Column {
@@ -150,6 +150,6 @@ fun TaskListItem(task: Task, onNavigateTaskEdit: (Task) -> Unit, viewModel: Task
                 }
             )
         },
-        modifier = Modifier.clickable { onNavigateTaskEdit(task) }
+        modifier = Modifier.clickable { onNavigateTaskEdit(task.id) }
     )
 }

@@ -3,8 +3,10 @@ package com.uryonym.ynymportal.ui.screens.tasks
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.TaskListRepository
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.model.Task
+import com.uryonym.ynymportal.data.model.TaskList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +16,7 @@ import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 data class TaskEditUiState(
-    val isLoading: Boolean = false,
-    val taskId: String = "",
-    val task: Task? = null,
+    val taskList: TaskList? = null,
     val title: String = "",
     val description: String = "",
     val deadLine: LocalDate? = null,
@@ -29,18 +29,28 @@ data class TaskEditUiState(
 @HiltViewModel
 class TaskEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val taskListRepository: TaskListRepository,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+    private val taskId: String = savedStateHandle["taskId"]!!
 
     private val _uiState = MutableStateFlow(TaskEditUiState())
     val uiState: StateFlow<TaskEditUiState> = _uiState
 
     init {
-        _uiState.update {
-            it.copy(taskId = savedStateHandle["taskId"]!!)
+        viewModelScope.launch {
+            val task = taskRepository.getTask(taskId)
+            val taskList = taskListRepository.getTaskList(task.taskListId)
+            _uiState.update {
+                it.copy(
+                    taskList = taskList,
+                    title = task.title,
+                    description = task.description,
+                    deadLine = task.deadLine,
+                    isComplete = task.isComplete
+                )
+            }
         }
-
-        getTask()
     }
 
     fun onChangeTitle(value: String) {
@@ -96,22 +106,6 @@ class TaskEditViewModel @Inject constructor(
             _uiState.update {
                 it.copy(isTaskSaved = true)
             }
-        }
-    }
-
-    private fun getTask() {
-        viewModelScope.launch {
-//            taskRepository.getTask(uiState.value.taskId).let { task ->
-//                _uiState.update {
-//                    it.copy(
-//                        isLoading = false,
-//                        title = task.title,
-//                        description = task.description ?: "",
-//                        deadLine = task.deadLine,
-//                        isComplete = task.isComplete
-//                    )
-//                }
-//            }
         }
     }
 

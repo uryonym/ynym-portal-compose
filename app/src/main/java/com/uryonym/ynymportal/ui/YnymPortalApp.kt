@@ -131,8 +131,8 @@ fun YnymPortalApp(
                     onNavigateTaskAdd = { taskListId ->
                         navController.navigate(YnymPortalScreen.TaskAdd.createRoute(taskListId))
                     },
-                    onNavigateTaskEdit = { task ->
-                        navController.navigate(YnymPortalScreen.TaskEdit.createRoute(task.id))
+                    onNavigateTaskEdit = { taskId ->
+                        navController.navigate(YnymPortalScreen.TaskEdit.createRoute(taskId))
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )

@@ -14,6 +14,9 @@ interface TaskDao {
     @Query("SELECT * FROM task ORDER BY dead_line is null, dead_line, created_at")
     suspend fun getTasks(): List<LocalTask>
 
+    @Query("SELECT * FROM task WHERE id = (:id)")
+    suspend fun getTask(id: String): LocalTask
+
     @Upsert
     suspend fun upsertTask(task: LocalTask)
 
@@ -22,13 +25,4 @@ interface TaskDao {
 
     @Query("DELETE FROM task WHERE id = (:id)")
     suspend fun deleteTaskById(id: String)
-
-//    @Query("SELECT * FROM task WHERE id = (:taskId)")
-//    suspend fun getTask(taskId: String): Task
-//
-//    @Query("DELETE FROM task WHERE id = (:taskId)")
-//    suspend fun deleteTask(taskId: String)
-//
-//    @Query("DELETE FROM task")
-//    suspend fun deleteAllTask()
 }
