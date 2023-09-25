@@ -12,8 +12,8 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
-//private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
+//private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
+private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
@@ -34,31 +34,6 @@ object YnymPortalApi {
 }
 
 interface YnymPortalService {
-    @GET("confidentials")
-    suspend fun getConfidentials(@Header("Authorization") token: String): List<NetworkConfidential>
-
-    @GET("confidentials/{id}")
-    suspend fun getConfidential(
-        @Path("id") id: String,
-        @Header("Authorization") token: String
-    ): NetworkConfidential
-
-    @POST("confidentials")
-    suspend fun addConfidential(
-        @Body confidential: NetworkConfidential,
-        @Header("Authorization") token: String
-    ): NetworkConfidential
-
-    @PATCH("confidentials/{id}")
-    suspend fun editConfidential(
-        @Path("id") id: String,
-        @Body confidential: NetworkConfidential,
-        @Header("Authorization") token: String
-    ): NetworkConfidential
-
-    @DELETE("confidentials/{id}")
-    suspend fun deleteConfidential(@Path("id") id: String, @Header("Authorization") token: String)
-
     @GET("cars")
     suspend fun getCars(@Header("Authorization") token: String): List<NetworkCar>
 

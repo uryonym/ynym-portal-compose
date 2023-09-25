@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ConfidentialEditUiState(
-    val isLoading: Boolean = false,
-    val confidentialId: String = "",
     val confidential: Confidential? = null,
     val serviceName: String = "",
     val loginId: String = "",
@@ -29,16 +27,24 @@ class ConfidentialEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val confidentialRepository: ConfidentialRepository
 ) : ViewModel() {
+    private val confidentialId: String = savedStateHandle["confidentialId"]!!
 
     private val _uiState = MutableStateFlow(ConfidentialEditUiState())
     val uiState: StateFlow<ConfidentialEditUiState> = _uiState
 
     init {
-        _uiState.update {
-            it.copy(confidentialId = savedStateHandle["confidentialId"]!!)
+        viewModelScope.launch {
+            val confidential = confidentialRepository.getConfidential(confidentialId)
+            _uiState.update {
+                it.copy(
+                    confidential = confidential,
+                    serviceName = confidential.serviceName,
+                    loginId = confidential.loginId,
+                    password = confidential.password,
+                    other = confidential.other
+                )
+            }
         }
-
-        getConfidential()
     }
 
     fun onChangeServiceName(value: String) {
@@ -72,17 +78,20 @@ class ConfidentialEditViewModel @Inject constructor(
     }
 
     fun onSaveEditConfidential() {
-        if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
-            viewModelScope.launch {
-                confidentialRepository.updateConfidential(
-                    id = uiState.value.confidentialId,
-                    serviceName = uiState.value.serviceName,
-                    loginId = uiState.value.loginId,
-                    password = uiState.value.password,
-                    other = uiState.value.other
-                )
-                _uiState.update {
-                    it.copy(isConfidentialSaved = true)
+        viewModelScope.launch {
+            if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
+                uiState.value.confidential?.let { confidential ->
+                    val updateConfidential = confidential.copy(
+                        serviceName = uiState.value.serviceName,
+                        loginId = uiState.value.loginId,
+                        password = uiState.value.password,
+                        other = uiState.value.other
+                    )
+                    confidentialRepository.updateConfidential(updateConfidential)
+
+                    _uiState.update {
+                        it.copy(isConfidentialSaved = true)
+                    }
                 }
             }
         }
@@ -90,27 +99,10 @@ class ConfidentialEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            confidentialRepository.deleteConfidential(uiState.value.confidentialId)
+            confidentialRepository.deleteConfidential(confidentialId)
             _uiState.update {
                 it.copy(isConfidentialSaved = true)
             }
-        }
-    }
-
-    private fun getConfidential() {
-        viewModelScope.launch {
-            confidentialRepository.getConfidential(uiState.value.confidentialId)
-                .let { confidential ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            serviceName = confidential.serviceName,
-                            loginId = confidential.loginId,
-                            password = confidential.password ?: "",
-                            other = confidential.other ?: "",
-                        )
-                    }
-                }
         }
     }
 }

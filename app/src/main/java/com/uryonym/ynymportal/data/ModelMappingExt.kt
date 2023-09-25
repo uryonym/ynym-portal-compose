@@ -1,41 +1,9 @@
 package com.uryonym.ynymportal.data
 
 import com.uryonym.ynymportal.data.model.Car
-import com.uryonym.ynymportal.data.model.Confidential
 import com.uryonym.ynymportal.data.model.Refueling
 import com.uryonym.ynymportal.data.remote.NetworkCar
-import com.uryonym.ynymportal.data.remote.NetworkConfidential
 import com.uryonym.ynymportal.data.remote.NetworkRefueling
-
-fun Confidential.toNetwork() = NetworkConfidential(
-    id = this.id,
-    serviceName = this.serviceName,
-    loginId = this.loginId,
-    password = this.password,
-    other = this.other,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listConfidentialToNetwork")
-fun List<Confidential>.toNetwork() = map {
-    it.toNetwork()
-}
-
-fun NetworkConfidential.toLocal() = Confidential(
-    id = this.id,
-    serviceName = this.serviceName,
-    loginId = this.loginId,
-    password = this.password,
-    other = this.other,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
-)
-
-@JvmName("listConfidentialToLocal")
-fun List<NetworkConfidential>.toLocal() = map {
-    it.toLocal()
-}
 
 fun Car.toNetwork() = NetworkCar(
     id = this.id,

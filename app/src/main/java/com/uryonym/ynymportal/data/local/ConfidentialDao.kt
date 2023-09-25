@@ -1,29 +1,28 @@
 package com.uryonym.ynymportal.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
-import com.uryonym.ynymportal.data.model.Confidential
+import androidx.room.Upsert
+import com.uryonym.ynymportal.data.model.LocalConfidential
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ConfidentialDao {
     @Query("SELECT * FROM confidential ORDER BY service_name")
-    fun getConfidentials(): Flow<List<Confidential>>
+    fun fetchConfidentials(): Flow<List<LocalConfidential>>
 
-    @Query("SELECT * FROM confidential WHERE id = (:confidentialId)")
-    suspend fun getConfidential(confidentialId: String): Confidential
+    @Query("SELECT * FROM confidential ORDER BY service_name")
+    suspend fun getConfidentials(): List<LocalConfidential>
 
-    @Insert
-    suspend fun insertConfidential(confidential: Confidential)
+    @Query("SELECT * FROM confidential WHERE id = (:id)")
+    suspend fun getConfidential(id: String): LocalConfidential
 
-    @Update
-    suspend fun updateConfidential(confidential: Confidential)
+    @Upsert
+    suspend fun upsertConfidential(confidential: LocalConfidential)
 
-    @Query("DELETE FROM confidential WHERE id = (:confidentialId)")
-    suspend fun deleteConfidential(confidentialId: String)
+    @Upsert
+    suspend fun upsertConfidentials(confidentials: List<LocalConfidential>)
 
-    @Query("DELETE FROM confidential")
-    suspend fun deleteAllConfidential()
+    @Query("DELETE FROM confidential WHERE id = (:id)")
+    suspend fun deleteConfidentialById(id: String)
 }

@@ -170,9 +170,9 @@ fun YnymPortalApp(
                     onNavigateConfidentialAdd = {
                         navController.navigate(YnymPortalScreen.ConfidentialAdd.route)
                     },
-                    onNavigateConfidentialEdit = { confidential ->
+                    onNavigateConfidentialEdit = { confidentialId ->
                         navController.navigate(
-                            YnymPortalScreen.ConfidentialEdit.createRoute(confidential.id)
+                            YnymPortalScreen.ConfidentialEdit.createRoute(confidentialId)
                         )
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }

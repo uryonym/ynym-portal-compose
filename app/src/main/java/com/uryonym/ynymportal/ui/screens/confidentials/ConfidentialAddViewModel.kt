@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ConfidentialAddUiState(
-    val isLoading: Boolean = false,
-    val confidential: Confidential? = null,
     val serviceName: String = "",
     val loginId: String = "",
     val password: String = "",
@@ -25,7 +23,6 @@ data class ConfidentialAddUiState(
 class ConfidentialAddViewModel @Inject constructor(
     private val confidentialRepository: ConfidentialRepository
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(ConfidentialAddUiState())
     val uiState: StateFlow<ConfidentialAddUiState> = _uiState
 
@@ -54,14 +51,16 @@ class ConfidentialAddViewModel @Inject constructor(
     }
 
     fun onSaveNewConfidential() {
-        if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
-            viewModelScope.launch {
-                confidentialRepository.insertConfidential(
+        viewModelScope.launch {
+            if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
+                val confidential = Confidential(
                     serviceName = uiState.value.serviceName,
                     loginId = uiState.value.loginId,
                     password = uiState.value.password,
                     other = uiState.value.other
                 )
+                confidentialRepository.insertConfidential(confidential)
+
                 _uiState.update {
                     it.copy(isConfidentialSaved = true)
                 }

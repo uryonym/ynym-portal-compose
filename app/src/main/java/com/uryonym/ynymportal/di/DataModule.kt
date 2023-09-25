@@ -17,6 +17,8 @@ import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.TaskRepositoryImpl
 import com.uryonym.ynymportal.data.local.CarDao
 import com.uryonym.ynymportal.data.local.ConfidentialDao
+import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSource
+import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.RefuelingDao
 import com.uryonym.ynymportal.data.local.TaskDao
 import com.uryonym.ynymportal.data.local.TaskListDao
@@ -25,6 +27,9 @@ import com.uryonym.ynymportal.data.local.TaskListLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.TaskLocalDataSource
 import com.uryonym.ynymportal.data.local.TaskLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.YnymPortalDatabase
+import com.uryonym.ynymportal.data.remote.ConfidentialApiService
+import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSource
+import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSourceImpl
 import com.uryonym.ynymportal.data.remote.TaskApiService
 import com.uryonym.ynymportal.data.remote.TaskListApiService
 import com.uryonym.ynymportal.data.remote.TaskListRemoteDataSource
@@ -40,7 +45,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -89,10 +93,18 @@ abstract class DataSourceModule {
     @Singleton
     @Binds
     abstract fun bindTaskRemoteDataSource(dataSource: TaskRemoteDataSourceImpl): TaskRemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindConfidentialLocalDataSource(dataSource: ConfidentialLocalDataSourceImpl): ConfidentialLocalDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindConfidentialRemoteDataSource(dataSource: ConfidentialRemoteDataSourceImpl): ConfidentialRemoteDataSource
 }
 
-private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
-//private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
+//private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
+private const val BASE_URL = "https://api-portal.uryonym.com/api/v1/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -115,6 +127,11 @@ object NetworkModule {
     @Singleton
     fun provideTaskService(retrofit: Retrofit): TaskApiService =
         retrofit.create(TaskApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideConfidentialService(retrofit: Retrofit): ConfidentialApiService =
+        retrofit.create(ConfidentialApiService::class.java)
 }
 
 @Module

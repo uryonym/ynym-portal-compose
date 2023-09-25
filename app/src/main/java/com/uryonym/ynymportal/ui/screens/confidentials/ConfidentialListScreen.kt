@@ -25,14 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.data.model.Confidential
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfidentialListScreen(
     onNavigateConfidentialAdd: () -> Unit,
-    onNavigateConfidentialEdit: (Confidential) -> Unit,
+    onNavigateConfidentialEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: ConfidentialListViewModel = hiltViewModel()
 ) {
@@ -45,7 +44,7 @@ fun ConfidentialListScreen(
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
-            IconButton(onClick = viewModel::refreshConfidentials) {
+            IconButton(onClick = viewModel::refresh) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
@@ -62,7 +61,7 @@ fun ConfidentialListScreen(
                     ListItem(
                         headlineContent = { Text(text = confidential.serviceName) },
                         modifier = Modifier.clickable {
-                            onNavigateConfidentialEdit(confidential)
+                            onNavigateConfidentialEdit(confidential.id)
                         })
                     HorizontalDivider()
                 }

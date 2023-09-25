@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ConfidentialListUiState(
-    val isLoading: Boolean = false,
     val confidentials: List<Confidential> = emptyList()
 )
 
@@ -20,9 +19,6 @@ data class ConfidentialListUiState(
 class ConfidentialListViewModel @Inject constructor(
     private val confidentialRepository: ConfidentialRepository
 ) : ViewModel() {
-
-    private val _isLoading = MutableStateFlow(false)
-
     private val _uiState = MutableStateFlow(ConfidentialListUiState())
     val uiState: StateFlow<ConfidentialListUiState> = _uiState
 
@@ -36,7 +32,7 @@ class ConfidentialListViewModel @Inject constructor(
         }
     }
 
-    fun refreshConfidentials() {
+    fun refresh() {
         viewModelScope.launch {
             confidentialRepository.refreshConfidentials()
         }
