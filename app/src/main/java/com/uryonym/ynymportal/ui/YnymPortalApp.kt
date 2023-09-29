@@ -211,9 +211,9 @@ fun YnymPortalApp(
                     onNavigateCarAdd = {
                         navController.navigate(YnymPortalScreen.CarAdd.route)
                     },
-                    onNavigateCarEdit = { car ->
+                    onNavigateCarEdit = { carId ->
                         navController.navigate(
-                            YnymPortalScreen.CarEdit.createRoute(car.id)
+                            YnymPortalScreen.CarEdit.createRoute(carId)
                         )
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }

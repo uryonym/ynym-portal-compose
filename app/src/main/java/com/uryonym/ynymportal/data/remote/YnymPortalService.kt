@@ -20,39 +20,12 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL).build()
 
 object YnymPortalApi {
-    val taskListService: TaskListApiService by lazy {
-        retrofit.create(TaskListApiService::class.java)
-    }
-
-    val taskService: TaskApiService by lazy {
-        retrofit.create(TaskApiService::class.java)
-    }
-
     val retrofitService: YnymPortalService by lazy {
         retrofit.create(YnymPortalService::class.java)
     }
 }
 
 interface YnymPortalService {
-    @GET("cars")
-    suspend fun getCars(@Header("Authorization") token: String): List<NetworkCar>
-
-    @GET("cars/{id}")
-    suspend fun getCar(@Path("id") id: String, @Header("Authorization") token: String): NetworkCar
-
-    @POST("cars")
-    suspend fun addCar(@Body car: NetworkCar, @Header("Authorization") token: String): NetworkCar
-
-    @PATCH("cars/{id}")
-    suspend fun editCar(
-        @Path("id") id: String,
-        @Body car: NetworkCar,
-        @Header("Authorization") token: String
-    ): NetworkCar
-
-    @DELETE("cars/{id}")
-    suspend fun deleteCar(@Path("id") id: String, @Header("Authorization") token: String)
-
     @GET("refuelings")
     suspend fun getRefuelings(@Header("Authorization") token: String): List<NetworkRefueling>
 

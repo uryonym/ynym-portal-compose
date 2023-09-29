@@ -25,14 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarListScreen(
     onNavigateCarAdd: () -> Unit,
-    onNavigateCarEdit: (Car) -> Unit,
+    onNavigateCarEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: CarListViewModel = hiltViewModel()
 ) {
@@ -45,7 +44,7 @@ fun CarListScreen(
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
-            IconButton(onClick = viewModel::refreshCars) {
+            IconButton(onClick = viewModel::refresh) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
@@ -62,7 +61,7 @@ fun CarListScreen(
                     ListItem(
                         headlineContent = { Text(text = car.name) },
                         modifier = Modifier.clickable {
-                            onNavigateCarEdit(car)
+                            onNavigateCarEdit(car.id)
                         })
                     HorizontalDivider()
                 }

@@ -100,6 +100,7 @@ class ConfidentialEditViewModel @Inject constructor(
     fun onDelete() {
         viewModelScope.launch {
             confidentialRepository.deleteConfidential(confidentialId)
+
             _uiState.update {
                 it.copy(isConfidentialSaved = true)
             }

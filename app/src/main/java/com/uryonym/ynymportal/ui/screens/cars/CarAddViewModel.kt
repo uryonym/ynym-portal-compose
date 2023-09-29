@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CarAddUiState(
-    val isLoading: Boolean = false,
-    val car: Car? = null,
     val name: String = "",
     val maker: String = "",
     val model: String = "",
@@ -27,7 +25,6 @@ data class CarAddUiState(
 class CarAddViewModel @Inject constructor(
     private val carRepository: CarRepository
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(CarAddUiState())
     val uiState: StateFlow<CarAddUiState> = _uiState
 
@@ -68,13 +65,13 @@ class CarAddViewModel @Inject constructor(
     }
 
     fun onSaveNewCar() {
-        if (
-            uiState.value.name.isNotEmpty() &&
-            uiState.value.maker.isNotEmpty() &&
-            uiState.value.model.isNotEmpty()
-        ) {
-            viewModelScope.launch {
-                carRepository.insertCar(
+        viewModelScope.launch {
+            if (
+                uiState.value.name.isNotEmpty() &&
+                uiState.value.maker.isNotEmpty() &&
+                uiState.value.model.isNotEmpty()
+            ) {
+                val car = Car(
                     name = uiState.value.name,
                     maker = uiState.value.maker,
                     model = uiState.value.model,
@@ -82,6 +79,8 @@ class CarAddViewModel @Inject constructor(
                     licensePlate = uiState.value.licensePlate,
                     tankCapacity = uiState.value.tankCapacity
                 )
+                carRepository.insertCar(car)
+
                 _uiState.update {
                     it.copy(isCarSaved = true)
                 }

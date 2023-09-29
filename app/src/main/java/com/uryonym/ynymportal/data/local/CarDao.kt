@@ -1,29 +1,29 @@
 package com.uryonym.ynymportal.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
-import com.uryonym.ynymportal.data.model.Car
+import androidx.room.Upsert
+import com.uryonym.ynymportal.data.model.LocalCar
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CarDao {
-    @Query("SELECT * FROM car ORDER BY created_at")
-    fun getCars(): Flow<List<Car>>
+    @Query("SELECT * FROM car ORDER BY name")
+    fun fetchCars(): Flow<List<LocalCar>>
 
-    @Query("SELECT * FROM car WHERE id = (:carId)")
-    suspend fun getCar(carId: String): Car
+    @Query("SELECT * FROM car ORDER BY name")
+    suspend fun getCars(): List<LocalCar>
 
-    @Insert
-    suspend fun insertCar(car: Car)
+    @Query("SELECT * FROM car WHERE id = (:id)")
+    suspend fun getCar(id: String): LocalCar
 
-    @Update
-    suspend fun updateCar(car: Car)
+    @Upsert
+    suspend fun upsertCar(car: LocalCar)
 
-    @Query("DELETE FROM car WHERE id = (:carId)")
-    suspend fun deleteCar(carId: String)
+    @Upsert
+    suspend fun upsertCars(cars: List<LocalCar>)
 
-    @Query("DELETE FROM car")
-    suspend fun deleteAllCar()
+    @Query("DELETE FROM car WHERE id = (:id)")
+    suspend fun deleteCarById(id: String)
 }
+

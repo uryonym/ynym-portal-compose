@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CarListUiState(
-    val isLoading: Boolean = false,
     val cars: List<Car> = emptyList()
 )
 
@@ -20,9 +19,6 @@ data class CarListUiState(
 class CarListViewModel @Inject constructor(
     private val carRepository: CarRepository
 ) : ViewModel() {
-
-    private val _isLoading = MutableStateFlow(false)
-
     private val _uiState = MutableStateFlow(CarListUiState())
     val uiState: StateFlow<CarListUiState> = _uiState
 
@@ -36,7 +32,7 @@ class CarListViewModel @Inject constructor(
         }
     }
 
-    fun refreshCars() {
+    fun refresh() {
         viewModelScope.launch {
             carRepository.refreshCars()
         }

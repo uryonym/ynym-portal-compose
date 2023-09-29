@@ -16,6 +16,8 @@ import com.uryonym.ynymportal.data.TaskListRepositoryImpl
 import com.uryonym.ynymportal.data.TaskRepository
 import com.uryonym.ynymportal.data.TaskRepositoryImpl
 import com.uryonym.ynymportal.data.local.CarDao
+import com.uryonym.ynymportal.data.local.CarLocalDataSource
+import com.uryonym.ynymportal.data.local.CarLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSource
 import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSourceImpl
@@ -27,6 +29,9 @@ import com.uryonym.ynymportal.data.local.TaskListLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.TaskLocalDataSource
 import com.uryonym.ynymportal.data.local.TaskLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.YnymPortalDatabase
+import com.uryonym.ynymportal.data.remote.CarApiService
+import com.uryonym.ynymportal.data.remote.CarRemoteDataSource
+import com.uryonym.ynymportal.data.remote.CarRemoteDataSourceImpl
 import com.uryonym.ynymportal.data.remote.ConfidentialApiService
 import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSource
 import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSourceImpl
@@ -101,6 +106,14 @@ abstract class DataSourceModule {
     @Singleton
     @Binds
     abstract fun bindConfidentialRemoteDataSource(dataSource: ConfidentialRemoteDataSourceImpl): ConfidentialRemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindCarLocalDataSource(dtaSource: CarLocalDataSourceImpl): CarLocalDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindCarRemoteDataSource(dataSource: CarRemoteDataSourceImpl): CarRemoteDataSource
 }
 
 //private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
@@ -132,6 +145,11 @@ object NetworkModule {
     @Singleton
     fun provideConfidentialService(retrofit: Retrofit): ConfidentialApiService =
         retrofit.create(ConfidentialApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCarService(retrofit: Retrofit): CarApiService =
+        retrofit.create(CarApiService::class.java)
 }
 
 @Module

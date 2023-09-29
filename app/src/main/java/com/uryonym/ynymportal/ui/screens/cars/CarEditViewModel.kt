@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CarEditUiState(
-    val isLoading: Boolean = false,
-    val carId: String = "",
     val car: Car? = null,
     val name: String = "",
     val maker: String = "",
@@ -31,16 +29,25 @@ class CarEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val carRepository: CarRepository
 ) : ViewModel() {
+    private val carId: String = savedStateHandle["carId"]!!
 
     private val _uiState = MutableStateFlow(CarEditUiState())
     val uiState: StateFlow<CarEditUiState> = _uiState
 
     init {
-        _uiState.update {
-            it.copy(carId = savedStateHandle["carId"]!!)
+        viewModelScope.launch {
+            val car = carRepository.getCar(carId)
+            _uiState.update {
+                it.copy(
+                    name = car.name,
+                    maker = car.maker,
+                    model = car.model,
+                    modelYear = car.modelYear,
+                    licensePlate = car.licensePlate,
+                    tankCapacity = car.tankCapacity
+                )
+            }
         }
-
-        getCar()
     }
 
     fun onChangeName(value: String) {
@@ -86,23 +93,26 @@ class CarEditViewModel @Inject constructor(
     }
 
     fun onSaveEditCar() {
-        if (
-            uiState.value.name.isNotEmpty() &&
-            uiState.value.maker.isNotEmpty() &&
-            uiState.value.model.isNotEmpty()
-        ) {
-            viewModelScope.launch {
-                carRepository.updateCar(
-                    id = uiState.value.carId,
-                    name = uiState.value.name,
-                    maker = uiState.value.maker,
-                    model = uiState.value.model,
-                    modelYear = uiState.value.modelYear,
-                    licensePlate = uiState.value.licensePlate,
-                    tankCapacity = uiState.value.tankCapacity
-                )
-                _uiState.update {
-                    it.copy(isCarSaved = true)
+        viewModelScope.launch {
+            if (
+                uiState.value.name.isNotEmpty() &&
+                uiState.value.maker.isNotEmpty() &&
+                uiState.value.model.isNotEmpty()
+            ) {
+                uiState.value.car?.let { car ->
+                    val updateCar = car.copy(
+                        name = uiState.value.name,
+                        maker = uiState.value.maker,
+                        model = uiState.value.model,
+                        modelYear = uiState.value.modelYear,
+                        licensePlate = uiState.value.licensePlate,
+                        tankCapacity = uiState.value.tankCapacity
+                    )
+                    carRepository.updateCar(updateCar)
+
+                    _uiState.update {
+                        it.copy(isCarSaved = true)
+                    }
                 }
             }
         }
@@ -110,45 +120,10 @@ class CarEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            carRepository.deleteCar(uiState.value.carId)
+            carRepository.deleteCar(carId)
+
             _uiState.update {
                 it.copy(isCarSaved = true)
-            }
-        }
-    }
-
-    private fun getCar() {
-        viewModelScope.launch {
-            carRepository.getCar(uiState.value.carId).let { car ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        name = car.name,
-                        maker = car.maker,
-                        model = car.model,
-                        modelYear = car.modelYear,
-                        licensePlate = car.licensePlate ?: "",
-                        tankCapacity = car.tankCapacity ?: 0
-                    )
-                }
-            }
-        }
-    }
-
-    private fun refreshCar() {
-        viewModelScope.launch {
-            carRepository.refreshCar(uiState.value.carId).let { car ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        name = car.name,
-                        maker = car.maker,
-                        model = car.model,
-                        modelYear = car.modelYear,
-                        licensePlate = car.licensePlate ?: "",
-                        tankCapacity = car.tankCapacity ?: 0
-                    )
-                }
             }
         }
     }
