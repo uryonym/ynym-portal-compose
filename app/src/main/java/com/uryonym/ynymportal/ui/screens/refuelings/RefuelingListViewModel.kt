@@ -39,14 +39,14 @@ class RefuelingListViewModel @Inject constructor(
         if (selectedCar != null) {
             RefuelingListUiState(
                 cars = cars,
-                refuelings = refuelings,
+                refuelings = refuelings.filter { it.carId == selectedCar.id },
                 carListExpanded = carListExpanded,
                 selectedCar = selectedCar
             )
         } else {
             RefuelingListUiState(
                 cars = cars,
-                refuelings = refuelings,
+                refuelings = if (cars.isNotEmpty()) refuelings.filter { it.carId == cars.first().id } else emptyList(),
                 carListExpanded = carListExpanded,
                 selectedCar = if (cars.isNotEmpty()) cars.first() else null
             )
