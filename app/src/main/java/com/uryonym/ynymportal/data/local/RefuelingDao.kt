@@ -1,29 +1,28 @@
 package com.uryonym.ynymportal.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
-import com.uryonym.ynymportal.data.model.Refueling
+import androidx.room.Upsert
+import com.uryonym.ynymportal.data.model.LocalRefueling
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RefuelingDao {
-    @Query("SELECT * FROM refueling WHERE car_id = (:carId) ORDER BY created_at DESC")
-    fun getRefuelings(carId: String): Flow<List<Refueling>>
+    @Query("SELECT * FROM refueling ORDER BY refuel_datetime DESC")
+    fun fetchRefuelings(): Flow<List<LocalRefueling>>
 
-    @Query("SELECT * FROM refueling WHERE id = (:refuelingId)")
-    suspend fun getRefueling(refuelingId: String): Refueling
+    @Query("SELECT * FROM refueling ORDER BY refuel_datetime DESC")
+    suspend fun getRefuelings(): List<LocalRefueling>
 
-    @Insert
-    suspend fun insertRefueling(refueling: Refueling)
+    @Query("SELECT * FROM refueling WHERE id = (:id)")
+    suspend fun getRefueling(id: String): LocalRefueling
 
-    @Update
-    suspend fun updateRefueling(refueling: Refueling)
+    @Upsert
+    suspend fun upsertRefueling(refueling: LocalRefueling)
 
-    @Query("DELETE FROM refueling WHERE id = (:refuelingId)")
-    suspend fun deleteRefueling(refuelingId: String)
+    @Upsert
+    suspend fun upsertRefuelings(refuelings: List<LocalRefueling>)
 
-    @Query("DELETE FROM refueling")
-    suspend fun deleteAllRefueling()
+    @Query("DELETE FROM refueling WHERE id = (:id)")
+    suspend fun deleteRefuelingById(id: String)
 }

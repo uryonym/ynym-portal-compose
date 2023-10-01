@@ -253,8 +253,12 @@ fun YnymPortalApp(
                     onNavigateRefuelingAdd = { carId ->
                         navController.navigate(YnymPortalScreen.RefuelingAdd.createRoute(carId))
                     },
-                    onNavigateRefuelingEdit = { refueling ->
-                        navController.navigate(YnymPortalScreen.RefuelingEdit.createRoute(refueling.id))
+                    onNavigateRefuelingEdit = { refuelingId ->
+                        navController.navigate(
+                            YnymPortalScreen.RefuelingEdit.createRoute(
+                                refuelingId
+                            )
+                        )
                     },
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )

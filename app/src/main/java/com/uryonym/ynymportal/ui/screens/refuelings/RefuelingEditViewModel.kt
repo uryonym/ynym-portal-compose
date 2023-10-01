@@ -3,7 +3,9 @@ package com.uryonym.ynymportal.ui.screens.refuelings
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uryonym.ynymportal.data.CarRepository
 import com.uryonym.ynymportal.data.RefuelingRepository
+import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.Refueling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +23,8 @@ import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 data class RefuelingEditUiState(
-    val isLoading: Boolean = false,
-    val refuelingId: String = "",
     val refueling: Refueling? = null,
+    val car: Car? = null,
     val refuelDateTime: Instant = Clock.System.now(),
     val odometer: Int? = 0,
     val fuelTypeListExtended: Boolean = false,
@@ -44,18 +45,32 @@ data class RefuelingEditUiState(
 @HiltViewModel
 class RefuelingEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val carRepository: CarRepository,
     private val refuelingRepository: RefuelingRepository
 ) : ViewModel() {
+    private val refuelingId: String = savedStateHandle["refuelingId"]!!
 
     private val _uiState = MutableStateFlow(RefuelingEditUiState())
     val uiState: StateFlow<RefuelingEditUiState> = _uiState
 
     init {
-        _uiState.update {
-            it.copy(refuelingId = savedStateHandle["refuelingId"]!!)
+        viewModelScope.launch {
+            val refueling = refuelingRepository.getRefueling(refuelingId)
+            val car = carRepository.getCar(refueling.carId)
+            _uiState.update {
+                it.copy(
+                    refueling = refueling,
+                    car = car,
+                    refuelDateTime = refueling.refuelDateTime,
+                    odometer = refueling.odometer,
+                    fuelType = refueling.fuelType,
+                    price = refueling.price,
+                    totalCost = refueling.totalCost,
+                    fullFlag = refueling.fullFlag,
+                    gasStand = refueling.gasStand
+                )
+            }
         }
-
-        getRefueling()
     }
 
     fun onChangeRefuelDate(value: LocalDate) {
@@ -171,14 +186,13 @@ class RefuelingEditViewModel @Inject constructor(
     }
 
     fun onSaveEditRefueling() {
-        if (uiState.value.fuelType.isNotEmpty()) {
-            uiState.value.odometer?.let { odometer ->
-                uiState.value.price?.let { price ->
-                    uiState.value.totalCost?.let { totalCost ->
-                        uiState.value.carId?.let { carId ->
-                            viewModelScope.launch {
-                                refuelingRepository.updateRefueling(
-                                    id = uiState.value.refuelingId,
+        viewModelScope.launch {
+            if (uiState.value.fuelType.isNotEmpty()) {
+                uiState.value.odometer?.let { odometer ->
+                    uiState.value.price?.let { price ->
+                        uiState.value.totalCost?.let { totalCost ->
+                            uiState.value.refueling?.let { refueling ->
+                                val updateRefueling = refueling.copy(
                                     refuelDateTime = uiState.value.refuelDateTime,
                                     odometer = odometer,
                                     fuelType = uiState.value.fuelType,
@@ -186,11 +200,12 @@ class RefuelingEditViewModel @Inject constructor(
                                     totalCost = totalCost,
                                     fullFlag = uiState.value.fullFlag,
                                     gasStand = uiState.value.gasStand,
-                                    carId = carId
                                 )
-                                _uiState.update {
-                                    it.copy(isRefuelingSaved = true)
-                                }
+                                refuelingRepository.updateRefueling(updateRefueling)
+                            }
+
+                            _uiState.update {
+                                it.copy(isRefuelingSaved = true)
                             }
                         }
                     }
@@ -201,49 +216,10 @@ class RefuelingEditViewModel @Inject constructor(
 
     fun onDelete() {
         viewModelScope.launch {
-            refuelingRepository.deleteRefueling(uiState.value.refuelingId)
+            refuelingRepository.deleteRefueling(refuelingId)
+
             _uiState.update {
                 it.copy(isRefuelingSaved = true)
-            }
-        }
-    }
-
-    private fun getRefueling() {
-        viewModelScope.launch {
-            refuelingRepository.getRefueling(uiState.value.refuelingId).let { refueling ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        refuelDateTime = refueling.refuelDateTime,
-                        odometer = refueling.odometer,
-                        fuelType = refueling.fuelType,
-                        price = refueling.price,
-                        totalCost = refueling.totalCost,
-                        fullFlag = refueling.fullFlag,
-                        gasStand = refueling.gasStand,
-                        carId = refueling.carId,
-                        quantity = refueling.totalCost.toFloat() / refueling.price.toFloat()
-                    )
-                }
-            }
-        }
-    }
-
-    private fun refreshRefueling() {
-        viewModelScope.launch {
-            refuelingRepository.refreshRefueling(uiState.value.refuelingId).let { refueling ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        refuelDateTime = refueling.refuelDateTime,
-                        odometer = refueling.odometer,
-                        fuelType = refueling.fuelType,
-                        price = refueling.price,
-                        totalCost = refueling.totalCost,
-                        fullFlag = refueling.fullFlag,
-                        gasStand = refueling.gasStand
-                    )
-                }
             }
         }
     }

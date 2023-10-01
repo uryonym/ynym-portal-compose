@@ -6,12 +6,13 @@ import androidx.room.TypeConverters
 import com.uryonym.ynymportal.data.model.Car
 import com.uryonym.ynymportal.data.model.LocalCar
 import com.uryonym.ynymportal.data.model.LocalConfidential
+import com.uryonym.ynymportal.data.model.LocalRefueling
 import com.uryonym.ynymportal.data.model.LocalTask
 import com.uryonym.ynymportal.data.model.LocalTaskList
 import com.uryonym.ynymportal.data.model.Refueling
 
 @Database(
-    entities = [LocalTaskList::class, LocalTask::class, LocalConfidential::class, LocalCar::class, Refueling::class],
+    entities = [LocalTaskList::class, LocalTask::class, LocalConfidential::class, LocalCar::class, LocalRefueling::class],
     version = 1,
     exportSchema = false
 )

@@ -4,10 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -36,7 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.data.model.Refueling
 import com.uryonym.ynymportal.ui.YnymPortalScreen
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -45,7 +42,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun RefuelingListScreen(
     onNavigateRefuelingAdd: (String) -> Unit,
-    onNavigateRefuelingEdit: (Refueling) -> Unit,
+    onNavigateRefuelingEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
     viewModel: RefuelingListViewModel = hiltViewModel()
 ) {
@@ -60,12 +57,12 @@ fun RefuelingListScreen(
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
             }
-            IconButton(onClick = viewModel::refreshRefuelings) {
+            IconButton(onClick = viewModel::refresh) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")
             }
         }, floatingActionButton = {
-            uiState.selectedCar?.id?.let { carId ->
-                FloatingActionButton(onClick = { onNavigateRefuelingAdd(carId) }) {
+            uiState.selectedCar?.let {
+                FloatingActionButton(onClick = { onNavigateRefuelingAdd(it.id) }) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
                 }
             }
@@ -123,7 +120,7 @@ fun RefuelingListScreen(
                                 }
                             },
                             modifier = Modifier.clickable {
-                                onNavigateRefuelingEdit(refueling)
+                                onNavigateRefuelingEdit(refueling.id)
                             })
                         HorizontalDivider()
                     }

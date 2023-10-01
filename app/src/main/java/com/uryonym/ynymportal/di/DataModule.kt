@@ -22,6 +22,8 @@ import com.uryonym.ynymportal.data.local.ConfidentialDao
 import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSource
 import com.uryonym.ynymportal.data.local.ConfidentialLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.RefuelingDao
+import com.uryonym.ynymportal.data.local.RefuelingLocalDataSource
+import com.uryonym.ynymportal.data.local.RefuelingLocalDataSourceImpl
 import com.uryonym.ynymportal.data.local.TaskDao
 import com.uryonym.ynymportal.data.local.TaskListDao
 import com.uryonym.ynymportal.data.local.TaskListLocalDataSource
@@ -35,6 +37,9 @@ import com.uryonym.ynymportal.data.remote.CarRemoteDataSourceImpl
 import com.uryonym.ynymportal.data.remote.ConfidentialApiService
 import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSource
 import com.uryonym.ynymportal.data.remote.ConfidentialRemoteDataSourceImpl
+import com.uryonym.ynymportal.data.remote.RefuelingApiService
+import com.uryonym.ynymportal.data.remote.RefuelingRemoteDataSource
+import com.uryonym.ynymportal.data.remote.RefuelingRemoteDataSourceImpl
 import com.uryonym.ynymportal.data.remote.TaskApiService
 import com.uryonym.ynymportal.data.remote.TaskListApiService
 import com.uryonym.ynymportal.data.remote.TaskListRemoteDataSource
@@ -109,11 +114,19 @@ abstract class DataSourceModule {
 
     @Singleton
     @Binds
-    abstract fun bindCarLocalDataSource(dtaSource: CarLocalDataSourceImpl): CarLocalDataSource
+    abstract fun bindCarLocalDataSource(dataSource: CarLocalDataSourceImpl): CarLocalDataSource
 
     @Singleton
     @Binds
     abstract fun bindCarRemoteDataSource(dataSource: CarRemoteDataSourceImpl): CarRemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindRefuelingLocalDataSource(dataSource: RefuelingLocalDataSourceImpl): RefuelingLocalDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindRefuelingRemoteDataSource(dataSource: RefuelingRemoteDataSourceImpl): RefuelingRemoteDataSource
 }
 
 //private const val BASE_URL = "http:/10.0.2.2:3000/api/v1/"
@@ -150,6 +163,11 @@ object NetworkModule {
     @Singleton
     fun provideCarService(retrofit: Retrofit): CarApiService =
         retrofit.create(CarApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideRefuelingService(retrofit: Retrofit): RefuelingApiService =
+        retrofit.create(RefuelingApiService::class.java)
 }
 
 @Module
