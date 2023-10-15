@@ -303,15 +303,19 @@ fun YnymPortalApp(
 
     val isUserSignedOut = viewModel.getAuthState().collectAsState().value
     if (isUserSignedOut) {
-        navController.navigate(YnymPortalScreen.Login.route) {
-            popUpTo(navController.graph.id) {
-                inclusive = true
+        LaunchedEffect(currentNavigate) {
+            navController.navigate(YnymPortalScreen.Login.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
             }
         }
     } else {
-        navController.navigate(currentNavigate) {
-            popUpTo(navController.graph.id) {
-                inclusive = true
+        LaunchedEffect(currentNavigate) {
+            navController.navigate(currentNavigate) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
             }
         }
     }
