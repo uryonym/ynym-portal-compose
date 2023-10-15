@@ -15,6 +15,8 @@ interface TaskListLocalDataSource {
 
     suspend fun getTaskList(id: String): TaskList
 
+    suspend fun upsertTaskList(taskList: TaskList)
+
     suspend fun upsertTaskLists(taskLists: List<TaskList>)
 
     suspend fun deleteTaskListsById(ids: List<String>)
@@ -34,6 +36,10 @@ class TaskListLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getTaskList(id: String): TaskList {
         return taskListDao.getTaskList(id).toModel()
+    }
+
+    override suspend fun upsertTaskList(taskList: TaskList) {
+        taskListDao.upsertTaskList(taskList.toLocal())
     }
 
     override suspend fun upsertTaskLists(taskLists: List<TaskList>) {

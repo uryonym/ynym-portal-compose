@@ -18,6 +18,9 @@ interface TaskListDao {
     suspend fun getTaskList(id: String): LocalTaskList
 
     @Upsert
+    suspend fun upsertTaskList(taskList: LocalTaskList)
+
+    @Upsert
     suspend fun upsertTaskLists(taskLists: List<LocalTaskList>)
 
     @Query("DELETE FROM task_list WHERE id = (:id)")

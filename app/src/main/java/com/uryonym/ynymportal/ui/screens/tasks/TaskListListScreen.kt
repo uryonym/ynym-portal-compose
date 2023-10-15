@@ -1,10 +1,8 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,8 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -49,7 +49,7 @@ fun TaskListListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.onChangeShowAddModal(true) }) {
+            FloatingActionButton(onClick = { viewModel.onChangeShowModal(true) }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "追加")
             }
         }
@@ -61,17 +61,22 @@ fun TaskListListScreen(
                 Column {
                     ListItem(
                         headlineContent = { Text(text = taskList.name) },
-                        modifier = Modifier.clickable { viewModel.onChangeShowEditModal(true) })
+                        modifier = Modifier.clickable {
+                            viewModel.setTaskList(taskList)
+                            viewModel.onChangeShowModal(true)
+                        })
                     HorizontalDivider()
                 }
             }
         }
 
-        if (uiState.isShowAddModal) {
-            InputTaskListNameModal(onCloseModal = { value -> viewModel.onChangeShowAddModal(value) })
-        }
-        if (uiState.isShowEditModal) {
-            InputTaskListNameModal(onCloseModal = { value -> viewModel.onChangeShowEditModal(value) })
+        if (uiState.isShowModal) {
+            InputTaskListNameModal(
+                title = uiState.taskListTitle,
+                onChangeTitle = viewModel::onChangeTitle,
+                onSave = viewModel::onSave,
+                onCloseModal = { viewModel.onChangeShowModal(false) }
+            )
         }
     }
 }
@@ -79,9 +84,20 @@ fun TaskListListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputTaskListNameModal(
-    onCloseModal: (Boolean) -> Unit
+    title: String,
+    onChangeTitle: (String) -> Unit,
+    onSave: () -> Unit,
+    onCloseModal: () -> Unit
 ) {
-    ModalBottomSheet(onDismissRequest = { onCloseModal(false) }) {
-        Text(text = "ボトムシートコンテンツ")
+    ModalBottomSheet(onDismissRequest = onCloseModal) {
+        Row {
+            OutlinedTextField(
+                value = title,
+                label = { Text("タスクリスト名") },
+                onValueChange = { onChangeTitle(it) },
+                maxLines = 1
+            )
+            TextButton(onClick = onSave) { Text(text = "保存") }
+        }
     }
 }

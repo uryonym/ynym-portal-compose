@@ -30,7 +30,7 @@ interface TaskListApiService {
         @Path("id") id: String,
         @Body taskList: RemoteTaskList,
         @Header("Authorization") token: String
-    ): RemoteTaskList
+    )
 
     @DELETE("task_lists/{id}")
     suspend fun deleteTaskList(@Path("id") id: String, @Header("Authorization") token: String)

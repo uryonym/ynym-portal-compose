@@ -13,8 +13,9 @@ import javax.inject.Inject
 
 data class TaskListListUiState(
     val taskLists: List<TaskList> = emptyList(),
-    val isShowAddModal: Boolean = false,
-    val isShowEditModal: Boolean = false
+    val currentTaskList: TaskList? = null,
+    val taskListTitle: String = "",
+    val isShowModal: Boolean = false
 )
 
 @HiltViewModel
@@ -34,15 +35,52 @@ class TaskListListViewModel @Inject constructor(
         }
     }
 
-    fun onChangeShowAddModal(value: Boolean) {
+    fun setTaskList(taskList: TaskList) {
         _uiState.update {
-            it.copy(isShowAddModal = value)
+            it.copy(currentTaskList = taskList, taskListTitle = taskList.name)
         }
     }
 
-    fun onChangeShowEditModal(value: Boolean) {
+    fun onChangeTitle(value: String) {
         _uiState.update {
-            it.copy(isShowEditModal = value)
+            it.copy(taskListTitle = value)
+        }
+    }
+
+    fun onChangeShowModal(value: Boolean) {
+        _uiState.update {
+            it.copy(isShowModal = value)
+        }
+        if (!value) {
+            onClearState()
+        }
+    }
+
+    fun onSave() {
+        viewModelScope.launch {
+            if (uiState.value.taskListTitle.isNotEmpty()) {
+                if (uiState.value.currentTaskList == null) {
+                    // 新規作成処理
+                    val taskList = TaskList(
+                        name = uiState.value.taskListTitle,
+                        seq = uiState.value.taskLists.size + 1
+                    )
+                    taskListRepository.insertTaskList(taskList)
+                } else {
+                    // 更新処理
+                    val updateTaskList = uiState.value.currentTaskList!!.copy(
+                        name = uiState.value.taskListTitle
+                    )
+                    taskListRepository.updateTaskList(updateTaskList)
+                }
+            }
+            onChangeShowModal(false)
+        }
+    }
+
+    private fun onClearState() {
+        _uiState.update {
+            it.copy(currentTaskList = null, taskListTitle = "")
         }
     }
 }

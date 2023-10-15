@@ -4,6 +4,7 @@ import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.model.RemoteTaskList
 import com.uryonym.ynymportal.data.model.TaskList
 import com.uryonym.ynymportal.data.model.toModel
+import com.uryonym.ynymportal.data.model.toRemote
 import com.uryonym.ynymportal.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +20,9 @@ interface TaskListRemoteDataSource {
 
     suspend fun getTaskList(id: String): RemoteTaskList
 
-    suspend fun createTaskList(taskList: RemoteTaskList)
+    suspend fun createTaskList(taskList: TaskList)
 
-    suspend fun updateTaskList(id: String, taskList: RemoteTaskList)
+    suspend fun updateTaskList(taskList: TaskList)
 
     suspend fun deleteTaskList(id: String)
 }
@@ -54,19 +55,17 @@ class TaskListRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun createTaskList(taskList: RemoteTaskList) {
+    override suspend fun createTaskList(taskList: TaskList) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
-            taskListApiService.createTaskList(taskList, token)
+            taskListApiService.createTaskList(taskList.toRemote(), token)
         }
     }
 
-    override suspend fun updateTaskList(id: String, taskList: RemoteTaskList) {
+    override suspend fun updateTaskList(taskList: TaskList) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
-            taskListApiService.updateTaskList(id, taskList, token)
+            taskListApiService.updateTaskList(taskList.id, taskList.toRemote(), token)
         }
     }
 
