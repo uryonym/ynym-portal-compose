@@ -71,7 +71,6 @@ class TaskListRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteTaskList(id: String) {
         val token = authRepository.getIdToken()
-
         withContext(ioDispatcher) {
             taskListApiService.deleteTaskList(id, token)
         }

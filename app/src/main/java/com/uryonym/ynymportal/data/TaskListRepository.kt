@@ -16,6 +16,8 @@ interface TaskListRepository {
 
     suspend fun updateTaskList(taskList: TaskList)
 
+    suspend fun deleteTaskList(id: String)
+
     suspend fun refreshTaskLists()
 }
 
@@ -40,6 +42,11 @@ class TaskListRepositoryImpl @Inject constructor(
     override suspend fun updateTaskList(taskList: TaskList) {
         taskListRemoteDataSource.updateTaskList(taskList)
         taskListLocalDataSource.upsertTaskList(taskList)
+    }
+
+    override suspend fun deleteTaskList(id: String) {
+        taskListRemoteDataSource.deleteTaskList(id)
+        taskListLocalDataSource.deleteTaskListsById(listOf(id))
     }
 
     override suspend fun refreshTaskLists() {

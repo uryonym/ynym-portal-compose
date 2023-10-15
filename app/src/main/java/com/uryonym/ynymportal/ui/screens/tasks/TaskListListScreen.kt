@@ -75,7 +75,9 @@ fun TaskListListScreen(
                 title = uiState.taskListTitle,
                 onChangeTitle = viewModel::onChangeTitle,
                 onSave = viewModel::onSave,
-                onCloseModal = { viewModel.onChangeShowModal(false) }
+                onDelete = viewModel::onDelete,
+                onCloseModal = { viewModel.onChangeShowModal(false) },
+                isEdit = uiState.currentTaskList != null
             )
         }
     }
@@ -87,7 +89,9 @@ fun InputTaskListNameModal(
     title: String,
     onChangeTitle: (String) -> Unit,
     onSave: () -> Unit,
-    onCloseModal: () -> Unit
+    onDelete: () -> Unit,
+    onCloseModal: () -> Unit,
+    isEdit: Boolean
 ) {
     ModalBottomSheet(onDismissRequest = onCloseModal) {
         Row {
@@ -98,6 +102,9 @@ fun InputTaskListNameModal(
                 maxLines = 1
             )
             TextButton(onClick = onSave) { Text(text = "保存") }
+            if (isEdit) {
+                TextButton(onClick = onDelete) { Text(text = "削除") }
+            }
         }
     }
 }
