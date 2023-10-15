@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,12 +27,16 @@ import com.uryonym.ynymportal.ui.screens.refuelings.RefuelingEditScreen
 import com.uryonym.ynymportal.ui.screens.refuelings.RefuelingListScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskAddScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskEditScreen
+import com.uryonym.ynymportal.ui.screens.tasks.TaskListListScreen
 import com.uryonym.ynymportal.ui.screens.tasks.TaskListScreen
 import kotlinx.coroutines.launch
 
 sealed class YnymPortalScreen(val route: String, @StringRes val title: Int) {
     data object Login : YnymPortalScreen(route = "login", title = R.string.login)
     data object TaskList : YnymPortalScreen(route = "taskList", title = R.string.task_list)
+    data object TaskListList :
+        YnymPortalScreen(route = "taskListList", title = R.string.task_list_list)
+
     data object TaskAdd :
         YnymPortalScreen(route = "taskAdd/{taskListId}", title = R.string.add_task) {
         fun createRoute(taskListId: String): String {
@@ -128,6 +133,9 @@ fun YnymPortalApp(
                 viewModel = viewModel
             ) {
                 TaskListScreen(
+                    onNavigateTaskListList = {
+                        navController.navigate(YnymPortalScreen.TaskListList.route)
+                    },
                     onNavigateTaskAdd = { taskListId ->
                         navController.navigate(YnymPortalScreen.TaskAdd.createRoute(taskListId))
                     },
@@ -137,6 +145,9 @@ fun YnymPortalApp(
                     onOpenDrawer = { scope.launch { drawerState.open() } }
                 )
             }
+        }
+        composable(route = YnymPortalScreen.TaskListList.route) {
+            TaskListListScreen(onNavigateBack = { navController.popBackStack() })
         }
         composable(route = YnymPortalScreen.TaskAdd.route) {
             NavigationDrawer(

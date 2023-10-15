@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Update
@@ -41,6 +42,7 @@ import com.uryonym.ynymportal.ui.YnymPortalScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
+    onNavigateTaskListList: () -> Unit,
     onNavigateTaskAdd: (String) -> Unit,
     onNavigateTaskEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -56,6 +58,9 @@ fun TaskListScreen(
         BottomAppBar(actions = {
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
+            }
+            IconButton(onClick = onNavigateTaskListList) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ListAlt, contentDescription = "タスクリスト")
             }
             IconButton(onClick = viewModel::refresh) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")

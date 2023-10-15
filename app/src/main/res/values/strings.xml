@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">YnymPortal</string>
     <string name="task_list">タスク</string>
+    <string name="task_list_list">タスクリスト</string>
     <string name="add_task">タスクの追加</string>
     <string name="edit_task">タスクの編集</string>
     <string name="confidential_list">認証情報</string>
