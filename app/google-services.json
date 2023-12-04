@@ -1,41 +1,70 @@
 {
   "project_info": {
-    "project_number": "1017779990554",
-    "project_id": "ynym-portal-25b29",
-    "storage_bucket": "ynym-portal-25b29.appspot.com"
+    "project_number": "713964715793",
+    "project_id": "ynym-portal-9a97e",
+    "storage_bucket": "ynym-portal-9a97e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1017779990554:android:72c386a9333b49e98f61a3",
+        "mobilesdk_app_id": "1:713964715793:android:5e62cb012e862b113256b0",
         "android_client_info": {
-          "package_name": "com.uryonym.ynymportal"
+          "package_name": "com.example.ynym_portal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1017779990554-549sque2ufie2966luof47a7hd45p7er.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.uryonym.ynymportal",
-            "certificate_hash": "5edc0a44525223162a9e55b6026352ab09abc230"
-          }
-        },
-        {
-          "client_id": "1017779990554-qnovgeflmbqiti5al69otlv0mtm8vup4.apps.googleusercontent.com",
+          "client_id": "713964715793-i3uhib10qmo7b0r53s7l2na5pprc4nv6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDaccChsqiAhZY6xwuBwGCt-hyxopFPR_4"
+          "current_key": "AIzaSyAmn3f4ga18NabCJRgQajFIPESSNRCs9lc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1017779990554-qnovgeflmbqiti5al69otlv0mtm8vup4.apps.googleusercontent.com",
+              "client_id": "713964715793-i3uhib10qmo7b0r53s7l2na5pprc4nv6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713964715793:android:0be4c1d61306642d3256b0",
+        "android_client_info": {
+          "package_name": "com.uryonym.ynymportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713964715793-h7njhd5jcjvo0avnhiutuqginusdaoqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uryonym.ynymportal",
+            "certificate_hash": "2aca4e355f52bfea2d50544144d647e20ea0a8a6"
+          }
+        },
+        {
+          "client_id": "713964715793-i3uhib10qmo7b0r53s7l2na5pprc4nv6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmn3f4ga18NabCJRgQajFIPESSNRCs9lc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713964715793-i3uhib10qmo7b0r53s7l2na5pprc4nv6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
