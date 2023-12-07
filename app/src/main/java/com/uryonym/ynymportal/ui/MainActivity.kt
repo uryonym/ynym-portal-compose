@@ -1,15 +1,15 @@
-package com.uryonym.ynymportal
+package com.uryonym.ynymportal.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import com.uryonym.ynymportal.ui.YnymPortalApp
 import com.uryonym.ynymportal.ui.theme.YnymPortalTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,4 +21,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }
