@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingAddScreen
 import com.uryonym.ynymportal.ui.screens.components.RefuelingAddEditForm
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +31,7 @@ fun RefuelingAddScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.RefuelingAdd.title))
+                    Text(stringResource(id = RefuelingAddScreen.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {

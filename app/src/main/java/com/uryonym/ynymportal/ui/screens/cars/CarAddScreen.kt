@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.CarAddScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +36,7 @@ fun CarAddScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.CarAdd.title))
+                    Text(stringResource(id = CarAddScreen.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {

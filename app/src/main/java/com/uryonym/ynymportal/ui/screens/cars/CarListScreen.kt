@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.CarListScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,7 @@ fun CarListScreen(
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
-            Text(stringResource(id = YnymPortalScreen.CarList.title))
+            Text(stringResource(id = CarListScreen.title))
         })
     }, bottomBar = {
         BottomAppBar(actions = {

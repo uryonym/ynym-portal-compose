@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.ConfidentialEditScreen
 import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +37,7 @@ fun ConfidentialEditScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.ConfidentialEdit.title))
+                    Text(stringResource(id = ConfidentialEditScreen.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {

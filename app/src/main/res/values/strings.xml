@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">YnymPortal</string>
+    <string name="sign_in">サインイン</string>
     <string name="task_list">タスク</string>
     <string name="task_list_list">タスクリスト</string>
     <string name="add_task">タスクの追加</string>
@@ -13,5 +14,4 @@
     <string name="refueling_list">燃費記録</string>
     <string name="add_refueling">燃費記録の追加</string>
     <string name="edit_refueling">燃費記録の編集</string>
-    <string name="login">ログイン</string>
 </resources>

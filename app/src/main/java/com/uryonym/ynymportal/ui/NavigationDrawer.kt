@@ -18,6 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskListScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.ConfidentialListScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.CarListScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingListScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -25,7 +29,8 @@ import kotlinx.coroutines.launch
 fun NavigationDrawer(
     drawerState: DrawerState,
     scope: CoroutineScope,
-    viewModel: YnymPortalAppViewModel,
+    navigate: (String) -> Unit,
+    onSignOut: () -> Unit,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
@@ -38,7 +43,7 @@ fun NavigationDrawer(
                     label = { Text(text = "タスク") },
                     selected = false,
                     onClick = {
-                        viewModel.onChangeNavigate(YnymPortalScreen.TaskList.route)
+                        navigate(TaskListScreen.route)
                         scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -48,7 +53,7 @@ fun NavigationDrawer(
                     label = { Text(text = "認証情報") },
                     selected = false,
                     onClick = {
-                        viewModel.onChangeNavigate(YnymPortalScreen.ConfidentialList.route)
+                        navigate(ConfidentialListScreen.route)
                         scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -63,7 +68,7 @@ fun NavigationDrawer(
                     label = { Text(text = "車両") },
                     selected = false,
                     onClick = {
-                        viewModel.onChangeNavigate(YnymPortalScreen.CarList.route)
+                        navigate(CarListScreen.route)
                         scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -78,7 +83,7 @@ fun NavigationDrawer(
                     label = { Text(text = "燃費記録") },
                     selected = false,
                     onClick = {
-                        viewModel.onChangeNavigate(YnymPortalScreen.RefuelingList.route)
+                        navigate(RefuelingListScreen.route)
                         scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -88,8 +93,7 @@ fun NavigationDrawer(
                     label = { Text(text = "ログアウト") },
                     selected = false,
                     onClick = {
-                        viewModel.onChangeNavigate("")
-                        viewModel.signOut()
+                        onSignOut()
                         scope.launch { drawerState.close() }
                     }
                 )

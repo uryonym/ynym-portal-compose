@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingEditScreen
 import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 import com.uryonym.ynymportal.ui.screens.components.RefuelingAddEditForm
 
@@ -34,7 +34,7 @@ fun RefuelingEditScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.RefuelingEdit.title))
+                    Text(stringResource(id = RefuelingEditScreen.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {

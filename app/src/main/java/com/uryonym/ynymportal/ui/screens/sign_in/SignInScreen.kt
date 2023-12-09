@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.ui.screens.login
+package com.uryonym.ynymportal.ui.screens.sign_in
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,16 +20,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.SignInScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel()
+fun SignInScreen(
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
-            Text(stringResource(id = YnymPortalScreen.Login.title))
+            Text(stringResource(id = SignInScreen.title))
         })
     }) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,8 +50,8 @@ fun LoginScreen(
                     .fillMaxWidth()
             )
 
-            TextButton(onClick = viewModel::onClickLogin) {
-                Text(text = "Googleでログイン")
+            TextButton(onClick = viewModel::onClickSignIn) {
+                Text(text = "サインイン")
             }
         }
     }

@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingListScreen
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -50,7 +50,7 @@ fun RefuelingListScreen(
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
-            Text(stringResource(id = YnymPortalScreen.RefuelingList.title))
+            Text(stringResource(id = RefuelingListScreen.title))
         })
     }, bottomBar = {
         BottomAppBar(actions = {

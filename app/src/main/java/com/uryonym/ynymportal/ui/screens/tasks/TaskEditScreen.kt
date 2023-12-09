@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskEditScreen
 import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 import com.uryonym.ynymportal.ui.screens.components.TaskAddEditForm
 
@@ -38,7 +38,7 @@ fun TaskEditScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.TaskEdit.title))
+                    Text(stringResource(id = TaskEditScreen.title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateBack() }) {

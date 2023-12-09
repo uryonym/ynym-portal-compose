@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.uryonym.ynymportal.ui.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskListListScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +44,7 @@ fun TaskListListScreen(
                     }
                 },
                 title = {
-                    Text(stringResource(id = YnymPortalScreen.TaskListList.title))
+                    Text(stringResource(id = TaskListListScreen.title))
                 }
             )
         },
