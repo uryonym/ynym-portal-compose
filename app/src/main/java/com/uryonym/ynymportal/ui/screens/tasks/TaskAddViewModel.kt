@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 data class TaskAddUiState(
     val taskList: TaskList? = null,
-    val title: String = "",
+    val title: TextFieldValue = TextFieldValue(""),
     val description: String = "",
     val deadLine: LocalDate? = null,
     val isComplete: Boolean = false,
@@ -45,7 +46,7 @@ class TaskAddViewModel @Inject constructor(
         }
     }
 
-    fun onChangeTitle(value: String) {
+    fun onChangeTitle(value: TextFieldValue) {
         _uiState.update {
             it.copy(title = value)
         }
@@ -71,9 +72,9 @@ class TaskAddViewModel @Inject constructor(
 
     fun onSaveNewTask() {
         viewModelScope.launch {
-            if (uiState.value.title.isNotEmpty()) {
+            if (uiState.value.title.text.isNotEmpty()) {
                 val task = Task(
-                    title = uiState.value.title,
+                    title = uiState.value.title.text,
                     description = uiState.value.description,
                     deadLine = uiState.value.deadLine,
                     isComplete = false,

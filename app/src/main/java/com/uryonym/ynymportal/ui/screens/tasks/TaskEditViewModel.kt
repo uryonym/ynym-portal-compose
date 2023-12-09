@@ -1,5 +1,7 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +20,7 @@ import javax.inject.Inject
 data class TaskEditUiState(
     val task: Task? = null,
     val taskList: TaskList? = null,
-    val title: String = "",
+    val title: TextFieldValue = TextFieldValue(""),
     val description: String = "",
     val deadLine: LocalDate? = null,
     val isComplete: Boolean = false,
@@ -46,7 +48,7 @@ class TaskEditViewModel @Inject constructor(
                 it.copy(
                     task = task,
                     taskList = taskList,
-                    title = task.title,
+                    title = TextFieldValue(task.title, selection = TextRange(task.title.length)),
                     description = task.description,
                     deadLine = task.deadLine,
                     isComplete = task.isComplete
@@ -55,7 +57,7 @@ class TaskEditViewModel @Inject constructor(
         }
     }
 
-    fun onChangeTitle(value: String) {
+    fun onChangeTitle(value: TextFieldValue) {
         _uiState.update {
             it.copy(title = value)
         }
@@ -87,10 +89,10 @@ class TaskEditViewModel @Inject constructor(
 
     fun onSaveEditTask() {
         viewModelScope.launch {
-            if (uiState.value.title.isNotEmpty()) {
+            if (uiState.value.title.text.isNotEmpty()) {
                 uiState.value.task?.let { task ->
                     val updateTask = task.copy(
-                        title = uiState.value.title,
+                        title = uiState.value.title.text,
                         description = uiState.value.description,
                         deadLine = uiState.value.deadLine,
                         isComplete = uiState.value.isComplete,

@@ -1,10 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
@@ -15,8 +11,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -25,22 +29,24 @@ import kotlinx.datetime.atStartOfDayIn
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskAddEditForm(
-    title: String,
+    title: TextFieldValue,
     description: String,
     deadLine: LocalDate?,
     isShowPicker: Boolean,
-    onChangeTitle: (String) -> Unit,
+    onChangeTitle: (TextFieldValue) -> Unit,
     onChangeDescription: (String) -> Unit,
     onChangeDeadLine: (LocalDate?) -> Unit,
     onChangeShowPicker: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     OutlinedTextField(
         value = title,
         label = { Text("タスク") },
         onValueChange = { onChangeTitle(it) },
         maxLines = 3,
-        modifier = modifier
+        modifier = modifier.focusRequester(focusRequester)
     )
     OutlinedTextField(
         value = description,
@@ -88,5 +94,9 @@ fun TaskAddEditForm(
             datePickerState = datePickerState,
             onChangeDeadLine = { onChangeDeadLine(it) },
             closePicker = { onChangeShowPicker(false) })
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
