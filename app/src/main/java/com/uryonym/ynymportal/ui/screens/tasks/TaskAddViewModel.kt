@@ -32,6 +32,7 @@ class TaskAddViewModel @Inject constructor(
     private val taskListRepository: TaskListRepository,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val taskListId: String = savedStateHandle["taskListId"]!!
 
     private val _uiState = MutableStateFlow(TaskAddUiState())
@@ -88,4 +89,5 @@ class TaskAddViewModel @Inject constructor(
             }
         }
     }
+
 }

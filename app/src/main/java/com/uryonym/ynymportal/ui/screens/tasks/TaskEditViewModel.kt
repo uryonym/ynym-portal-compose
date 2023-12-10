@@ -35,6 +35,7 @@ class TaskEditViewModel @Inject constructor(
     private val taskListRepository: TaskListRepository,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val taskId: String = savedStateHandle["taskId"]!!
 
     private val _uiState = MutableStateFlow(TaskEditUiState())
@@ -116,4 +117,5 @@ class TaskEditViewModel @Inject constructor(
             }
         }
     }
+
 }

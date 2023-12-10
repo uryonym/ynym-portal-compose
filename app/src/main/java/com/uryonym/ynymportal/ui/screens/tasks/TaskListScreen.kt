@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.data.model.Task
-import com.uryonym.ynymportal.navigation.YnymPortalScreen
+import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskListScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +52,7 @@ fun TaskListScreen(
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
-            Text(stringResource(id = YnymPortalScreen.TaskListScreen.title))
+            Text(stringResource(id = TaskListScreen.title))
         })
     }, bottomBar = {
         BottomAppBar(actions = {
