@@ -26,6 +26,7 @@ class TaskListViewModel @Inject constructor(
     private val taskListRepository: TaskListRepository,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+
     private val _selectedTaskListid: MutableStateFlow<String?> = MutableStateFlow(null)
 
     val uiState: StateFlow<TaskListUiState> = combine(
@@ -69,4 +70,5 @@ class TaskListViewModel @Inject constructor(
             taskRepository.refreshTasks()
         }
     }
+
 }
