@@ -19,6 +19,7 @@ data class CarListUiState(
 class CarListViewModel @Inject constructor(
     private val carRepository: CarRepository
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(CarListUiState())
     val uiState: StateFlow<CarListUiState> = _uiState
 
@@ -37,4 +38,5 @@ class CarListViewModel @Inject constructor(
             carRepository.refreshCars()
         }
     }
+
 }

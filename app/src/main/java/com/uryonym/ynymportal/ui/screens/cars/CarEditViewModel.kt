@@ -1,5 +1,7 @@
 package com.uryonym.ynymportal.ui.screens.cars
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 data class CarEditUiState(
     val car: Car? = null,
-    val name: String = "",
+    val name: TextFieldValue = TextFieldValue(""),
     val maker: String = "",
     val model: String = "",
     val modelYear: Int = 0,
@@ -29,6 +31,7 @@ class CarEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val carRepository: CarRepository
 ) : ViewModel() {
+
     private val carId: String = savedStateHandle["carId"]!!
 
     private val _uiState = MutableStateFlow(CarEditUiState())
@@ -39,7 +42,7 @@ class CarEditViewModel @Inject constructor(
             val car = carRepository.getCar(carId)
             _uiState.update {
                 it.copy(
-                    name = car.name,
+                    name = TextFieldValue(car.name, selection = TextRange(car.name.length)),
                     maker = car.maker,
                     model = car.model,
                     modelYear = car.modelYear,
@@ -50,7 +53,7 @@ class CarEditViewModel @Inject constructor(
         }
     }
 
-    fun onChangeName(value: String) {
+    fun onChangeName(value: TextFieldValue) {
         _uiState.update {
             it.copy(name = value)
         }
@@ -95,13 +98,13 @@ class CarEditViewModel @Inject constructor(
     fun onSaveEditCar() {
         viewModelScope.launch {
             if (
-                uiState.value.name.isNotEmpty() &&
+                uiState.value.name.text.isNotEmpty() &&
                 uiState.value.maker.isNotEmpty() &&
                 uiState.value.model.isNotEmpty()
             ) {
                 uiState.value.car?.let { car ->
                     val updateCar = car.copy(
-                        name = uiState.value.name,
+                        name = uiState.value.name.text,
                         maker = uiState.value.maker,
                         model = uiState.value.model,
                         modelYear = uiState.value.modelYear,
@@ -127,4 +130,5 @@ class CarEditViewModel @Inject constructor(
             }
         }
     }
+
 }

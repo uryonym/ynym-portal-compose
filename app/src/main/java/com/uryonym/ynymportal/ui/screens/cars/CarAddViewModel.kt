@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.cars
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.model.Car
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CarAddUiState(
-    val name: String = "",
+    val name: TextFieldValue = TextFieldValue(""),
     val maker: String = "",
     val model: String = "",
     val modelYear: Int = 0,
@@ -25,10 +26,11 @@ data class CarAddUiState(
 class CarAddViewModel @Inject constructor(
     private val carRepository: CarRepository
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(CarAddUiState())
     val uiState: StateFlow<CarAddUiState> = _uiState
 
-    fun onChangeName(value: String) {
+    fun onChangeName(value: TextFieldValue) {
         _uiState.update {
             it.copy(name = value)
         }
@@ -67,12 +69,12 @@ class CarAddViewModel @Inject constructor(
     fun onSaveNewCar() {
         viewModelScope.launch {
             if (
-                uiState.value.name.isNotEmpty() &&
+                uiState.value.name.text.isNotEmpty() &&
                 uiState.value.maker.isNotEmpty() &&
                 uiState.value.model.isNotEmpty()
             ) {
                 val car = Car(
-                    name = uiState.value.name,
+                    name = uiState.value.name.text,
                     maker = uiState.value.maker,
                     model = uiState.value.model,
                     modelYear = uiState.value.modelYear,
@@ -87,4 +89,5 @@ class CarAddViewModel @Inject constructor(
             }
         }
     }
+
 }

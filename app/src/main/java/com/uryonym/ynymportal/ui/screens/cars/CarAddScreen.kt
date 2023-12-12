@@ -1,26 +1,30 @@
 package com.uryonym.ynymportal.ui.screens.cars
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,13 +39,9 @@ fun CarAddScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(stringResource(id = CarAddScreen.title))
-                },
+                title = { Text(stringResource(id = CarAddScreen.title)) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigateBack()
-                    }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },
@@ -54,14 +54,24 @@ fun CarAddScreen(
         }
     ) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val focusRequester = remember { FocusRequester() }
+        val interactionSource = remember { MutableInteractionSource() }
 
         Column(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth(),
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = interactionSource,
+                    enabled = true,
+                    indication = null,
+                    onClick = { focusRequester.requestFocus() }
+                )
+                .focusRequester(focusRequester)
+                .focusTarget(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CarAddForm(
+            CarAddEditForm(
                 name = uiState.name,
                 maker = uiState.maker,
                 model = uiState.model,
@@ -86,66 +96,4 @@ fun CarAddScreen(
             }
         }
     }
-}
-
-@Composable
-private fun CarAddForm(
-    name: String,
-    maker: String,
-    model: String,
-    modelYear: String,
-    licensePlate: String,
-    tankCapacity: String,
-    onChangeName: (String) -> Unit,
-    onChangeMaker: (String) -> Unit,
-    onChangeModel: (String) -> Unit,
-    onChangeModelYear: (String) -> Unit,
-    onChangeLicensePlate: (String) -> Unit,
-    onChangeTankCapacity: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = name,
-        label = { Text("名称") },
-        onValueChange = { onChangeName(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = maker,
-        label = { Text("メーカー") },
-        onValueChange = { onChangeMaker(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = model,
-        label = { Text("モデル") },
-        onValueChange = { onChangeModel(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = modelYear,
-        label = { Text("年式") },
-        onValueChange = { onChangeModelYear(it) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = licensePlate,
-        label = { Text("ナンバープレート") },
-        onValueChange = { onChangeLicensePlate(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = tankCapacity,
-        label = { Text("タンク容量") },
-        onValueChange = { onChangeTankCapacity(it) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = modifier
-    )
 }
