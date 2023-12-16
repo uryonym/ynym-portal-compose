@@ -1,9 +1,8 @@
 package com.uryonym.ynymportal.ui.screens.refuelings
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -22,7 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingEditScreen
 import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
-import com.uryonym.ynymportal.ui.screens.components.RefuelingAddEditForm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +36,10 @@ fun RefuelingEditScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "戻る"
+                        )
                     }
                 },
                 actions = {
@@ -84,7 +85,6 @@ fun RefuelingEditScreen(
             onChangeShowTimePicker = viewModel::onChangeShowTimePicker,
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth()
         )
 
         LaunchedEffect(uiState.isRefuelingSaved) {

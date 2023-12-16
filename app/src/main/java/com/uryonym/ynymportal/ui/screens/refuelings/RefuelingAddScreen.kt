@@ -1,6 +1,5 @@
 package com.uryonym.ynymportal.ui.screens.refuelings
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingAddScreen
-import com.uryonym.ynymportal.ui.screens.components.RefuelingAddEditForm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +72,6 @@ fun RefuelingAddScreen(
             onChangeShowTimePicker = viewModel::onChangeShowTimePicker,
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth()
         )
 
         LaunchedEffect(uiState.isRefuelingSaved) {

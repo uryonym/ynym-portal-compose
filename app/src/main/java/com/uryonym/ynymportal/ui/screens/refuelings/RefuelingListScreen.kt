@@ -80,7 +80,9 @@ fun RefuelingListScreen(
                     label = { Text("車両") },
                     onValueChange = {},
                     readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.carListExpanded) },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.carListExpanded)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor()

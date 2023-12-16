@@ -1,8 +1,11 @@
-package com.uryonym.ynymportal.ui.screens.components
+package com.uryonym.ynymportal.ui.screens.refuelings
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
@@ -19,11 +22,19 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.uryonym.ynymportal.ui.screens.components.ClickableOutlinedTextField
+import com.uryonym.ynymportal.ui.screens.components.DatePickerDialogComponent
+import com.uryonym.ynymportal.ui.screens.components.TimePickerDialog
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -58,10 +69,23 @@ fun RefuelingAddEditForm(
     onChangeShowTimePicker: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusRequesterForm = remember { FocusRequester() }
+    val focusRequesterScreen = remember { FocusRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
     val localDateTime = refuelDateTime.toLocalDateTime(TimeZone.currentSystemDefault())
 
     Column(
-        modifier = modifier.padding(16.dp, 0.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .clickable(
+                interactionSource = interactionSource,
+                enabled = true,
+                indication = null,
+                onClick = { focusRequesterScreen.requestFocus() }
+            )
+            .focusRequester(focusRequesterScreen)
+            .focusTarget()
+            .padding(16.dp, 0.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
@@ -93,7 +117,9 @@ fun RefuelingAddEditForm(
             singleLine = true,
             suffix = { Text("km") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequesterForm)
         )
 
         ExposedDropdownMenuBox(
@@ -105,7 +131,9 @@ fun RefuelingAddEditForm(
                 label = { Text("種類") },
                 onValueChange = {},
                 readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = fuelTypeListExtended) },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = fuelTypeListExtended)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor()
@@ -212,5 +240,9 @@ fun RefuelingAddEditForm(
         ) {
             TimePicker(state = timePickerState)
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequesterForm.requestFocus()
     }
 }

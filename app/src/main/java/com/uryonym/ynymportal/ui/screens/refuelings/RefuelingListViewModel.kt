@@ -27,6 +27,7 @@ class RefuelingListViewModel @Inject constructor(
     private val carRepository: CarRepository,
     private val refuelingRepository: RefuelingRepository
 ) : ViewModel() {
+
     private val _carListExpanded: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _selectedCar: MutableStateFlow<Car?> = MutableStateFlow(null)
 
@@ -72,4 +73,5 @@ class RefuelingListViewModel @Inject constructor(
             refuelingRepository.refreshRefuelings()
         }
     }
+
 }
