@@ -1,5 +1,7 @@
 package com.uryonym.ynymportal.ui.screens.confidentials
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 data class ConfidentialEditUiState(
     val confidential: Confidential? = null,
-    val serviceName: String = "",
+    val serviceName: TextFieldValue = TextFieldValue(""),
     val loginId: String = "",
     val password: String = "",
     val other: String = "",
@@ -27,6 +29,7 @@ class ConfidentialEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val confidentialRepository: ConfidentialRepository
 ) : ViewModel() {
+
     private val confidentialId: String = savedStateHandle["confidentialId"]!!
 
     private val _uiState = MutableStateFlow(ConfidentialEditUiState())
@@ -38,7 +41,10 @@ class ConfidentialEditViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     confidential = confidential,
-                    serviceName = confidential.serviceName,
+                    serviceName = TextFieldValue(
+                        confidential.serviceName,
+                        selection = TextRange(confidential.serviceName.length)
+                    ),
                     loginId = confidential.loginId,
                     password = confidential.password,
                     other = confidential.other
@@ -47,7 +53,7 @@ class ConfidentialEditViewModel @Inject constructor(
         }
     }
 
-    fun onChangeServiceName(value: String) {
+    fun onChangeServiceName(value: TextFieldValue) {
         _uiState.update {
             it.copy(serviceName = value)
         }
@@ -79,10 +85,10 @@ class ConfidentialEditViewModel @Inject constructor(
 
     fun onSaveEditConfidential() {
         viewModelScope.launch {
-            if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
+            if (uiState.value.serviceName.text.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
                 uiState.value.confidential?.let { confidential ->
                     val updateConfidential = confidential.copy(
-                        serviceName = uiState.value.serviceName,
+                        serviceName = uiState.value.serviceName.text,
                         loginId = uiState.value.loginId,
                         password = uiState.value.password,
                         other = uiState.value.other
@@ -106,4 +112,5 @@ class ConfidentialEditViewModel @Inject constructor(
             }
         }
     }
+
 }

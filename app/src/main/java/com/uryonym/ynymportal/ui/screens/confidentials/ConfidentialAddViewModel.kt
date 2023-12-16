@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.confidentials
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.ConfidentialRepository
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ConfidentialAddUiState(
-    val serviceName: String = "",
+    val serviceName: TextFieldValue = TextFieldValue(""),
     val loginId: String = "",
     val password: String = "",
     val other: String = "",
@@ -23,10 +24,11 @@ data class ConfidentialAddUiState(
 class ConfidentialAddViewModel @Inject constructor(
     private val confidentialRepository: ConfidentialRepository
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(ConfidentialAddUiState())
     val uiState: StateFlow<ConfidentialAddUiState> = _uiState
 
-    fun onChangeServiceName(value: String) {
+    fun onChangeServiceName(value: TextFieldValue) {
         _uiState.update {
             it.copy(serviceName = value)
         }
@@ -52,9 +54,9 @@ class ConfidentialAddViewModel @Inject constructor(
 
     fun onSaveNewConfidential() {
         viewModelScope.launch {
-            if (uiState.value.serviceName.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
+            if (uiState.value.serviceName.text.isNotEmpty() && uiState.value.loginId.isNotEmpty()) {
                 val confidential = Confidential(
-                    serviceName = uiState.value.serviceName,
+                    serviceName = uiState.value.serviceName.text,
                     loginId = uiState.value.loginId,
                     password = uiState.value.password,
                     other = uiState.value.other
@@ -67,4 +69,5 @@ class ConfidentialAddViewModel @Inject constructor(
             }
         }
     }
+
 }

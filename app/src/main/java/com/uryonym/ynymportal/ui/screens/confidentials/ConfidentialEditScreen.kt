@@ -1,6 +1,9 @@
 package com.uryonym.ynymportal.ui.screens.confidentials
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,15 +14,18 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,14 +68,24 @@ fun ConfidentialEditScreen(
         }
     ) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val focusRequester = remember { FocusRequester() }
+        val interactionSource = remember { MutableInteractionSource() }
 
         Column(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxWidth(),
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = interactionSource,
+                    enabled = true,
+                    indication = null,
+                    onClick = { focusRequester.requestFocus() }
+                )
+                .focusRequester(focusRequester)
+                .focusTarget(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ConfidentialEditForm(
+            ConfidentialAddEditForm(
                 serviceName = uiState.serviceName,
                 loginId = uiState.loginId,
                 password = uiState.password,
@@ -96,46 +112,4 @@ fun ConfidentialEditScreen(
             onDelete = viewModel::onDelete
         )
     }
-}
-
-@Composable
-fun ConfidentialEditForm(
-    serviceName: String,
-    loginId: String,
-    password: String,
-    other: String,
-    onChangeServiceName: (String) -> Unit,
-    onChangeLoginId: (String) -> Unit,
-    onChangePassword: (String) -> Unit,
-    onChangeOther: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = serviceName,
-        label = { Text("サービス名") },
-        onValueChange = { onChangeServiceName(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = loginId,
-        label = { Text("ログインID") },
-        onValueChange = { onChangeLoginId(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = password,
-        label = { Text("パスワード") },
-        onValueChange = { onChangePassword(it) },
-        singleLine = true,
-        modifier = modifier
-    )
-    OutlinedTextField(
-        value = other,
-        label = { Text("備考") },
-        onValueChange = { onChangeOther(it) },
-        singleLine = true,
-        modifier = modifier
-    )
 }
