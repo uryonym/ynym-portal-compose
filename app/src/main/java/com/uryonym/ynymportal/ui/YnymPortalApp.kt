@@ -6,6 +6,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -56,6 +57,7 @@ fun YnymPortalApp(
         }
     }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
     val isUserSignedOut = viewModel.getAuthState().collectAsState().value
     NavHost(
         navController = navController,
@@ -87,7 +89,10 @@ fun YnymPortalApp(
             }
         }
         composable(route = TaskListListScreen.route) {
-            TaskListListScreen(onNavigateBack = { navController.popBackStack() })
+            TaskListListScreen(onNavigateBack = {
+                keyboardController?.hide()
+                navController.navigateUp()
+            })
         }
         composable(route = TaskAddScreen.route) {
             NavigationDrawer(
@@ -97,7 +102,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 TaskAddScreen(
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -109,7 +117,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 TaskEditScreen(
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -142,7 +153,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 ConfidentialAddScreen(
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -154,7 +168,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 ConfidentialEditScreen(
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -187,7 +204,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 CarAddScreen(
-                    onNavigateBack = { navController.navigateUp() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -199,7 +219,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 CarEditScreen(
-                    onNavigateBack = { navController.navigateUp() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -234,7 +257,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 RefuelingAddScreen(
-                    onNavigateBack = { navController.navigateUp() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
@@ -246,7 +272,10 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 RefuelingEditScreen(
-                    onNavigateBack = { navController.navigateUp() }
+                    onNavigateBack = {
+                        keyboardController?.hide()
+                        navController.navigateUp()
+                    }
                 )
             }
         }
