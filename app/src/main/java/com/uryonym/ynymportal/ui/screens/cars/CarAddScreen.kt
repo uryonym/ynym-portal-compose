@@ -34,6 +34,7 @@ import com.uryonym.ynymportal.navigation.YnymPortalScreen.CarAddScreen
 @Composable
 fun CarAddScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: CarAddViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -41,12 +42,18 @@ fun CarAddScreen(
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(id = CarAddScreen.title)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveNewCar) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveNewCar()
+                    }) {
                         Text(text = "保存")
                     }
                 }

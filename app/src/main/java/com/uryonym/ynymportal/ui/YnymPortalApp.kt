@@ -99,10 +99,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 TaskAddScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -114,10 +112,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 TaskEditScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -150,10 +146,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 ConfidentialAddScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -165,10 +159,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 ConfidentialEditScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -201,10 +193,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 CarAddScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -216,10 +206,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 CarEditScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -254,10 +242,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 RefuelingAddScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }
@@ -269,10 +255,8 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 RefuelingEditScreen(
-                    onNavigateBack = {
-                        keyboardController?.hide()
-                        navController.navigateUp()
-                    }
+                    onNavigateBack = { navController.navigateUp() },
+                    onHideKeyboard = { keyboardController?.hide() }
                 )
             }
         }

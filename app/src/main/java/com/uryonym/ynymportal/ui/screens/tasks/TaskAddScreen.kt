@@ -34,6 +34,7 @@ import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskAddScreen
 @Composable
 fun TaskAddScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: TaskAddViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -43,12 +44,18 @@ fun TaskAddScreen(
                     Text(stringResource(id = TaskAddScreen.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveNewTask) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveNewTask()
+                    }) {
                         Text(text = "保存")
                     }
                 })

@@ -38,6 +38,7 @@ import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 @Composable
 fun TaskEditScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: TaskEditViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -47,7 +48,10 @@ fun TaskEditScreen(
                     Text(stringResource(id = TaskEditScreen.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "戻る"
@@ -55,7 +59,10 @@ fun TaskEditScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveEditTask) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveEditTask()
+                    }) {
                         Text(text = "保存")
                     }
                 })

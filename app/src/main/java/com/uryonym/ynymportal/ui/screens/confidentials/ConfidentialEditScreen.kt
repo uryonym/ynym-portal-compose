@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
@@ -37,6 +38,7 @@ import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 @Composable
 fun ConfidentialEditScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: ConfidentialEditViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -47,13 +49,20 @@ fun ConfidentialEditScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
+                        onHideKeyboard()
                         onNavigateBack()
                     }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "戻る")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "戻る"
+                        )
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveEditConfidential) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveEditConfidential()
+                    }) {
                         Text(text = "保存")
                     }
                 }

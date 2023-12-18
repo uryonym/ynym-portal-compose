@@ -26,6 +26,7 @@ import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 @Composable
 fun RefuelingEditScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: RefuelingEditViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -35,7 +36,10 @@ fun RefuelingEditScreen(
                     Text(stringResource(id = RefuelingEditScreen.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "戻る"
@@ -43,7 +47,10 @@ fun RefuelingEditScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveEditRefueling) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveEditRefueling()
+                    }) {
                         Text(text = "保存")
                     }
                 }

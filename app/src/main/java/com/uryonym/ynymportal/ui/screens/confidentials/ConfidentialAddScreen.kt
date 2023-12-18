@@ -34,6 +34,7 @@ import com.uryonym.ynymportal.navigation.YnymPortalScreen.ConfidentialAddScreen
 @Composable
 fun ConfidentialAddScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: ConfidentialAddViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -44,13 +45,17 @@ fun ConfidentialAddScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
+                        onHideKeyboard()
                         onNavigateBack()
                     }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveNewConfidential) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveNewConfidential()
+                    }) {
                         Text(text = "保存")
                     }
                 }

@@ -23,6 +23,7 @@ import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingAddScreen
 @Composable
 fun RefuelingAddScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: RefuelingAddViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -32,12 +33,18 @@ fun RefuelingAddScreen(
                     Text(stringResource(id = RefuelingAddScreen.title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "閉じる")
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveNewRefueling) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveNewRefueling()
+                    }) {
                         Text(text = "保存")
                     }
                 }

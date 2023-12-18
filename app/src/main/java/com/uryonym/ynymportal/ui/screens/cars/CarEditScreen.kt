@@ -37,6 +37,7 @@ import com.uryonym.ynymportal.ui.screens.components.DeleteConfirmDialog
 @Composable
 fun CarEditScreen(
     onNavigateBack: () -> Unit,
+    onHideKeyboard: () -> Unit,
     viewModel: CarEditViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -44,7 +45,10 @@ fun CarEditScreen(
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(id = CarEditScreen.title)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        onHideKeyboard()
+                        onNavigateBack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "戻る"
@@ -52,7 +56,10 @@ fun CarEditScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = viewModel::onSaveEditCar) {
+                    TextButton(onClick = {
+                        onHideKeyboard()
+                        viewModel.onSaveEditCar()
+                    }) {
                         Text(text = "保存")
                     }
                 }
