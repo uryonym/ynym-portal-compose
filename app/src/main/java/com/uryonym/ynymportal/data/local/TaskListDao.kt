@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskListDao {
-    @Query("SELECT * FROM task_list")
+    @Query("SELECT * FROM task_list ORDER BY seq")
     fun fetchTaskLists(): Flow<List<LocalTaskList>>
 
     @Query("SELECT * FROM task_list")

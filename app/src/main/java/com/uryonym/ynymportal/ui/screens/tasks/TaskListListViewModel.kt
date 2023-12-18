@@ -22,6 +22,7 @@ data class TaskListListUiState(
 class TaskListListViewModel @Inject constructor(
     private val taskListRepository: TaskListRepository
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(TaskListListUiState())
     val uiState: StateFlow<TaskListListUiState> = _uiState
 
@@ -92,4 +93,5 @@ class TaskListListViewModel @Inject constructor(
             it.copy(currentTaskList = null, taskListTitle = "")
         }
     }
+
 }
