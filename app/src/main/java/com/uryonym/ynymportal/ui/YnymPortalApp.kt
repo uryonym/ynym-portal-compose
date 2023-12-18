@@ -89,10 +89,7 @@ fun YnymPortalApp(
             }
         }
         composable(route = TaskListListScreen.route) {
-            TaskListListScreen(onNavigateBack = {
-                keyboardController?.hide()
-                navController.navigateUp()
-            })
+            TaskListListScreen(onNavigateBack = { navController.navigateUp() })
         }
         composable(route = TaskAddScreen.route) {
             NavigationDrawer(
