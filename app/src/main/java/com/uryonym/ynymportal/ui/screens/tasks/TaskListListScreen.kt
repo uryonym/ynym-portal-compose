@@ -22,9 +22,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskListListScreen
@@ -86,25 +91,32 @@ fun TaskListListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputTaskListNameModal(
-    title: String,
-    onChangeTitle: (String) -> Unit,
+    title: TextFieldValue,
+    onChangeTitle: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
     onDelete: () -> Unit,
     onCloseModal: () -> Unit,
     isEdit: Boolean
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     ModalBottomSheet(onDismissRequest = onCloseModal) {
         Row {
             OutlinedTextField(
                 value = title,
                 label = { Text("タスクリスト名") },
                 onValueChange = { onChangeTitle(it) },
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.focusRequester(focusRequester)
             )
             TextButton(onClick = onSave) { Text(text = "保存") }
             if (isEdit) {
                 TextButton(onClick = onDelete) { Text(text = "削除") }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }

@@ -1,5 +1,7 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uryonym.ynymportal.data.TaskListRepository
@@ -14,7 +16,7 @@ import javax.inject.Inject
 data class TaskListListUiState(
     val taskLists: List<TaskList> = emptyList(),
     val currentTaskList: TaskList? = null,
-    val taskListTitle: String = "",
+    val taskListTitle: TextFieldValue = TextFieldValue(""),
     val isShowModal: Boolean = false
 )
 
@@ -38,11 +40,17 @@ class TaskListListViewModel @Inject constructor(
 
     fun setTaskList(taskList: TaskList) {
         _uiState.update {
-            it.copy(currentTaskList = taskList, taskListTitle = taskList.name)
+            it.copy(
+                currentTaskList = taskList,
+                taskListTitle = TextFieldValue(
+                    taskList.name,
+                    selection = TextRange(taskList.name.length)
+                )
+            )
         }
     }
 
-    fun onChangeTitle(value: String) {
+    fun onChangeTitle(value: TextFieldValue) {
         _uiState.update {
             it.copy(taskListTitle = value)
         }
@@ -59,18 +67,18 @@ class TaskListListViewModel @Inject constructor(
 
     fun onSave() {
         viewModelScope.launch {
-            if (uiState.value.taskListTitle.isNotEmpty()) {
+            if (uiState.value.taskListTitle.text.isNotEmpty()) {
                 if (uiState.value.currentTaskList == null) {
                     // 新規作成処理
                     val taskList = TaskList(
-                        name = uiState.value.taskListTitle,
+                        name = uiState.value.taskListTitle.text,
                         seq = uiState.value.taskLists.size + 1
                     )
                     taskListRepository.insertTaskList(taskList)
                 } else {
                     // 更新処理
                     val updateTaskList = uiState.value.currentTaskList!!.copy(
-                        name = uiState.value.taskListTitle
+                        name = uiState.value.taskListTitle.text
                     )
                     taskListRepository.updateTaskList(updateTaskList)
                 }
@@ -90,7 +98,7 @@ class TaskListListViewModel @Inject constructor(
 
     private fun onClearState() {
         _uiState.update {
-            it.copy(currentTaskList = null, taskListTitle = "")
+            it.copy(currentTaskList = null, taskListTitle = TextFieldValue(""))
         }
     }
 
