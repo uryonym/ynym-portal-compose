@@ -1,5 +1,6 @@
 package com.uryonym.ynymportal.ui.screens.tasks
 
+import android.util.Log
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -62,6 +63,16 @@ class TaskListListViewModel @Inject constructor(
         }
         if (!value) {
             onClearState()
+        }
+    }
+
+    fun onChangeListIndex(from: Int, to: Int) {
+        Log.d("debug", "from: $from to: $to")
+        val newTaskList = _uiState.value.taskLists.toMutableList().apply {
+            add(to, removeAt(from))
+        }
+        _uiState.update {
+            it.copy(taskLists = newTaskList)
         }
     }
 
