@@ -32,9 +32,9 @@ import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.uryonym.ynymportal.ui.screens.components.ClickableOutlinedTextField
-import com.uryonym.ynymportal.ui.screens.components.DatePickerDialogComponent
-import com.uryonym.ynymportal.ui.screens.components.TimePickerDialog
+import com.uryonym.ynymportal.ui.components.ClickableOutlinedTextField
+import com.uryonym.ynymportal.ui.components.DatePickerDialogComponent
+import com.uryonym.ynymportal.ui.components.TimePickerDialog
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime

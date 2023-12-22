@@ -1,4 +1,4 @@
-package com.uryonym.ynymportal.ui.screens.components
+package com.uryonym.ynymportal.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
