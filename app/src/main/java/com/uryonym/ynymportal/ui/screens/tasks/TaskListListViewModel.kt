@@ -98,12 +98,9 @@ class TaskListListViewModel @Inject constructor(
         }
     }
 
-    fun onDelete() {
+    fun onDelete(taskListId: String) {
         viewModelScope.launch {
-            uiState.value.currentTaskList?.let {
-                taskListRepository.deleteTaskList(it.id)
-            }
-            onChangeShowModal(false)
+            taskListRepository.deleteTaskList(taskListId)
         }
     }
 

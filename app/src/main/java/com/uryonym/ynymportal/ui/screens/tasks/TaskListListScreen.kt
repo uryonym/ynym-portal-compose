@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -32,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -89,6 +94,14 @@ fun TaskListListScreen(
                 DraggableItem(dragDropState, index) {
                     ListItem(
                         headlineContent = { Text(text = taskList.name) },
+                        trailingContent = {
+                            IconButton(onClick = { viewModel.onDelete(taskList.id) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "削除"
+                                )
+                            }
+                        },
                         modifier = Modifier.clickable {
                             viewModel.setTaskList(taskList)
                             viewModel.onChangeShowModal(true)
@@ -103,9 +116,7 @@ fun TaskListListScreen(
                 title = uiState.taskListTitle,
                 onChangeTitle = viewModel::onChangeTitle,
                 onSave = viewModel::onSave,
-                onDelete = viewModel::onDelete,
-                onCloseModal = { viewModel.onChangeShowModal(false) },
-                isEdit = uiState.currentTaskList != null
+                onCloseModal = { viewModel.onChangeShowModal(false) }
             )
         }
     }
@@ -117,14 +128,18 @@ fun InputTaskListNameModal(
     title: TextFieldValue,
     onChangeTitle: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
-    onDelete: () -> Unit,
     onCloseModal: () -> Unit,
-    isEdit: Boolean
 ) {
     val focusRequester = remember { FocusRequester() }
 
     ModalBottomSheet(onDismissRequest = onCloseModal) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             OutlinedTextField(
                 value = title,
                 label = { Text("タスクリスト名") },
@@ -133,9 +148,6 @@ fun InputTaskListNameModal(
                 modifier = Modifier.focusRequester(focusRequester)
             )
             TextButton(onClick = onSave) { Text(text = "保存") }
-            if (isEdit) {
-                TextButton(onClick = onDelete) { Text(text = "削除") }
-            }
         }
     }
 
