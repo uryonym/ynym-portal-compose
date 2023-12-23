@@ -67,7 +67,8 @@ class RefuelingEditViewModel @Inject constructor(
                     price = refueling.price,
                     totalCost = refueling.totalCost,
                     fullFlag = refueling.fullFlag,
-                    gasStand = refueling.gasStand
+                    gasStand = refueling.gasStand,
+                    quantity = refueling.totalCost.toFloat() / refueling.price.toFloat()
                 )
             }
         }

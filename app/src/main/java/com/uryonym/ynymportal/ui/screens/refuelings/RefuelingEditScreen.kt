@@ -32,9 +32,7 @@ fun RefuelingEditScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(stringResource(id = RefuelingEditScreen.title))
-                },
+                title = { Text(stringResource(id = RefuelingEditScreen.title)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         onHideKeyboard()
@@ -66,6 +64,12 @@ fun RefuelingEditScreen(
     ) { padding ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+        LaunchedEffect(uiState.isRefuelingSaved) {
+            if (uiState.isRefuelingSaved) {
+                onNavigateBack()
+            }
+        }
+
         RefuelingAddEditForm(
             refuelDateTime = uiState.refuelDateTime,
             odometer = uiState.odometer,
@@ -93,12 +97,6 @@ fun RefuelingEditScreen(
             modifier = Modifier
                 .padding(padding)
         )
-
-        LaunchedEffect(uiState.isRefuelingSaved) {
-            if (uiState.isRefuelingSaved) {
-                onNavigateBack()
-            }
-        }
 
         DeleteConfirmDialog(
             isShow = uiState.isShowDeleteDialog,
