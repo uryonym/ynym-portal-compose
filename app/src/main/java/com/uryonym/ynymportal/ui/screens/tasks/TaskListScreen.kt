@@ -94,14 +94,12 @@ fun TaskListScreen(
 
                 LazyColumn {
                     items(items = uiState.tasks.filter { it.taskListId == uiState.selectedTaskListId && !it.isComplete }) { task ->
-                        Column {
-                            TaskListItem(
-                                task = task,
-                                onNavigateTaskEdit = onNavigateTaskEdit,
-                                viewModel = viewModel
-                            )
-                            HorizontalDivider()
-                        }
+                        TaskListItem(
+                            task = task,
+                            onNavigateTaskEdit = onNavigateTaskEdit,
+                            viewModel = viewModel
+                        )
+                        HorizontalDivider()
                     }
 
                     item {
@@ -121,14 +119,12 @@ fun TaskListScreen(
                     }
 
                     items(items = uiState.tasks.filter { it.taskListId == uiState.selectedTaskListId && it.isComplete }) { task ->
-                        Column {
-                            TaskListItem(
-                                task = task,
-                                onNavigateTaskEdit = onNavigateTaskEdit,
-                                viewModel = viewModel
-                            )
-                            HorizontalDivider()
-                        }
+                        TaskListItem(
+                            task = task,
+                            onNavigateTaskEdit = onNavigateTaskEdit,
+                            viewModel = viewModel
+                        )
+                        HorizontalDivider()
                     }
                 }
             }
@@ -139,14 +135,8 @@ fun TaskListScreen(
 @Composable
 fun TaskListItem(task: Task, onNavigateTaskEdit: (String) -> Unit, viewModel: TaskListViewModel) {
     ListItem(
-        headlineContent = {
-            Column {
-                Text(text = task.title)
-                task.deadLine?.let {
-                    Text(text = it.toString())
-                }
-            }
-        },
+        headlineContent = { Text(text = task.title) },
+        supportingContent = { task.deadLine?.let { Text(text = it.toString()) } },
         leadingContent = {
             Checkbox(
                 checked = task.isComplete,
