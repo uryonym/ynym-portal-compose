@@ -2,7 +2,6 @@ package com.uryonym.ynymportal.di
 
 import android.content.Context
 import androidx.room.Room
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.uryonym.ynymportal.data.AuthRepository
 import com.uryonym.ynymportal.data.AuthRepositoryImpl
 import com.uryonym.ynymportal.data.CarRepository
@@ -55,6 +54,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 @Module
