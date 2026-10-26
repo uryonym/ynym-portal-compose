@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -41,6 +42,7 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RefuelingListScreen(
+    onNavigateCarList: () -> Unit,
     onNavigateRefuelingAdd: (String) -> Unit,
     onNavigateRefuelingEdit: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -56,6 +58,9 @@ fun RefuelingListScreen(
         BottomAppBar(actions = {
             IconButton(onClick = onOpenDrawer) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "メニュー")
+            }
+            IconButton(onClick = onNavigateCarList) {
+                Icon(imageVector = Icons.Outlined.DirectionsCar, contentDescription = "車")
             }
             IconButton(onClick = viewModel::refresh) {
                 Icon(imageVector = Icons.Filled.Update, contentDescription = "更新")

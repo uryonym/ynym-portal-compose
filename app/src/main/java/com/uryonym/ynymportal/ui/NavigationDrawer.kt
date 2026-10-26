@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.TaskListScreen
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.ConfidentialListScreen
-import com.uryonym.ynymportal.navigation.YnymPortalScreen.CarListScreen
 import com.uryonym.ynymportal.navigation.YnymPortalScreen.RefuelingListScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -54,21 +53,6 @@ fun NavigationDrawer(
                     selected = false,
                     onClick = {
                         navigate(ConfidentialListScreen.route)
-                        scope.launch { drawerState.close() }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.DirectionsCar,
-                            contentDescription = "car"
-                        )
-                    },
-                    label = { Text(text = "車両") },
-                    selected = false,
-                    onClick = {
-                        navigate(CarListScreen.route)
                         scope.launch { drawerState.close() }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)

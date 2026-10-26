@@ -166,52 +166,8 @@ fun YnymPortalApp(
         }
 
         composable(route = CarListScreen.route) {
-            NavigationDrawer(
-                drawerState = drawerState,
-                scope = scope,
-                navigate = { route -> navController.navigate(route) },
-                onSignOut = viewModel::signOut
-            ) {
-                CarListScreen(
-                    onNavigateCarAdd = {
-                        navController.navigate(CarAddScreen.route)
-                    },
-                    onNavigateCarEdit = { carId ->
-                        navController.navigate(
-                            CarEditScreen.createRoute(carId)
-                        )
-                    },
-                    onOpenDrawer = { scope.launch { drawerState.open() } }
-                )
-            }
+            CarListScreen(onNavigateBack = { navController.navigateUp() })
         }
-        composable(route = CarAddScreen.route) {
-            NavigationDrawer(
-                drawerState = drawerState,
-                scope = scope,
-                navigate = { route -> navController.navigate(route) },
-                onSignOut = viewModel::signOut
-            ) {
-                CarAddScreen(
-                    onNavigateBack = { navController.navigateUp() },
-                    onHideKeyboard = { keyboardController?.hide() }
-                )
-            }
-        }
-        composable(route = CarEditScreen.route) {
-            NavigationDrawer(
-                drawerState = drawerState,
-                scope = scope,
-                navigate = { route -> navController.navigate(route) },
-                onSignOut = viewModel::signOut
-            ) {
-                CarEditScreen(
-                    onNavigateBack = { navController.navigateUp() },
-                    onHideKeyboard = { keyboardController?.hide() }
-                )
-            }
-        }
-
         composable(route = RefuelingListScreen.route) {
             NavigationDrawer(
                 drawerState = drawerState,
@@ -220,6 +176,9 @@ fun YnymPortalApp(
                 onSignOut = viewModel::signOut
             ) {
                 RefuelingListScreen(
+                    onNavigateCarList = {
+                        navController.navigate(CarListScreen.route)
+                    },
                     onNavigateRefuelingAdd = { carId ->
                         navController.navigate(RefuelingAddScreen.createRoute(carId))
                     },
